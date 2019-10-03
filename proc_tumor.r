@@ -4,9 +4,13 @@ print(fileName)
 
 print("Reading dataset...")
 #df <- read.delim(fileName, header=TRUE)
-# Reading only 300 rows
+
+# Reading only 300 samples (which are in the columns)
+samplesToBeLoaded <- 300
+colsToLoad <- c("character", rep("double", samplesToBeLoaded), rep("NULL", 9265-samplesToBeLoaded))
+
 df <- read.table(fileName, header = TRUE, sep = "\t", quote = "\"", 
-    dec = ".", fill = TRUE, comment.char = "", nrows=300)
+    dec = ".", fill = TRUE, comment.char = "", colClasses = colsToLoad)
 
 print("Processing dataset...")
 
