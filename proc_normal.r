@@ -1,5 +1,5 @@
 print("Trying to access file:")
-fileName <- "/home/colombelli/Documents/datasets/GSE62944_06_01_15_TCGA_24_Normal_CancerType_Samples.txt"
+fileName <- "/home/colombelli/Documents/datasets/GSM1697009_06_01_15_TCGA_24.normal_Rsubread_TPM.txt"
 print(fileName)
 
 print("Reading dataset...")

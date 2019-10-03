@@ -3,8 +3,10 @@ fileName <- "/home/colombelli/Documents/datasets/GSM1536837_06_01_15_TCGA_24.tum
 print(fileName)
 
 print("Reading dataset...")
-df <- read.delim(fileName, header=TRUE)
-
+#df <- read.delim(fileName, header=TRUE)
+# Reading only 300 rows
+df <- read.table(fileName, header = TRUE, sep = "\t", quote = "\"", 
+    dec = ".", fill = TRUE, comment.char = "", nrows=300)
 
 print("Processing dataset...")
 

@@ -84,7 +84,12 @@ varEntryDialog <- function(vars,
 
 
 print("Choose file to be processed...")
-fileName <- file.choose()
+if (interactive()) {
+    fileName <- file.choose()
+} else {
+    
+}
+
 
 
 print("Reading dataset...")
