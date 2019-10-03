@@ -88,23 +88,23 @@ fileName <- file.choose()
 
 
 print("Reading dataset...")
-df <- read.delim(fileName, header=FALSE)
+df <- read.delim(fileName, header=TRUE)
 
 colValue <- varEntryDialog(vars="Classification label \n(must be integer)")
 colValue <- as.integer(colValue)
 
 print("Processing dataset...")
 
-# Transpose df
-df <- as.data.frame(t(df))
+# Transpose df maintaining header
+df <- setNames(as.data.frame(t(df[,-1])), df[,1])
 
-# Adding classification column
-df$classification <- colValue
+# Adding class column
+df$class <- colValue
 
 print("Choose file name...")
 fileName = file.choose(new = TRUE)
 
 print("Saving processed dataset...")
-write.table(df, fileName, sep="\t", row.names = FALSE, col.names = FALSE)
+write.table(df, fileName, sep="\t", row.names = TRUE, col.names = TRUE)
 
-
+print("Done!")
