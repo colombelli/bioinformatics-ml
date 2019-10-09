@@ -2,9 +2,9 @@
 fileName1 <- "/home/colombelli/Documents/datasets/procNormalSamples.txt"
 fileName2 <- "/home/colombelli/Documents/datasets/procTumorSamples.txt"
 
-print("Reading datasets...")
-normal <- read.delim(fileName1, header = TRUE, nrows = 300)
-tumor <- read.delim(fileName2, header = TRUE, nrows = 300)
+print("Reading 113 samples of each dataset...")
+normal <- read.delim(fileName1, header = TRUE, nrows = 113)
+tumor <- read.delim(fileName2, header = TRUE, nrows = 113)
 
 print("Merging datasets...")
 mergedDF <- rbind(normal, tumor)
