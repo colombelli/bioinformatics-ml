@@ -1,7 +1,21 @@
+#!/usr/bin/python
+
 import time
 import pandas as pd
 from sklearn.feature_selection import RFE
 from sklearn.svm import SVR
+import sys
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument("-f", "--file", dest="filename",
+                    help="csv file name to use", metavar="FILE")
+args = parser.parse_args()
+
+if (len(sys.argv) != 2):
+    parser.print_help()
+    print("\nMissing arguments were found.")
+    sys.exit()
 
 print("Reading dataset...")
 df = pd.read_csv('mergedIQR.csv')
