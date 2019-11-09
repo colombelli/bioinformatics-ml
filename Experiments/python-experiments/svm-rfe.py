@@ -58,4 +58,4 @@ rank = DataFrame(data, index=list(X.columns))
 
 
 print("Saving CSV:", args.output)
-rank.to_csv(args.output)
+rank.to_csv(args.output, index_label=False)
