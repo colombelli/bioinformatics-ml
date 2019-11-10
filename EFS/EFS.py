@@ -1,29 +1,27 @@
 import pandas as pd
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
-import subprocess
-
+import sys
+sys.path.insert(0, './feature-selection/svm_rfe.py')
+from svm_rfe import svmRFE
 
 class EFS:
 
-    def __init__(self, filePath):
+    def __init__(self, filePath, chosenFS, bags, folds):
 
         self.filePath = filePath
-
-        self.bags = 30
-        self.folds = 10
-
-        self.relief = True
-        self.gainRatio = True
-        self.symmetricalUncertainty = True
-        self.oneR = False
-        self.svmRFE = False
+        self.chosenFS = chosenFS
+        self.bags = bags
+        self.folds = folds
+        
 
         self.df = self.__loadRDS()
+
         
     
     def __loadRDS(self):
         
+        print("Loading dataset...")
         readRDS = robjects.r['readRDS']
         return readRDS(self.filePath)
 
@@ -36,20 +34,42 @@ class EFS:
 
     def buildRanks(self):
         
-        readRDS = robjects.r['readRDS']
-        df = readRDS(self.filePath)
 
         rpackages.importr('CORElearn')
+        rpackages.importr('FSelectorRcpp')
+        #rpackages.importr('FSelector')
 
-        if self.relief:
+        if self.chosenFS['relief']:
+            self.reliefRank = self.__callRFSelectionScript("rf", "relief", "relief")
+
+
+        if self.chosenFS['gainRatio']:
+            self.gainRatioRank = self.__callRFSelectionScript("gr", 
+                                                    "gain-ratio-cpp", "gainRatio")
+
+
+        if self.chosenFS['symmetricalUncertainty']:
+            self.symUncRank = self.__callRFSelectionScript("su", 
+                                        "symmetrical-uncertainty", "symUnc")
+
+
+        if self.chosenFS['oneR']:
+            self.oneRRank = self.__callRFSelectionScript("or", "oneR", "oneRule")
+
+
+        if self.chosenFS['svmRFE']:
+            self.svmRFERank = svmRFE(self.df)
+            robjects.r['saveRDS'](self.svmRFERank, "./ranks/svmrfe.rds")
+
+
+
+    def __callRFSelectionScript(self, rdsName, scriptName, featureSelector):
+
+        outputPath = "./ranks/" + rdsName + ".rds"
+        call = "./fs-algorithms/" + scriptName + ".r"
+        robjects.r.source(call)
+        
+        return robjects.r[featureSelector](self.df, outputPath)
             
-            outputPath = "rf.rds"
-            robjects.r.source('./fs-algorithms/reliefNoDsReread.r')
-            output = robjects.r['relief'](df, outputPath)
-            print(output)
             
 
-            
-
-    def __getReliefRank(self):
-        return

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 library(optparse)
-library(CORElearn)
+library(FSelector)
 
 option_list = list(
 	make_option(c("-i", "--input"), type="character", default=NULL, 
@@ -27,7 +27,7 @@ df <- readRDS(args$input)
 
 df$class <- as.factor(df$class)
 print("Classifying with One Rule algorithm...")
-rankDf <- attrEval(class ~ ., df, estimator="Relief") 
+rankDf <- oneR(class ~ ., df)
 
 
 print("Processing output...")
