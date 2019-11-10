@@ -26,15 +26,14 @@ df <- readRDS(args$input)
 
 
 df$class <- as.factor(df$class)
-print("Reliefing... :)")
-attScores <- attrEval(class ~ ., df, estimator="Relief") 
+print("Classifying with One Rule algorithm...")
+rankDf <- attrEval(class ~ ., df, estimator="Relief") 
 
 
 print("Processing output...")
-rankDf <- as.data.frame(attScores)
-rankDf <- rankDf[order(-rankDf$attScores),,drop=FALSE]
-rankDf["rank"] <- c(1:length(rankDf$attScores))
-rankDf["attScores"] <- NULL
+rankDf <- rankDf[order(-rankDf$attr_importance),,drop=FALSE]
+rankDf["rank"] <- c(1:length(rankDf$attr_importance))
+rankDf["attr_importance"] <- NULL
 
 
 print("Saving rank...")

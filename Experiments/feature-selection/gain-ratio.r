@@ -37,5 +37,5 @@ rankDf["rank"] <- c(1:length(rankDf$attScores))
 rankDf["attScores"] <- NULL
 
 
-print("Saving ranking output...")
+print("Saving rank...")
 saveRDS(rankDf, args$output)

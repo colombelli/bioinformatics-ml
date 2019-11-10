@@ -41,5 +41,5 @@ su["rank"] <- c(1:length(su$importance))
 su$importance <- NULL
 
 
-print("Saving ranking output...")
+print("Saving rank...")
 saveRDS(su, args$output)

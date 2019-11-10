@@ -41,5 +41,5 @@ gr["rank"] <- c(1:length(gr$importance))
 gr$importance <- NULL
 
 
-print("Saving ranking output...")
+print("Saving rank...")
 saveRDS(gr, args$output)
