@@ -7,8 +7,8 @@ chosenFS = {
             "relief": False,
             "gainRatio": False,
             "symmetricalUncertainty": False,
-            "oneR": True,
-            "svmRFE": False
+            "oneR": False,
+            "svmRFE": True
         }         
 
 bags = 30

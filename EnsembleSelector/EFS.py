@@ -1,9 +1,10 @@
 import pandas as pd
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
-#import sys
-#sys.path.insert(0, './feature-selection/svm_rfe.py')
-#from svm_rfe import svmRFE
+from rpy2.robjects import pandas2ri
+from rpy2.robjects.conversion import localconverter
+from fs_algorithms.svm_rfe import svmRFE
+
 
 class EFS:
 
@@ -58,8 +59,28 @@ class EFS:
 
 
         if self.chosenFS['svmRFE']:
-            self.svmRFERank = svmRFE(self.df)
+            
+            pdDF = self.__rToPandas(self.df)
+            svmRFERank = svmRFE(pdDF)
+
+            self.svmRFERank = self.__pandasToR(svmRFERank)
+
+            print("Saving data...")
             robjects.r['saveRDS'](self.svmRFERank, "./ranks/svmrfe.rds")
+
+
+    def __pandasToR(self, df):
+
+        with localconverter(robjects.default_converter + pandas2ri.converter):
+            rFromPandasDF = robjects.conversion.py2rpy(df)
+        return rFromPandasDF
+
+
+    def __rToPandas(self, df):
+        
+        with localconverter(robjects.default_converter + pandas2ri.converter):
+                pdFromRDF = robjects.conversion.rpy2py(df)
+        return pdFromRDF
 
 
 

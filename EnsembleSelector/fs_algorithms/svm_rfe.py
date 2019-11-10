@@ -1,9 +1,9 @@
 from sklearn.feature_selection import RFE
 from sklearn.svm import SVR
+import pandas as pd
 
 def svmRFE(df):
-
-    X = df.iloc[0:, 1:-1]
+    X = df.iloc[0:, 0:-1]
     y = df.iloc[:, -1]
 
     estimator = SVR(kernel="linear")
@@ -12,16 +12,10 @@ def svmRFE(df):
     selector = selector.fit(X, y)
 
 
-    print("Processing data..")
+    print("Processing data...")
     data = {"rank": selector.ranking_}
     rank = pd.DataFrame(data, index=list(X.columns))
+    rank = rank.sort_values(by="rank")
 
     return rank
-
-
-def doNothing():
-    return
-
-if __name__ == __main__:
-    doNothing()
 
