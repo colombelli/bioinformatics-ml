@@ -1,6 +1,6 @@
 import pandas as pd
 import rpy2.robjects as robjects
-from rpy2.robjects import pandas2ri
+import rpy2.robjects.packages as rpackages
 import subprocess
 
 
@@ -35,18 +35,21 @@ class EFS:
 
 
     def buildRanks(self):
+        
+        readRDS = robjects.r['readRDS']
+        df = readRDS(self.filePath)
+
+        rpackages.importr('CORElearn')
 
         if self.relief:
-            rScript = "./fs-algorithms/relief.r"
-            outputPath = "rf.rds"
-
-
-            subprocess.call (["/usr/bin/Rscript", "--vanilla", rScript,
-                                "-i", self.filePath, "-o", outputPath])
             
-            readRDS = robjects.r['readRDS']
-            df = readRDS('./fs-algorithms/rf.rds')
-            print(df.head())
+            outputPath = "rf.rds"
+            robjects.r.source('./fs-algorithms/reliefNoDsReread.r')
+            output = robjects.r['relief'](df, outputPath)
+            print(output)
+            
+
+            
 
     def __getReliefRank(self):
         return
