@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
-library("optparse")
+library(optparse)
  
 option_list = list(
 	make_option(c("-d", "--dataset"), type="character", default=NULL, 
               help=".rds dataset file path", metavar="character"),
-    make_option(c("-f", "--fraction"), type="numeric", default=0.4, 
-              help="fraction of genes to drop", metavar="numeric")
+  make_option(c("-f", "--fraction"), type="numeric", default=0.4, 
+              help="fraction of genes to drop. Default: 0.4", metavar="numeric")
 ); 
  
 opt_parser = OptionParser(option_list=option_list);
