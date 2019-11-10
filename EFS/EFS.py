@@ -1,9 +1,9 @@
 import pandas as pd
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
-import sys
-sys.path.insert(0, './feature-selection/svm_rfe.py')
-from svm_rfe import svmRFE
+#import sys
+#sys.path.insert(0, './feature-selection/svm_rfe.py')
+#from svm_rfe import svmRFE
 
 class EFS:
 
@@ -37,7 +37,7 @@ class EFS:
 
         rpackages.importr('CORElearn')
         rpackages.importr('FSelectorRcpp')
-        #rpackages.importr('FSelector')
+        rpackages.importr('FSelector')
 
         if self.chosenFS['relief']:
             self.reliefRank = self.__callRFSelectionScript("rf", "relief", "relief")
