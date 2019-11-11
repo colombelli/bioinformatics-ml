@@ -10,6 +10,12 @@ MAX_SEED = 99999999
 class DataManager:
 
     def __init__(self, filePath, bags, folds, seed=None):
+        
+        if seed is not None:
+            if seed >= MAX_SEED:
+                raise("Seed must be less than"+str(MAX_SEED))
+        self.seed = seed
+
 
         self.filePath = filePath
         self.bags = bags
@@ -19,10 +25,7 @@ class DataManager:
         self.rDF = self.__loadRDS()
         self.pdDF = self.__rToPandas(self.rDF)
     
-        if seed is not None:
-            if seed >= MAX_SEED:
-                raise("Seed must be less than"+str(MAX_SEED))
-        self.seed = seed
+        
 
     
     def __loadRDS(self):
@@ -51,14 +54,26 @@ class DataManager:
 
         samplesPerFold = len(self.pdDF) // self.folds
 
+        self.foldIdx = {}
+        previousFold = 0
+
+        for f in range(1, self.folds+1):
+            self.foldIdx[str(f)] = range(previousFold, previousFold + samplesPerFold)
+            previousFold = previousFold + samplesPerFold
+            
+        
+        # fix last fold 
+        lastFoldFirstIdx = self.foldIdx[str(self.folds)][0]
+        self.foldIdx[str(self.folds)] = range(lastFoldFirstIdx, len(self.pdDF))
 
 
 
-    def getBootStrap(self, data, seed=None, trainFraction=0.8):
+
+    def getBootStrap(self, k):
         
         
 
-        np.random.seed(seed)
+        np.random.seed(self.seed)
 
         numTrainingSamples = round(len(data)*trainFraction)
         sampleRangeSequence = np.arange(0, len(data))
@@ -77,15 +92,17 @@ class DataManager:
             
             # in order to keep shuffling randomly (but to maintain reproducibility),
             # we use the given seed to generate another seed which will be used in the
-            # next iteration shuffling
-            newSeed = np.random.randint(0, MAX_SEED) 
-            np.random.seed(newSeed)
+            # next iteration shuffling; and we change the attribute seed in order to 
+            # continuously perform a random shuffling for the next folds.
+            self.seed = np.random.randint(0, MAX_SEED) 
+            np.random.seed(self.seed)
 
 
         return bootstrap
 
 
 
-    def getFoldIndexes(self, fold):
+    def __getFoldIndexes(self, fold):
 
         return
+

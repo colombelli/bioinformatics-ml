@@ -9,42 +9,39 @@ import numpy as np
 
 class EFS:
 
-    def __init__(self, filePath, chosenFS, bags, folds):
+    def __init__(self, dataManager, chosenFS, folds):
 
-        self.filePath = filePath
+        self.dm = dataManager
         self.chosenFS = chosenFS
-        self.bags = bags
         self.folds = folds
         
 
-        self.df = self.__loadRDS()
-
-        
-    
-    def __loadRDS(self):
-        
-        print("Loading dataset...")
-        readRDS = robjects.r['readRDS']
-        return readRDS(self.filePath)
 
 
+    def selectFeatures(self):
 
-    def __bootStrapNoReplacement(self, data, bags=30, seed=None, trainFraction=0.8):
-        
-        np.random.seed(seed)
+        for k in self.folds:
 
-        pd_df = self.__rToPandas(self.df)
+            bootsrap = self.dm.getBootsrap(k)
+            bagsRanks = []
 
-        return
+            for bag in bootsrap:
+
+                ranks = self.__buildRanks(bag["train"])
+                bagsRanks.append(self.__unweightedAggregation(ranks))
+
+            finalRank = self.__weightedAggregation(bagsRanks)
 
 
 
-    def buildRanks(self):
+    def __buildRanks(self, samplesIdx):
         
 
         rpackages.importr('CORElearn')
         rpackages.importr('FSelectorRcpp')
         rpackages.importr('FSelector')
+
+
 
         if self.chosenFS['relief']:
             self.reliefRank = self.__callRFSelectionScript("rf", "relief", "relief")
@@ -75,20 +72,6 @@ class EFS:
             robjects.r['saveRDS'](self.svmRFERank, "./ranks/svmrfe.rds")
 
 
-    def __pandasToR(self, df):
-
-        with localconverter(robjects.default_converter + pandas2ri.converter):
-            rFromPandasDF = robjects.conversion.py2rpy(df)
-        return rFromPandasDF
-
-
-    def __rToPandas(self, df):
-        
-        with localconverter(robjects.default_converter + pandas2ri.converter):
-                pdFromRDF = robjects.conversion.rpy2py(df)
-        return pdFromRDF
-
-
 
     def __callRFSelectionScript(self, rdsName, scriptName, featureSelector):
 
@@ -97,20 +80,15 @@ class EFS:
         robjects.r.source(call)
         
         return robjects.r[featureSelector](self.df, outputPath)
-            
-            
-
-"""
-
-    for k in folds:
-
-        self.bagPdDF, foldRDF = dm.getBootsrap(k)
-        self.buildRanks()
 
 
+    
+    def __unweightedAggregation(self, ranks):
 
-    def __buildRanks(self):
+        return 0
 
-        
 
-"""
+    def __weightedAggregation(self, bagsRanks):
+
+        return 0
+    
