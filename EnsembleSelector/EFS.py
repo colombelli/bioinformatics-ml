@@ -22,15 +22,17 @@ class EFS:
 
         for k in self.folds:
 
-            bootsrap = self.dm.getBootsrap(k)
+            bootstrap = self.dm.getBootStrap(k)
             bagsRanks = []
 
-            for bag in bootsrap:
+            for bag in bootstrap:
 
-                ranks = self.__buildRanks(bag["train"])
+                ranks = self.__buildRanks(bag["training"])
                 bagsRanks.append(self.__unweightedAggregation(ranks))
 
             finalRank = self.__weightedAggregation(bagsRanks)
+        
+        return finalRank
 
 
 
@@ -71,6 +73,7 @@ class EFS:
             print("Saving data...")
             robjects.r['saveRDS'](self.svmRFERank, "./ranks/svmrfe.rds")
 
+        return 0
 
 
     def __callRFSelectionScript(self, rdsName, scriptName, featureSelector):
