@@ -4,6 +4,7 @@ import rpy2.robjects.packages as rpackages
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
 from fs_algorithms.svm_rfe import svmRFE
+import numpy as np
 
 
 class EFS:
@@ -28,9 +29,14 @@ class EFS:
 
 
 
-    def __bootStrap(self):
+    def __bootStrapNoReplacement(self, data, bags=30, seed=None, trainFraction=0.8):
+        
+        np.random.seed(seed)
 
-        print("something")
+        pd_df = self.__rToPandas(self.df)
+
+        return
+
 
 
     def buildRanks(self):
@@ -94,3 +100,17 @@ class EFS:
             
             
 
+"""
+
+    for k in folds:
+
+        self.bagPdDF, foldRDF = dm.getBootsrap(k)
+        self.buildRanks()
+
+
+
+    def __buildRanks(self):
+
+        
+
+"""
