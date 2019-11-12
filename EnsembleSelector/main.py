@@ -2,9 +2,16 @@ from EFS import EFS
 from DataManager import DataManager
 
 
-#datasetPath = "/home/colombelli/Documents/datasets/tt.rds"
-datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
+datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
+#datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
+
 seed = 42
+bags = 30
+folds = 10
+
+
+
+
 chosenFS = {
             "relief": False,
             "gainRatio": False,
@@ -13,16 +20,12 @@ chosenFS = {
             "svmRFE": True
         }         
 
-bags = 30
-folds = 10
 
-#efs = EFS(datasetPath, chosenFS, bags, folds)
-#efs.buildRanks()
 
 dm = DataManager(datasetPath, bags, folds, seed)
 
-
-
+#efs = EFS(datasetPath, chosenFS, bags, folds)
+#efs.buildRanks()
 
 
 

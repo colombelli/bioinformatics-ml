@@ -39,14 +39,14 @@ class DataManager:
         return readRDS(self.filePath)
 
 
-    def __pandasToR(self, df):
+    def pandasToR(self, df):
 
         with localconverter(robjects.default_converter + pandas2ri.converter):
             rFromPandasDF = robjects.conversion.py2rpy(df)
         return rFromPandasDF
 
 
-    def __rToPandas(self, df):
+    def rToPandas(self, df):
         
         with localconverter(robjects.default_converter + pandas2ri.converter):
                 pdFromRDF = robjects.conversion.rpy2py(df)
@@ -71,24 +71,24 @@ class DataManager:
         self.foldIdx[str(self.folds)] = range(lastFoldFirstIdx, len(self.pdDF))
 
 
-    def getFoldSubset(self, k):
+    def __setTestFoldSubset(self, k):
 
         kIdx = self.foldIdx[str(k)]
-        foldData = self.pdDF.iloc[kIdx]
+        self.testingFoldData = self.pdDF.iloc[kIdx]
 
-        return foldData
+        return
 
 
-    def getBootStrap(self, testFold):
+    def getBootStrap(self, k):
         
-        
-        kIdx = self.foldIdx[str(testFold)]
-        testFoldData = self.pdDF.iloc[kIdx]
+        self.__setTestFoldSubset(k)
 
+        trainingFolds = pd.concat([self.pdDF, self.testingFoldData])
+        trainingFolds = trainingFolds.drop_duplicates(keep=False, inplace=False)
 
-        numTrainingSamples = round(len(foldData) * self.bagTrainFraction)
-        sampleRangeSequence = np.arange(0, len(foldData))
-        bootstrap = []   # a list containg tuples with two elements: 
+        numTrainingSamples = round(len(trainingFolds) * self.bagTrainFraction)
+        sampleRangeSequence = np.arange(0, len(trainingFolds))
+        bootstrap = []    # a list containg tuples with two elements: 
                           # training indexes for that bag,
                           # testing indexes for that bag                                          
 
@@ -98,11 +98,15 @@ class DataManager:
         for _ in range(self.bags):
             
             np.random.shuffle(sampleRangeSequence)
-            training =  sampleRangeSequence[0:numTrainingSamples]
-            testing = sampleRangeSequence[numTrainingSamples:]
+
+            trainingIdx =  sampleRangeSequence[0:numTrainingSamples]
+            trainingDataBag = trainingFolds.iloc[trainingIdx]
+
+            testingIdx = sampleRangeSequence[numTrainingSamples:]
+            testingDataBag = trainingFolds.iloc[testingIdx]
             
-            bootstrap.append({"training": training, 
-                              "testing": testing})
+            bootstrap.append({"training": trainingDataBag, 
+                              "testing": testingDataBag})
             
             # in order to keep shuffling randomly (but to maintain reproducibility),
             # we use the given seed to generate another seed which will be used in the

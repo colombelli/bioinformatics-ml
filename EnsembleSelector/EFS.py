@@ -17,12 +17,10 @@ class EFS:
         
 
 
-
     def selectFeatures(self):
 
         for k in self.folds:
             
-            testFold = self.dm.getFoldSubstet(k)
             bootstrap = self.dm.getBootStrap(k)
             bagsRanks = []
 
@@ -31,13 +29,13 @@ class EFS:
                 ranks = self.__buildRanks(bag["training"])
                 bagsRanks.append(self.__unweightedAggregation(ranks))
 
-            finalRank = self.__weightedAggregation(bagsRanks, testFold)
+            finalRank = self.__weightedAggregation(bagsRanks)
         
         return finalRank
 
 
 
-    def __buildRanks(self, samplesIdx):
+    def __buildRanks(self, df):
         
 
         rpackages.importr('CORElearn')
@@ -47,29 +45,27 @@ class EFS:
 
 
         if self.chosenFS['relief']:
-            self.reliefRank = self.__callRFSelectionScript("rf", "relief", "relief")
+            self.reliefRank = self.__callRFSelectionScript(df, "rf", "relief", "relief")
 
 
         if self.chosenFS['gainRatio']:
-            self.gainRatioRank = self.__callRFSelectionScript("gr", 
+            self.gainRatioRank = self.__callRFSelectionScript(df, "gr", 
                                                     "gain-ratio-cpp", "gainRatio")
 
 
         if self.chosenFS['symmetricalUncertainty']:
-            self.symUncRank = self.__callRFSelectionScript("su", 
+            self.symUncRank = self.__callRFSelectionScript(df, "su", 
                                         "symmetrical-uncertainty", "symUnc")
 
 
         if self.chosenFS['oneR']:
-            self.oneRRank = self.__callRFSelectionScript("or", "oneR", "oneRule")
+            self.oneRRank = self.__callRFSelectionScript(df, "or", "oneR", "oneRule")
 
 
         if self.chosenFS['svmRFE']:
             
-            pdDF = self.__rToPandas(self.df)
-            svmRFERank = svmRFE(pdDF)
-
-            self.svmRFERank = self.__pandasToR(svmRFERank)
+            svmRFERank = svmRFE(df)
+            self.svmRFERank = self.dm.pandasToR(svmRFERank)
 
             print("Saving data...")
             robjects.r['saveRDS'](self.svmRFERank, "./ranks/svmrfe.rds")
@@ -77,13 +73,13 @@ class EFS:
         return 0
 
 
-    def __callRFSelectionScript(self, rdsName, scriptName, featureSelector):
+    def __callRFSelectionScript(self, df, rdsName, scriptName, featureSelector):
 
         outputPath = "./ranks/" + rdsName + ".rds"
         call = "./fs-algorithms/" + scriptName + ".r"
         robjects.r.source(call)
         
-        return robjects.r[featureSelector](self.df, outputPath)
+        return robjects.r[featureSelector](df, outputPath)
 
 
     
