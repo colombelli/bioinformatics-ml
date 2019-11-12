@@ -20,7 +20,7 @@ class DataManager:
         self.bagTrainFraction = bagTrainFraction
 
         self.rDF = self.__loadRDS()
-        self.pdDF = self.__rToPandas(self.rDF)
+        self.pdDF = self.rToPandas(self.rDF)
 
         self.__calculateFolds()
 
