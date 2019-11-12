@@ -21,7 +21,8 @@ class EFS:
     def selectFeatures(self):
 
         for k in self.folds:
-
+            
+            testFold = self.dm.getFoldSubstet(k)
             bootstrap = self.dm.getBootStrap(k)
             bagsRanks = []
 
@@ -30,7 +31,7 @@ class EFS:
                 ranks = self.__buildRanks(bag["training"])
                 bagsRanks.append(self.__unweightedAggregation(ranks))
 
-            finalRank = self.__weightedAggregation(bagsRanks)
+            finalRank = self.__weightedAggregation(bagsRanks, testFold)
         
         return finalRank
 

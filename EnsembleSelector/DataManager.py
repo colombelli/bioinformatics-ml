@@ -71,13 +71,19 @@ class DataManager:
         self.foldIdx[str(self.folds)] = range(lastFoldFirstIdx, len(self.pdDF))
 
 
+    def getFoldSubset(self, k):
 
-
-    def getBootStrap(self, k):
-        
-        
         kIdx = self.foldIdx[str(k)]
         foldData = self.pdDF.iloc[kIdx]
+
+        return foldData
+
+
+    def getBootStrap(self, testFold):
+        
+        
+        kIdx = self.foldIdx[str(testFold)]
+        testFoldData = self.pdDF.iloc[kIdx]
 
 
         numTrainingSamples = round(len(foldData) * self.bagTrainFraction)
