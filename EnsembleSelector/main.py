@@ -15,17 +15,17 @@ folds = 10
 chosenFS = {
             "relief": False,
             "gainRatio": False,
-            "symmetricalUncertainty": False,
+            "symmetricalUncertainty": True,
             "oneR": False,
-            "svmRFE": True
+            "svmRFE": False
         }         
 
 
 
 dm = DataManager(datasetPath, bags, folds, seed)
 
-#efs = EFS(datasetPath, chosenFS, bags, folds)
-#efs.buildRanks()
+efs = EFS(dm, chosenFS)
+efs.selectFeatures()
 
 
 

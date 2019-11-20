@@ -9,17 +9,16 @@ import numpy as np
 
 class EFS:
 
-    def __init__(self, dataManager, chosenFS, folds):
+    def __init__(self, dataManager, chosenFS):
 
         self.dm = dataManager
         self.chosenFS = chosenFS
-        self.folds = folds
         
 
 
     def selectFeatures(self):
 
-        for k in self.folds:
+        for k in range(1, self.dm.folds+1):
             
             bootstrap = self.dm.getBootStrap(k)
             bagsRanks = []
@@ -40,7 +39,7 @@ class EFS:
 
         rpackages.importr('CORElearn')
         rpackages.importr('FSelectorRcpp')
-        rpackages.importr('FSelector')
+        #rpackages.importr('FSelector')
 
 
 
