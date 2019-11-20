@@ -36,34 +36,36 @@ class EFS:
 
     def __buildRanks(self, df):
         
+        
+        pdDF = df
+        rDF = self.dm.pandasToR(pdDF)
 
         rpackages.importr('CORElearn')
         rpackages.importr('FSelectorRcpp')
-        #rpackages.importr('FSelector')
-
+        rpackages.importr('FSelector')
 
 
         if self.chosenFS['relief']:
-            self.reliefRank = self.__callRFSelectionScript(df, "rf", "relief", "relief")
+            self.reliefRank = self.__callRFSelectionScript(rDF, "rf", "relief", "relief")
 
 
         if self.chosenFS['gainRatio']:
-            self.gainRatioRank = self.__callRFSelectionScript(df, "gr", 
+            self.gainRatioRank = self.__callRFSelectionScript(rDF, "gr", 
                                                     "gain-ratio-cpp", "gainRatio")
 
 
         if self.chosenFS['symmetricalUncertainty']:
-            self.symUncRank = self.__callRFSelectionScript(df, "su", 
+            self.symUncRank = self.__callRFSelectionScript(rDF, "su", 
                                         "symmetrical-uncertainty", "symUnc")
 
 
         if self.chosenFS['oneR']:
-            self.oneRRank = self.__callRFSelectionScript(df, "or", "oneR", "oneRule")
+            self.oneRRank = self.__callRFSelectionScript(rDF, "or", "oneR", "oneRule")
 
 
         if self.chosenFS['svmRFE']:
             
-            svmRFERank = svmRFE(df)
+            svmRFERank = svmRFE(pdDF)
             self.svmRFERank = self.dm.pandasToR(svmRFERank)
 
             print("Saving data...")
@@ -75,7 +77,7 @@ class EFS:
     def __callRFSelectionScript(self, df, rdsName, scriptName, featureSelector):
 
         outputPath = "./ranks/" + rdsName + ".rds"
-        call = "./fs-algorithms/" + scriptName + ".r"
+        call = "./fs_algorithms/" + scriptName + ".r"
         robjects.r.source(call)
         
         return robjects.r[featureSelector](df, outputPath)

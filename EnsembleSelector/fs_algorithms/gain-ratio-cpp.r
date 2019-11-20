@@ -20,5 +20,8 @@ gainRatio <- function(df, outputPath) {
   print("Saving rank...")
   saveRDS(rankDf, outputPath)
 
+  print("Rank saved on:")
+  print(outputPath)
+  
   return(rankDf)
 }
