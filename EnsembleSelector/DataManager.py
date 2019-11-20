@@ -62,18 +62,18 @@ class DataManager:
         previousFold = 0
 
         for f in range(1, self.folds+1):
-            self.foldIdx[str(f)] = range(previousFold, previousFold + samplesPerFold)
+            self.foldIdx[f] = list(range(previousFold, previousFold + samplesPerFold))
             previousFold = previousFold + samplesPerFold
-            
         
-        # fix last fold 
-        lastFoldFirstIdx = self.foldIdx[str(self.folds)][0]
-        self.foldIdx[str(self.folds)] = range(lastFoldFirstIdx, len(self.pdDF))
+        # fix last fold (which should get the remaining data without wasting 
+        # it because of the round operation //)
+        lastFoldFirstIdx = self.foldIdx[self.folds][0]
+        self.foldIdx[self.folds] = list(range(lastFoldFirstIdx, len(self.pdDF)))
 
 
     def __setTestFoldSubset(self, k):
 
-        kIdx = self.foldIdx[str(k)]
+        kIdx = self.foldIdx[k]
         self.testingFoldData = self.pdDF.iloc[kIdx]
 
         return

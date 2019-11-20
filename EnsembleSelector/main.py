@@ -2,7 +2,7 @@ from EFS import EFS
 from DataManager import DataManager
 
 
-datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
+datasetPath = "/home/colombelli/Documents/datasets/merged226Samples.rds"
 #datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
 seed = 42
