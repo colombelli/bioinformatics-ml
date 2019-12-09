@@ -12,7 +12,7 @@ class DataManager:
     def __init__(self, filePath, bags, folds, seed=None, bagTrainFraction=0.8):
         
         self.seed = seed
-        self.__validateSeed()
+        np.random.seed(self.seed)
 
         self.filePath = filePath
         self.bags = bags
@@ -24,12 +24,6 @@ class DataManager:
 
         self.__calculateFolds()
 
-
-    def __validateSeed(self):
-        if self.seed is not None:
-            if self.seed >= MAX_SEED:
-                raise("Seed must be less than"+str(MAX_SEED))
-        return
 
     
     def __loadRDS(self):
@@ -92,8 +86,6 @@ class DataManager:
                           # training indexes for that bag,
                           # testing indexes for that bag                                          
 
-        
-        np.random.seed(self.seed)
 
         for _ in range(self.bags):
             
@@ -108,13 +100,6 @@ class DataManager:
             bootstrap.append({"training": trainingDataBag, 
                               "testing": testingDataBag})
             
-            # in order to keep shuffling randomly (but to maintain reproducibility),
-            # we use the given seed to generate another seed which will be used in the
-            # next iteration shuffling; and we change the attribute seed in order to 
-            # continuously perform a random shuffling for the next folds.
-            self.seed = np.random.randint(0, MAX_SEED) 
-            np.random.seed(self.seed)
-
 
         return bootstrap
 
