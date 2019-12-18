@@ -3,13 +3,11 @@ import pandas as pd
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
-
-
-MAX_SEED = 99999999
+from os import mkdir
 
 class DataManager:
 
-    def __init__(self, filePath, bags, folds, seed=None, bagTrainFraction=0.8):
+    def __init__(self, resultsPath, filePath, bags, folds, seed=None, bagTrainFraction=0.8):
         
         self.seed = seed
         np.random.seed(self.seed)
@@ -23,6 +21,23 @@ class DataManager:
         self.pdDF = self.rToPandas(self.rDF)
 
         self.__calculateFolds()
+
+        self.resultsPath = resultsPath
+        self.__createResultsDir()
+
+
+
+    def __createResultsDir(self):
+        print("Creating result directory...")
+        mkdir(self.resultsPath)
+
+        for i in range(1, self.folds+1):
+            foldDir = self.resultsPath+"/fold_"+str(i)
+            mkdir(foldDir)
+
+            for j in range(1, self.bags+1):
+                bagDir = foldDir + "/bag_"+str(j)
+                mkdir(bagDir)
 
 
     

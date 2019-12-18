@@ -3,6 +3,7 @@ from DataManager import DataManager
 
 
 datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
+resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector/results"
 #datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
 seed = 42
@@ -21,7 +22,7 @@ chosenFS = {
 
 
 
-dm = DataManager(datasetPath, bags, folds, seed)
+dm = DataManager(resultsPath, datasetPath, bags, folds, seed)
 
-efs = EFS(dm, chosenFS)
-efs.selectFeatures()
+#efs = EFS(dm, chosenFS)
+#efs.selectFeatures()

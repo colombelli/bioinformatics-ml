@@ -1,8 +1,6 @@
 import pandas as pd
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
-from rpy2.robjects import pandas2ri
-from rpy2.robjects.conversion import localconverter
 from fs_algorithms.svm_rfe import svmRFE
 import numpy as np
 
