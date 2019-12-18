@@ -1,7 +1,5 @@
 from EFS import EFS
 from DataManager import DataManager
-from subprocess import call
-from os import popen
 
 datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
 resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector/results"
@@ -21,13 +19,21 @@ chosenFS = {
             "svmRFE": False
         }         
 
-print("Preparing enviroment...")
-print("Running command: R CMD javareconf -e\n\n")
-call(["R", "CMD", "javareconf", "-e"])
-#popen('R CMD javareconf -e')
-print("\n\n")
-
+"""
 dm = DataManager(resultsPath, datasetPath, bags, folds, seed)
 
 efs = EFS(dm, chosenFS)
 efs.selectFeatures()
+"""
+
+from Evaluate import Evaluate
+import pickle
+rankings = open('rankings.pkl', 'rb')      
+rk = pickle.load(rankings) 
+rankings.close() 
+
+import pandas as pd
+df = pd.read_pickle("df.pkl")
+
+ev = Evaluate(rk, 15, df, df)
+print(ev.getAUC())

@@ -3,7 +3,7 @@ import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
 from fs_algorithms.svm_rfe import svmRFE
 import numpy as np
-
+import Evaluate
 
 
 class EFS:
@@ -75,9 +75,9 @@ class EFS:
         if self.chosenFS['svmRFE']:
             
             svmRFERank = svmRFE(pdDF)
-            svmRFERank = self.dm.pandasToR(svmRFERank)
             self.rankings.append(svmRFERank)
-
+            
+            svmRFERank = self.dm.pandasToR(svmRFERank)
             print("Saving data...")
             outputPath = self.dm.resultsPath + "/fold_" + str(self.currentFold) + "/bag_" + \
                         str(self.currentBag) + "/svmrfe.rds"
@@ -92,7 +92,7 @@ class EFS:
         call = "./fs_algorithms/" + scriptName + ".r"
         robjects.r.source(call)
 
-        return robjects.r[featureSelector](df, outputPath)
+        return self.dm.rToPandas(robjects.r[featureSelector](df, outputPath))
 
 
     

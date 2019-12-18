@@ -20,7 +20,7 @@ class DataManager:
 
         self.rDF = self.__loadRDS()
         self.pdDF = self.rToPandas(self.rDF)
-
+        
         self.__calculateFolds()
 
         self.resultsPath = resultsPath
