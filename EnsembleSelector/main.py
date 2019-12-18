@@ -2,7 +2,7 @@ from EFS import EFS
 from DataManager import DataManager
 
 datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
-resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector/results"
+resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector/results2"
 #datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
 seed = 42
@@ -36,4 +36,4 @@ import pandas as pd
 df = pd.read_pickle("df.pkl")
 
 ev = Evaluate(rk, 80, df, df)
-print(ev.getStability())  
+print(ev.getAUC())  

@@ -37,16 +37,25 @@ class Evaluate:
 
     def getAUC(self):
         
-        clf = SVC(gamma='auto')
+        clf = SVC(gamma='auto', probability=True)
         clf.fit(self.training_x, self.training_y)
         
-        pred = clf.predict(self.testing_x)
         y = self.testing_y
-
-
-        fpr, tpr, thresholds = metrics.roc_curve(y, pred, pos_label=2)
+        pred = clf.predict_proba(self.testing_x)
+        pred = self.__getProbsPositiveClass(pred)
+        
+        fpr, tpr, thresholds = metrics.roc_curve(np.array(y, dtype=int)+1, pred, pos_label=2)
         return metrics.auc(fpr, tpr)
+
+
+    def __getProbsPositiveClass(self, pred):
+        positiveProbs = []
+
+        for prediction in pred:
+            positiveProbs.append(prediction[1])
+        return positiveProbs
 
 
     def getStability(self):
         return ki.get_kuncheva_index(self.rankings, threshold=self.threshold)
+
