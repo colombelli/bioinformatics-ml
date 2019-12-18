@@ -1,5 +1,6 @@
 oneRule <- function(df, outputPath) {
 
+
   df$class <- as.factor(df$class)
   print("Classifying with One Rule algorithm...")
   rankDf <- oneR(class ~ ., df) 
@@ -16,3 +17,4 @@ oneRule <- function(df, outputPath) {
 
   return(rankDf)
 }
+

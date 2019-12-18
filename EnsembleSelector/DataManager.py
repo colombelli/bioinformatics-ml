@@ -5,6 +5,7 @@ from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
 from os import mkdir
 
+
 class DataManager:
 
     def __init__(self, resultsPath, filePath, bags, folds, seed=None, bagTrainFraction=0.8):
@@ -98,8 +99,8 @@ class DataManager:
         numTrainingSamples = round(len(trainingFolds) * self.bagTrainFraction)
         sampleRangeSequence = np.arange(0, len(trainingFolds))
         bootstrap = []    # a list containg tuples with two elements: 
-                          # training indexes for that bag,
-                          # testing indexes for that bag                                          
+                          # training data for that bag,
+                          # testing data for that bag                                          
 
 
         for _ in range(self.bags):
@@ -119,4 +120,4 @@ class DataManager:
         return bootstrap
 
 
-
+        

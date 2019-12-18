@@ -1,7 +1,7 @@
 symUnc <- function(df, outputPath) {
 
   df$class <- as.factor(df$class)
-  dfx <- df[c(1:226), c(1:length(df)-1)]
+  dfx <- df[c(1:nrow(df)), c(1:length(df)-1)]
   dfy <- dfy <- df$class
 
 
