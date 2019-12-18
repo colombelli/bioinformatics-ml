@@ -3,6 +3,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn import metrics
 import numpy as np
+import kuncheva_index as ki
 
 class Evaluate:
 
@@ -41,10 +42,11 @@ class Evaluate:
         
         pred = clf.predict(self.testing_x)
         y = self.testing_y
-        
+
 
         fpr, tpr, thresholds = metrics.roc_curve(y, pred, pos_label=2)
         return metrics.auc(fpr, tpr)
 
 
-
+    def getStability(self):
+        return ki.get_kuncheva_index(self.rankings, threshold=self.threshold)

@@ -35,5 +35,5 @@ rankings.close()
 import pandas as pd
 df = pd.read_pickle("df.pkl")
 
-ev = Evaluate(rk, 15, df, df)
-print(ev.getAUC())
+ev = Evaluate(rk, 80, df, df)
+print(ev.getStability())  
