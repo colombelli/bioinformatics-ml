@@ -109,19 +109,18 @@ class EFS:
             aggregatedRanking[gene] = 0
 
         for ranking in self.rankings:
-            for gene in ranking.index.values:   
-                aggregatedRanking[0] += ranking.loc[gene, 'rank']
+            for gene in ranking.index.values: 
+                aggregatedRanking[gene] += ranking.loc[gene, 'rank']
 
         num_rankings = len(self.rankings)
         for gene, ranking in aggregatedRanking.items():
             aggregatedRanking[gene] /= num_rankings 
 
 
-        finalRanking = pd.DataFrame.from_dict(aggregatedRanking)
-        #finalRanking.sort_values(by='')
-        print(finalRanking)
-        input(' ?')
-        return 0
+        finalRanking = pd.DataFrame.from_dict(aggregatedRanking, orient='index')
+        finalRanking.columns = ['rank']
+       
+        return finalRanking.sort_values(by='rank')
  
 
     def __unweightedAggregation(self):
