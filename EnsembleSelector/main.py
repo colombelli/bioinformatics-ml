@@ -10,7 +10,6 @@ bags = 30
 folds = 10
 
 
-
 chosenFS = {
             "relief": False,
             "gainRatio": True,
@@ -19,13 +18,13 @@ chosenFS = {
             "svmRFE": False
         }         
 
-"""
+
 dm = DataManager(resultsPath, datasetPath, bags, folds, seed)
 
 efs = EFS(dm, chosenFS)
 efs.selectFeatures()
-"""
 
+"""
 from Evaluate import Evaluate
 import pickle
 rankings = open('rankings.pkl', 'rb')      
@@ -37,3 +36,4 @@ df = pd.read_pickle("df.pkl")
 
 ev = Evaluate(rk, 80, df, df)
 print(ev.getAUC())  
+"""

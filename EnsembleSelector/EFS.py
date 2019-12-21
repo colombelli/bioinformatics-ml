@@ -34,7 +34,7 @@ class EFS:
                 print("Bag: ", idx+1, "\n")
 
                 self.__buildRanks(bag["training"])
-                bagsRankings.append(self.__unweightedAggregation())
+                bagsRankings.append(self.__meanAggregation())
                 self.rankings = []
 
             finalRanking = self.__weightedAggregation(bagsRankings)
@@ -96,6 +96,34 @@ class EFS:
 
 
     
+    def __meanAggregation(self):
+        
+        aggregatedRanking = {}  # it's a dictionary where the keys 
+                                # represent the genes and its values 
+                                # are, at first, the sum of the ranking
+                                # positions and, by the end, the mean
+                                # value of the rankings 
+
+
+        for gene in self.rankings[0].index.values:
+            aggregatedRanking[gene] = 0
+
+        for ranking in self.rankings:
+            for gene in ranking.index.values:   
+                aggregatedRanking[0] += ranking.loc[gene, 'rank']
+
+        num_rankings = len(self.rankings)
+        for gene, ranking in aggregatedRanking.items():
+            aggregatedRanking[gene] /= num_rankings 
+
+
+        finalRanking = pd.DataFrame.from_dict(aggregatedRanking)
+        #finalRanking.sort_values(by='')
+        print(finalRanking)
+        input(' ?')
+        return 0
+ 
+
     def __unweightedAggregation(self):
         raise Exception('This method must be implemented')
         return 0

@@ -4,6 +4,7 @@ import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
 from os import mkdir
+import sys
 
 
 class DataManager:
@@ -24,8 +25,12 @@ class DataManager:
         self.__calculateFolds()
 
         self.resultsPath = resultsPath
-        self.__createResultsDir()
-
+        try:
+            self.__createResultsDir()
+        except:
+            print("Provided directory already created, files will be replaced.")
+            if input("Continue? y/n ") == "n":
+                sys.exit()
 
 
     def __createResultsDir(self):
