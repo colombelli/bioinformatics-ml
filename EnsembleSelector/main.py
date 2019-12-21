@@ -1,5 +1,6 @@
 from EFS import EFS
 from DataManager import DataManager
+import time 
 
 datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
 resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector/results2"
@@ -18,11 +19,14 @@ chosenFS = {
             "svmRFE": False
         }         
 
-
+startTime = time.time()
 dm = DataManager(resultsPath, datasetPath, bags, folds, seed)
 
 efs = EFS(dm, chosenFS)
 efs.selectFeatures()
+
+endTime = time.time()
+print(endTime - startTime)
 
 """
 from Evaluate import Evaluate
