@@ -12,7 +12,7 @@ oneRule <- function(df, outputPath) {
   rankDf["attr_importance"] <- NULL
 
 
-  print("Saving rank...")
+  print("Saving ranking...")
   saveRDS(rankDf, outputPath)
 
   return(rankDf)

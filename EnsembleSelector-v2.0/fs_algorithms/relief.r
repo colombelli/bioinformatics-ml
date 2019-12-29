@@ -12,7 +12,7 @@ relief <- function(df, outputPath) {
   rankDf["attScores"] <- NULL
 
 
-  print("Saving rank...")
+  print("Saving ranking...")
   saveRDS(rankDf, outputPath)
 
   return(rankDf)
