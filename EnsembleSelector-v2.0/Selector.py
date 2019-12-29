@@ -1,6 +1,6 @@
 from DataManager import DataManager as dm
 import rpy2.robjects as robjects
-from fs_algorithms.svm_rfe import svmRFE
+import importlib
 
 class FSelector:
 
@@ -25,20 +25,22 @@ class RSelector(FSelector):
         call = "./fs_algorithms/" + self.script_name + ".r"
         robjects.r.source(call)
 
-        ranking = robjects.r[self.selector](dataframe, output_path+self.rds_name)
+        ranking = robjects.r[self.selector](dataframe, output_path+self.rds_name+".rds")
         ranking = dm.r_to_pandas(ranking)
 
         robjects.r['rm']('list = ls()')
         return ranking
 
 
-class SVMRFE(FSelector):
+class PySelector(FSelector):
+
+    def __init__(self, rds_name, script_name, selector = None):
+        FSelector.__init__(self, rds_name, script_name, selector)
+        self.py_selection = importlib.import_module("fs_algorithms."+script_name).select
 
     def select(self, dataframe, output_path):
-        print("Using SVM-RFE...")
-        ranking = svmRFE(dataframe)
-            
-        ranking = dm.pandas_to_r(ranking)
+        ranking = self.py_selection(dataframe)
+        
         print("Saving data...")
-        robjects.r['saveRDS'](ranking, output_path+self.rds_name)
+        robjects.r['saveRDS'](dm.pandas_to_r(ranking), output_path+self.rds_name+".rds")
         return ranking

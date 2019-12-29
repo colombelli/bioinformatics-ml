@@ -1,11 +1,11 @@
 from Selector import RSelector
-from Selector import SVMRFE
+from Selector import PySelector
 from DataManager import DataManager
 import rpy2.robjects.packages as rpackages
 
 
 datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
-resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results"
+resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results/"
 #datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
 rpackages.importr('CORElearn')
@@ -30,6 +30,7 @@ chosenFS = {
 dm = DataManager(resultsPath, datasetPath, bags, folds, seed)
 bootstrap = dm.getBootStrap(1)
 df = bootstrap[0]["training"]
+#selector = PySelector("svm", "svm_rfe")
 selector = RSelector("gr", "gain-ratio-cpp", "gainRatio")
 
 print(selector.select(df, resultsPath))

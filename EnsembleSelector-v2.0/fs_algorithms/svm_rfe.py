@@ -2,7 +2,7 @@ from sklearn.feature_selection import RFE
 from sklearn.svm import SVR
 import pandas as pd
 
-def svmRFE(df):
+def select(df):
     X = df.iloc[0:, 0:-1]
     y = df.iloc[:, -1]
 
