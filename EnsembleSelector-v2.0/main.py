@@ -5,18 +5,18 @@ from Aggregator import Aggregator
 import rpy2.robjects.packages as rpackages
 
 
-datasetPath = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
-resultsPath = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results/"
-#datasetPath = "/home/colombelli/Documents/datasets/merged80Samples.rds"
+dataset_path = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
+results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results/"
+#dataset_path = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
 rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
-rpackages.importr('FSelector')
+#rpackages.importr('FSelector')
 
 
-seed = 42
-bags = 30
-folds = 10
+seed = 43
+num_bootstraps = 30
+num_folds = 10
 
 
 chosenFS = {
@@ -27,8 +27,10 @@ chosenFS = {
             "svmRFE": False
         }         
 
+dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 
-dm = DataManager(resultsPath, datasetPath, bags, folds, seed)
+print(len(dm.folds))
+"""
 bootstrap = dm.getBootStrap(1)
 df = bootstrap[0]["training"]
 #selector = PySelector("svm", "svm_rfe")
@@ -37,11 +39,4 @@ ranking1 = selector.select(df, resultsPath)
 
 selector2 = RSelector("su", "symmetrical-uncertainty", "symUnc")
 ranking2 = selector2.select(df, resultsPath)
-
-aggregator = Aggregator("mean")
-print("\n\n#########")
-print(ranking1)
-print("\n\n#########")
-print(ranking2)
-print("\n\n#########")
-print(aggregator.aggregate([ranking1, ranking2]))
+"""

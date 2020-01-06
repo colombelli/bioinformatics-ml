@@ -1,93 +1,97 @@
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import KFold
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
 from os import mkdir
 import sys
+import pickle
 
 
 class DataManager:
 
-    def __init__(self, resultsPath, filePath, bags, folds, seed=None, bagTrainFraction=0.8):
+    def __init__(self, results_path, file_path, num_bootstraps, 
+                num_folds, seed):
         
         self.seed = seed
         np.random.seed(self.seed)
 
-        self.filePath = filePath
-        self.bags = bags
-        self.folds = folds
-        self.bagTrainFraction = bagTrainFraction
+        self.file_path = file_path
+        self.num_bootstraps = num_bootstraps
+        self.num_folds = num_folds
 
-        self.rDF = self.__loadRDS()
-        self.pdDF = self.r_to_pandas(self.rDF)
-        
-        self.__calculateFolds()
+        self.r_df = self.__load_RDS()
+        self.pd_df = self.r_to_pandas(self.r_df)
 
-        self.resultsPath = resultsPath
+        self.results_path = results_path
         try:
-            self.__createResultsDir()
+            self.__create_results_dir()
         except:
             print("Given directory already created, files will be replaced.")
-            if input("Continue? y/n ") == "n":
+            if input("Input c to cancel or any other key to continue... ") == "c":
                 sys.exit()
 
+        self.folds = None
+        self.__calculate_folds()
+        self.__save_folds()
 
-    def __createResultsDir(self):
-        print("Creating result directory...")
-        mkdir(self.resultsPath)
 
-        for i in range(1, self.folds+1):
-            foldDir = self.resultsPath+"/fold_"+str(i)
-            mkdir(foldDir)
+    def __create_results_dir(self):
+        print("Creating results directory...")
+        mkdir(self.results_path)
 
-            for j in range(1, self.bags+1):
-                bagDir = foldDir + "/bag_"+str(j)
-                mkdir(bagDir)
+        for i in range(1, self.num_folds+1):
+            fold_dir = self.results_path+"/fold_"+str(i)
+            mkdir(fold_dir)
+
+            for j in range(1, self.num_bootstraps+1):
+                bag_dir = fold_dir + "/bootstrap_"+str(j)
+                mkdir(bag_dir)
 
 
     
-    def __loadRDS(self):
+    def __load_RDS(self):
         
         print("Loading dataset...")
-        readRDS = robjects.r['readRDS']
-        return readRDS(self.filePath)
+        read_RDS = robjects.r['readRDS']
+        return read_RDS(self.file_path)
 
 
     @classmethod
     def pandas_to_r(self, df):
-
         with localconverter(robjects.default_converter + pandas2ri.converter):
-            rFromPandasDF = robjects.conversion.py2rpy(df)
-        return rFromPandasDF
+            r_from_pandas_df = robjects.conversion.py2rpy(df)
+        return r_from_pandas_df
 
 
     @classmethod
     def r_to_pandas(self, df):
-        
         with localconverter(robjects.default_converter + pandas2ri.converter):
-                pdFromRDF = robjects.conversion.rpy2py(df)
-        return pdFromRDF
+                pandas_from_r_df = robjects.conversion.rpy2py(df)
+        return pandas_from_r_df
 
 
 
-    def __calculateFolds(self):
+    def __calculate_folds(self):
 
-        samplesPerFold = len(self.pdDF) // self.folds
+        k = self.num_folds
+        kf = KFold(k, shuffle=True, random_state=self.seed)
+        self.folds = list(kf.split(self.pd_df))
+        return
 
-        self.foldIdx = {}
-        previousFold = 0
-
-        for f in range(1, self.folds+1):
-            self.foldIdx[f] = list(range(previousFold, previousFold + samplesPerFold))
-            previousFold = previousFold + samplesPerFold
+    
+    def __save_folds(self):
         
-        # fix last fold (which should get the remaining data without wasting 
-        # it because of the round operation //)
-        lastFoldFirstIdx = self.foldIdx[self.folds][0]
-        self.foldIdx[self.folds] = list(range(lastFoldFirstIdx, len(self.pdDF)))
+        file = self.results_path + "fold_sampling.pkl"
+        with open(file, 'wb') as f:
+            pickle.dump(self.folds, f)
+        return
 
 
+
+
+"""
     def __setTestFoldSubset(self, k):
 
         kIdx = self.foldIdx[k]
@@ -125,6 +129,6 @@ class DataManager:
             
 
         return bootstrap
-
+"""
 
         
