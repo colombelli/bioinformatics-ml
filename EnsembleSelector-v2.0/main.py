@@ -26,10 +26,33 @@ chosenFS = {
             "oneR": False,
             "svmRFE": False
         }         
-
+"""
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+b0 = dm.get_bootstraps()
+dm.save_bootstraps(b0)
+dm.current_fold_iteration = 1
+b1 = dm.get_bootstraps()
+dm.current_fold_iteration = 2
+b2 = dm.get_bootstraps()
 
-print(len(dm.folds))
+print(b0[0])
+print(b0[1])
+print('#############')
+print(b1[0])
+print(b1[1])
+print('#############')
+print(b2[0])
+print(b2[1])
+print('#############')
+"""
+
+import pickle
+file = results_path + "fold_1/bootstrap_1/bootstrap_sampling.pkl" 
+with open(file, 'rb') as f:
+    bs = pickle.load(f)
+
+print(bs[0])
+print(bs[1])
 """
 bootstrap = dm.getBootStrap(1)
 df = bootstrap[0]["training"]

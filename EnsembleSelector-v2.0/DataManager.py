@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
+from sklearn.utils import resample
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
@@ -9,11 +10,14 @@ import sys
 import pickle
 
 
+MAX_SEED = 9999999
+
 class DataManager:
 
     def __init__(self, results_path, file_path, num_bootstraps, 
-                num_folds, seed):
+                num_folds, seed, bs_training_fraction=0.9):
         
+        self.bs_training_fraction = bs_training_fraction
         self.seed = seed
         np.random.seed(self.seed)
 
@@ -36,6 +40,10 @@ class DataManager:
         self.__calculate_folds()
         self.__save_folds()
 
+        self.current_fold_iteration = 0
+        self.current_bootstraps = None
+
+
 
     def __create_results_dir(self):
         print("Creating results directory...")
@@ -56,6 +64,7 @@ class DataManager:
         print("Loading dataset...")
         read_RDS = robjects.r['readRDS']
         return read_RDS(self.file_path)
+
 
 
     @classmethod
@@ -89,6 +98,39 @@ class DataManager:
         return
 
 
+    # Output: A list of tuples containing n tuples representing the n 
+    #           (bootstraps, out-of-bag) samples
+    def get_bootstraps(self):
+        
+        training_data = self.folds[self.current_fold_iteration][0]
+        num_bs_samples = round(len(training_data) * self.bs_training_fraction)
+        
+        bootstraps_oob = []
+        for _ in range(self.num_bootstraps):
+            bootstrap = resample(training_data, replace=True, n_samples=num_bs_samples,
+                                random_state=self.seed)
+            oob = np.array([x for x in training_data if x not in bootstrap])
+            bootstraps_oob.append((bootstrap, oob))
+            self.update_seed()  # in order to keep deterministically (but "randomly") sampling
+
+        return bootstraps_oob
+
+
+    def save_bootstraps(self, bootstraps):
+        
+        path = self.results_path + "fold_" + str(self.current_fold_iteration+1) + "/bootstrap_"
+        for i, bootstrap in enumerate(bootstraps):
+            file = path + str(i+1) + "/bootstrap_sampling.pkl" 
+            with open(file, 'wb') as f:
+                pickle.dump(bootstrap, f)
+        return
+
+    
+    def update_seed(self):
+        self.seed = np.random.randint(0, high=MAX_SEED)
+    
+
+
 
 
 """
@@ -99,36 +141,5 @@ class DataManager:
 
         return
 
-
-    def getBootStrap(self, k):
-        
-        self.__setTestFoldSubset(k)
-
-        trainingFolds = pd.concat([self.pdDF, self.testingFoldData])
-        trainingFolds = trainingFolds.drop_duplicates(keep=False, inplace=False)
-
-        numTrainingSamples = round(len(trainingFolds) * self.bagTrainFraction)
-        sampleRangeSequence = np.arange(0, len(trainingFolds))
-        bootstrap = []    # a list containg tuples with two elements: 
-                          # training data for that bag,
-                          # testing data for that bag                                          
-
-
-        for _ in range(self.bags):
-            
-            np.random.shuffle(sampleRangeSequence)
-
-            trainingIdx =  sampleRangeSequence[0:numTrainingSamples]
-            trainingDataBag = trainingFolds.iloc[trainingIdx]
-
-            testingIdx = sampleRangeSequence[numTrainingSamples:]
-            testingDataBag = trainingFolds.iloc[testingIdx]
-            
-            bootstrap.append({"training": trainingDataBag, 
-                              "testing": testingDataBag})
-            
-
-        return bootstrap
 """
-
         
