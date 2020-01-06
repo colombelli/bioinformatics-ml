@@ -128,6 +128,8 @@ class DataManager:
     
     def update_seed(self):
         self.seed = np.random.randint(0, high=MAX_SEED)
+        with open(self.results_path+"seed.pkl", 'wb') as f:
+                pickle.dump(self.seed, f)
     
 
 

@@ -47,12 +47,10 @@ print('#############')
 """
 
 import pickle
-file = results_path + "fold_1/bootstrap_1/bootstrap_sampling.pkl" 
+file = results_path + "seed.pkl" 
 with open(file, 'rb') as f:
-    bs = pickle.load(f)
-
-print(bs[0])
-print(bs[1])
+    seed = pickle.load(f)
+print(seed)
 """
 bootstrap = dm.getBootStrap(1)
 df = bootstrap[0]["training"]
