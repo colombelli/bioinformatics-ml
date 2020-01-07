@@ -1,17 +1,31 @@
-class EFS:
+from Selector import PySelector, RSelector
+from Aggregator import Aggregator
 
+class EFS:
+    
+    # fs_methods: a tuple (script name, language which the script was written, .rds output name)
     def __init__(self, data_manager, fs_methods, first_aggregator, second_aggregator):
 
         self.dm = data_manager
-        self.fs_methods = fs_methods
+        self.fs_methods = self.__generate_fselectors_object(fs_methods)
+        self.fst_aggregator = Aggregator(first_aggregator, self.dm)
+        self.snd_aggregator = Aggregator(second_aggregator, self.dm)
         
 
+    def __generate_fselectors_object(self, methods):
+        
+        fs_methods = []
+        for script, language, rds_name in methods:
+            if language == "python":
+                fs_methods.append(
+                    PySelector(rds_name, script)
+                )
+            elif language == "r":
+                fs_methods.append(
+                    RSelector(rds_name, script)
+                )
 
-
-    #def __generate_fselectors_object(self, methods):
-#
- #       for method in methods:
-
+        return fs_methods
 
 """
     def selectFeatures(self):
