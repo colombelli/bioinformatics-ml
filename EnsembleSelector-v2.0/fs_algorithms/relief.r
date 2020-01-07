@@ -1,4 +1,4 @@
-relief <- function(df, outputPath) {
+select <- function(df, outputPath) {
 
   df$class <- as.factor(df$class)
   print("Reliefing... :)")

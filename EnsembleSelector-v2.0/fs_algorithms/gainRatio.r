@@ -1,4 +1,4 @@
-gainRatio <- function(df, outputPath) {
+select <- function(df, outputPath) {
   
   df$class <- as.factor(df$class)
   dfx <- df[c(1:nrow(df)), c(1:length(df)-1)]

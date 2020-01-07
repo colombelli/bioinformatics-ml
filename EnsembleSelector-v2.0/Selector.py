@@ -9,8 +9,7 @@ class FSelector:
     def __init__(self, rds_name, script_name):
 
         self.rds_name = rds_name
-        self.script_name = script_name  # the R function performing the selection 
-                                        # must have the same name of the script
+        self.script_name = script_name
 
 
 class RSelector(FSelector):
@@ -21,7 +20,7 @@ class RSelector(FSelector):
         call = "./fs_algorithms/" + self.script_name + ".r"
         robjects.r.source(call)
 
-        ranking = robjects.r[self.script_name](dataframe, output_path+self.rds_name+".rds")
+        ranking = robjects.r["select"](dataframe, output_path+self.rds_name+".rds")
         ranking = dm.r_to_pandas(ranking)
 
         robjects.r['rm']('list = ls()')
