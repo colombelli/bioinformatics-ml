@@ -21,7 +21,9 @@ fs_methods = [
     ("symmetrical-uncertainty", "r", "su")
 ]
 
-aggregator = "mean.py"
+aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 ensemble = EFS(dm, fs_methods, aggregator, aggregator)
+
+ensemble.select_features()

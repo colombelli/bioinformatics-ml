@@ -34,7 +34,7 @@ class EFS:
     def select_features(self):
 
         for i, (training_fold, testing_fold) in enumerate(self.dm.folds):
-            print("\n\n################# Fold iteration:", i, "#################")
+            print("\n\n################# Fold iteration:", i+1, "#################")
             self.dm.current_fold_iteration = i
             self.dm.update_bootstraps()
 
@@ -42,11 +42,13 @@ class EFS:
             for j, (bootstrap, oob_observation) in enumerate(self.dm.current_bootstraps):
                 print("\n\nBootstrap: ", j+1, "\n")
                 output_path = self.dm.get_output_path(i, j)
+                bootstrap_data = self.dm.pd_df.iloc[bootstrap]
 
                 fst_layer_rankings = []
-                for fs_method in self.fs_methods:
+                for fs_method in self.fs_methods:   
+                    print("")
                     fst_layer_rankings.append(
-                        fs_method.select(bootstrap, output_path)
+                        fs_method.select(bootstrap_data, output_path)
                     )
                 
                 fs_aggregation = self.fst_aggregator.aggregate(fst_layer_rankings)
