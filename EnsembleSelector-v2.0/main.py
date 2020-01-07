@@ -45,19 +45,10 @@ print(b2[0])
 print(b2[1])
 print('#############')
 """
-
+"""
 import pickle
 file = results_path + "seed.pkl" 
 with open(file, 'rb') as f:
     seed = pickle.load(f)
 print(seed)
-"""
-bootstrap = dm.getBootStrap(1)
-df = bootstrap[0]["training"]
-#selector = PySelector("svm", "svm_rfe")
-selector = RSelector("gr", "gain-ratio-cpp", "gainRatio")
-ranking1 = selector.select(df, resultsPath)
-
-selector2 = RSelector("su", "symmetrical-uncertainty", "symUnc")
-ranking2 = selector2.select(df, resultsPath)
 """

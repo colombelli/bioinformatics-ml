@@ -42,6 +42,11 @@ class DataManager:
 
         self.current_fold_iteration = 0
         self.current_bootstraps = None
+        self.fst_layer_rankings = []    # derived from the single FS methods
+        self.snd_layer_rankings = []    # derived from the first aggregation (between single FS methods)
+                                        # this could be the same as the first if just one method is chosen
+                                        # i.e., a homogenous ensemble is performed
+        # the second (and final) aggregation will be saved on hd
 
 
 

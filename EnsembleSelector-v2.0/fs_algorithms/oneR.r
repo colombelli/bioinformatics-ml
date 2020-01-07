@@ -1,4 +1,4 @@
-oneRule <- function(df, outputPath) {
+oneR <- function(df, outputPath) {
 
 
   df$class <- as.factor(df$class)
