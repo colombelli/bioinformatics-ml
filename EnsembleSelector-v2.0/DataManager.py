@@ -42,11 +42,6 @@ class DataManager:
 
         self.current_fold_iteration = 0
         self.current_bootstraps = None
-        self.fst_layer_rankings = []    # derived from the single FS methods
-        self.snd_layer_rankings = []    # derived from the first aggregation (between single FS methods)
-                                        # this could be the same as the first if just one method is chosen
-                                        # i.e., a homogenous ensemble is performed
-        # the second (and final) aggregation will be saved on hd
 
 
 
@@ -103,9 +98,14 @@ class DataManager:
         return
 
 
+    def update_bootstraps(self):
+        self.current_bootstraps = self.__get_bootstraps()
+        self.__save_bootstraps()
+
+
     # Output: A list of tuples containing n tuples representing the n 
     #           (bootstraps, out-of-bag) samples
-    def get_bootstraps(self):
+    def __get_bootstraps(self):
         
         training_data = self.folds[self.current_fold_iteration][0]
         num_bs_samples = round(len(training_data) * self.bs_training_fraction)
@@ -121,10 +121,10 @@ class DataManager:
         return bootstraps_oob
 
 
-    def save_bootstraps(self, bootstraps):
-        
+    def __save_bootstraps(self):
+
         path = self.results_path + "fold_" + str(self.current_fold_iteration+1) + "/bootstrap_"
-        for i, bootstrap in enumerate(bootstraps):
+        for i, bootstrap in enumerate(self.current_bootstraps):
             file = path + str(i+1) + "/bootstrap_sampling.pkl" 
             with open(file, 'wb') as f:
                 pickle.dump(bootstrap, f)
@@ -135,18 +135,25 @@ class DataManager:
         self.seed = np.random.randint(0, high=MAX_SEED)
         with open(self.results_path+"seed.pkl", 'wb') as f:
                 pickle.dump(self.seed, f)
-    
 
 
-
-
-"""
-    def __setTestFoldSubset(self, k):
-
-        kIdx = self.foldIdx[k]
-        self.testingFoldData = self.pdDF.iloc[kIdx]
-
-        return
-
-"""
+    def get_output_path(self, fold_iteration=None, bootstrap_iteration=None):
         
+        path = self.results_path
+
+        if fold_iteration is None:
+            return path
+        
+        path += "fold_" + str(fold_iteration+1) + "/"
+        if bootstrap_iteration is None:
+            return path
+        
+        path += "bootstrap_" + str(bootstrap_iteration+1) + "/"
+        return path
+
+
+    def save_aggregated_ranking(self, ranking, output_path):
+        file = output_path + "aggregated_ranking.rds"
+        rds_format = self.pandas_to_r(ranking)
+        robjects.r['saveRDS'](rds_format, file)
+        return

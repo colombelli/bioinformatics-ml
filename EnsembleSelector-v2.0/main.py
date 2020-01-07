@@ -1,7 +1,5 @@
-from Selector import RSelector
-from Selector import PySelector
 from DataManager import DataManager
-from Aggregator import Aggregator
+from EFS import EFS
 import rpy2.robjects.packages as rpackages
 
 
@@ -11,44 +9,19 @@ results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2
 
 rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
-#rpackages.importr('FSelector')
+rpackages.importr('FSelector')
 
 
 seed = 43
-num_bootstraps = 30
-num_folds = 10
+num_bootstraps = 10
+num_folds = 3
 
+fs_methods = [
+    ("gain-ratio", "r", "gr"),
+    ("symmetrical-uncertainty", "r", "su")
+]
 
-chosenFS = {
-            "relief": False,
-            "gainRatio": True,
-            "symmetricalUncertainty": True,
-            "oneR": False,
-            "svmRFE": False
-        }         
-"""
+aggregator = "mean.py"
+
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
-b0 = dm.get_bootstraps()
-dm.save_bootstraps(b0)
-dm.current_fold_iteration = 1
-b1 = dm.get_bootstraps()
-dm.current_fold_iteration = 2
-b2 = dm.get_bootstraps()
-
-print(b0[0])
-print(b0[1])
-print('#############')
-print(b1[0])
-print(b1[1])
-print('#############')
-print(b2[0])
-print(b2[1])
-print('#############')
-"""
-"""
-import pickle
-file = results_path + "seed.pkl" 
-with open(file, 'rb') as f:
-    seed = pickle.load(f)
-print(seed)
-"""
+ensemble = EFS(dm, fs_methods, aggregator, aggregator)
