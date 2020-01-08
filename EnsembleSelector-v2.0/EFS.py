@@ -69,12 +69,11 @@ class EFS:
         with open(self.dm.results_path, 'rb') as f:
                 folds_sampling = pickle.load(f)
         
-        self.__compute_aucs(final_rankings, thresholds, folds_sampling)
-        
+        aucs = self.__compute_aucs(final_rankings, thresholds, folds_sampling)
+        stabilities = self.__compute_stabilities(final_rankings, thresholds)
 
-        
+        return aucs, stabilities
 
-        return
     
 
     def __get_final_rankings(self):

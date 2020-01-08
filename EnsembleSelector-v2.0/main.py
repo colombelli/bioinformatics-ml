@@ -13,7 +13,7 @@ rpackages.importr('FSelector')
 
 
 seed = 43
-num_bootstraps = 10
+num_bootstraps = 5
 num_folds = 3
 
 fs_methods = [
@@ -26,4 +26,11 @@ aggregator = "mean"
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 ensemble = EFS(dm, fs_methods, aggregator, aggregator)
 
-ensemble.select_features()
+#ensemble.select_features()
+aucs, stabilities = ensemble.evaluate_final_rankings([0.1, 0.5, 1, 2, 5])
+
+print("\n\nAUCs:")
+print(aucs)
+
+print("\n\nStabilities:")
+print(stabilities)
