@@ -25,7 +25,7 @@ class DataManager:
         self.num_bootstraps = num_bootstraps
         self.num_folds = num_folds
 
-        self.r_df = self.__load_RDS()
+        self.r_df = self.load_RDS(self.file_path)
         self.pd_df = self.r_to_pandas(self.r_df)
 
         self.results_path = results_path
@@ -58,13 +58,12 @@ class DataManager:
                 mkdir(bag_dir)
 
 
-    
-    def __load_RDS(self):
+    @classmethod
+    def load_RDS(self, file_path):
         
         print("Loading dataset...")
         read_RDS = robjects.r['readRDS']
-        return read_RDS(self.file_path)
-
+        return read_RDS(file_path)
 
 
     @classmethod
