@@ -1,5 +1,6 @@
 from DataManager import DataManager
 from EFS import EFS
+from Evaluator import Evaluator
 import rpy2.robjects.packages as rpackages
 
 
@@ -24,10 +25,10 @@ fs_methods = [
 aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
-ensemble = EFS(dm, fs_methods, aggregator, aggregator)
+#ensemble = EFS(dm, fs_methods, aggregator, aggregator)
+ev = Evaluator(dm, [0.1, 0.5, 1, 2, 5])
 
-#ensemble.select_features()
-aucs, stabilities = ensemble.evaluate_final_rankings([0.1, 0.5, 1, 2, 5])
+aucs, stabilities = ev.evaluate_final_rankings()
 
 print("\n\nAUCs:")
 print(aucs)

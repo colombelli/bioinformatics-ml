@@ -61,7 +61,7 @@ class DataManager:
     @classmethod
     def load_RDS(self, file_path):
         
-        print("Loading dataset...")
+        print("Loading data...")
         read_RDS = robjects.r['readRDS']
         return read_RDS(file_path)
 
