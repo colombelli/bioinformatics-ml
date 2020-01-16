@@ -15,9 +15,8 @@ MAX_SEED = 9999999
 class DataManager:
 
     def __init__(self, results_path, file_path, num_bootstraps, 
-                num_folds, seed, bs_training_fraction=0.9):
+                num_folds, seed):
         
-        self.bs_training_fraction = bs_training_fraction
         self.seed = seed
         np.random.seed(self.seed)
 
@@ -107,7 +106,7 @@ class DataManager:
     def __get_bootstraps(self):
         
         training_data = self.folds[self.current_fold_iteration][0]
-        num_bs_samples = round(len(training_data) * self.bs_training_fraction)
+        num_bs_samples = len(training_data)
         
         bootstraps_oob = []
         for _ in range(self.num_bootstraps):

@@ -25,9 +25,11 @@ fs_methods = [
 aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
-#ensemble = EFS(dm, fs_methods, aggregator, aggregator)
-ev = Evaluator(dm, [0.1, 0.5, 1, 2, 5])
 
+ensemble = EFS(dm, fs_methods, aggregator, aggregator)
+ensemble.select_features()
+
+ev = Evaluator(dm, [0.1, 0.5, 1, 2, 5])
 aucs, stabilities = ev.evaluate_final_rankings()
 
 print("\n\nAUCs:")
