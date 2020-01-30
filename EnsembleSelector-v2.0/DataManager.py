@@ -1,6 +1,6 @@
+from StratifiedKFold import StratifiedKFold
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import KFold
 from sklearn.utils import resample
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
@@ -83,8 +83,8 @@ class DataManager:
     def __calculate_folds(self):
 
         k = self.num_folds
-        kf = KFold(k, shuffle=True, random_state=self.seed)
-        self.folds = list(kf.split(self.pd_df))
+        skf = StratifiedKFold(self.seed, self.pd_df, "class", k)
+        self.folds = list(skf.split())
         return
 
     

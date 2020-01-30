@@ -42,7 +42,7 @@ class EFS:
             for j, (bootstrap, _) in enumerate(self.dm.current_bootstraps):
                 print("\n\nBootstrap: ", j+1, "\n")
                 output_path = self.dm.get_output_path(i, j)
-                bootstrap_data = self.dm.pd_df.iloc[bootstrap]
+                bootstrap_data = self.dm.pd_df.loc[bootstrap]
 
                 fst_layer_rankings = []
                 for fs_method in self.fs_methods:   

@@ -4,7 +4,7 @@ from Evaluator import Evaluator
 import rpy2.robjects.packages as rpackages
 
 
-dataset_path = "/home/colombelli/Documents/datasets/iqrSelectedGenes.rds"
+dataset_path = "/home/colombelli/Documents/datasets/iqrSelectedGenesAllSamples.rds"
 results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results/"
 #dataset_path = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
@@ -13,7 +13,7 @@ rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 
 
-seed = 43
+seed = 42
 num_bootstraps = 5
 num_folds = 3
 
