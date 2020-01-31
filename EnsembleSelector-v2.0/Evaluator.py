@@ -30,6 +30,8 @@ class Evaluator:
             int_thresholds.append(
                     int(dataset_len * th/100)
                 )
+        print("\nNumber of genes to select given the threshold percentages:")
+        print(int_thresholds, "\n\n")
         return int_thresholds
 
 
@@ -66,9 +68,11 @@ class Evaluator:
         print("\nCOMMON ELEMENT?")
         print(not set(tr).isdisjoint(ts))
         print("\ntesting with two lists one common element to see if it works:")
-        l1 = ['TCGA.BH.A0B3.11B.21R.A089.07', 'TCGA.C8.A1HO.01A.11R.A13Q.07',
+        l1 = [
+            'TCGA.BH.A0B3.11B.21R.A089.07', 'TCGA.C8.A1HO.01A.11R.A13Q.07',
             'TCGA.B6.A402.01A.11R.A239.07', 'TCGA.BH.A0BT.01A.11R.A12P.07',
-            'TCGA.A7.A13D.01A.13R.A277.07', 'TCGA.AR.A0TU.01A.31R.A109.07']
+            'TCGA.A7.A13D.01A.13R.A277.07', 'TCGA.AR.A0TU.01A.31R.A109.07'
+        ]
         l2 = [
             'TCGA.BH.A0E1.11A.13R.A089.07', 'TCGA.AN.A041.01A.11R.A034.07',
             'TCGA.BH.A0B8.01A.21R.A056.07', 'TCGA.AO.A03V.01A.11R.A115.07',

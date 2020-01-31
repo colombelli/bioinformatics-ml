@@ -6,7 +6,6 @@ import rpy2.robjects.packages as rpackages
 
 dataset_path = "/home/colombelli/Documents/datasets/iqrSelectedGenesAllSamples.rds"
 results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results/"
-#dataset_path = "/home/colombelli/Documents/datasets/merged80Samples.rds"
 
 rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
@@ -26,8 +25,8 @@ aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 
-#ensemble = EFS(dm, fs_methods, aggregator, aggregator)
-#ensemble.select_features()
+ensemble = EFS(dm, fs_methods, aggregator, aggregator)
+ensemble.select_features()
 
 ev = Evaluator(dm, [0.1, 0.5, 1, 2, 5])
 aucs, stabilities = ev.evaluate_final_rankings()
