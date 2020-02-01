@@ -8,7 +8,7 @@ option_list = list(
               help="fraction of genes to drop. Default: 0.4", metavar="numeric")
 ); 
  
-opt_parser = OptionParser(option_list=option_list);
+opt_parser = OptionParseriqr$X(option_list=option_list);
 args = parse_args(opt_parser);
 
 

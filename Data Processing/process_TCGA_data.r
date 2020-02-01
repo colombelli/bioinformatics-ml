@@ -2,19 +2,26 @@
 # GitHub: @colombelli
 # Title: GSE62944 Data Processing
 #
-# Description:
+# Description and how to use:
 #
-# This is R script aims to automatically process ...
+# This R script aims to automatically pre-process GSE62944 related data, from TCGA.
+# In order to use it, you must have the following files (with their original names)
+# placed in the same directory:
+#
+#   -   GSM1697009_06_01_15_TCGA_24.normal_Rsubread_TPM.txt
+#   -   GSM1536837_06_01_15_TCGA_24.tumor_Rsubread_TPM.txt
+#   -   GSE62944_06_01_15_TCGA_24_Normal_CancerType_Samples.txt
+#   -   GSE62944_06_01_15_TCGA_24_CancerType_Samples.txt
 #
 #
+# After asked for input the path for GSE/GSM files, you must provide an absolute path 
+# like '/home/user/Documents/datasets/'.
 #
+# The same logic applies when inputting the directory where processed datasets and
+# boxplots will be saved. Note that you must provide an existing path.
 #
-#
-#
-#
-#
-#
-#
+# The recommended fraction of genes to select by IQR (if chosen) is 0.6.
+
 
 collectPatientIDs <- function(df) {
     
