@@ -66,6 +66,7 @@ class DataManager:
 
     @classmethod
     def pandas_to_r(self, df):
+        
         with localconverter(robjects.default_converter + pandas2ri.converter):
             r_from_pandas_df = robjects.conversion.py2rpy(df)
         return r_from_pandas_df

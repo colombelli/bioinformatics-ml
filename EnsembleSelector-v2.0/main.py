@@ -3,9 +3,8 @@ from EFS import EFS
 from Evaluator import Evaluator
 import rpy2.robjects.packages as rpackages
 
-
-dataset_path = "/home/colombelli/Documents/datasets/iqrSelectedGenesAllSamples.rds"
-results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/results/"
+dataset_path = "/home/colombelli/Documents/THCA/iqrSelectedGenes.rds"
+results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
 
 rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
@@ -13,12 +12,15 @@ rpackages.importr('FSelector')
 
 
 seed = 42
-num_bootstraps = 5
-num_folds = 3
+num_bootstraps = 50
+num_folds = 10
 
 fs_methods = [
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su")
+    ("symmetrical-uncertainty", "r", "su"),
+    ("relief", "r", "rf"),
+    ("oneR", "r", "or"),
+    ("svm_rfe", "python", "svmrfe")
 ]
 
 aggregator = "mean"

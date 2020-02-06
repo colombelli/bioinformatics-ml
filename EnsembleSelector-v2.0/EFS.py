@@ -1,6 +1,7 @@
 from Selector import PySelector, RSelector
 from Aggregator import Aggregator
 from DataManager import DataManager
+import time
 
 class EFS:
     
@@ -31,6 +32,17 @@ class EFS:
 
 
 
+
+    def end_time_and_print(self, start):
+        end = time.time()
+        hours, rem = divmod(end-start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        print("\nTime taken:")
+        print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
+        print("\n")
+        return
+
+
     def select_features(self):
 
         for i in range(self.dm.num_folds):
@@ -41,6 +53,7 @@ class EFS:
             snd_layer_rankings = []
             for j, (bootstrap, _) in enumerate(self.dm.current_bootstraps):
                 print("\n\nBootstrap: ", j+1, "\n")
+                start = time.time()
                 output_path = self.dm.get_output_path(i, j)
                 bootstrap_data = self.dm.pd_df.loc[bootstrap]
 
@@ -54,6 +67,7 @@ class EFS:
                 fs_aggregation = self.fst_aggregator.aggregate(fst_layer_rankings)
                 self.dm.save_aggregated_ranking(fs_aggregation, output_path)
                 snd_layer_rankings.append(fs_aggregation)
+                self.end_time_and_print(start)
             
             output_path = self.dm.get_output_path(fold_iteration=i)
             final_ranking = self.snd_aggregator.aggregate(snd_layer_rankings)
