@@ -97,33 +97,33 @@ class DataManager:
 
     @classmethod
     def encode_df(self, df):
-        for attribute in df.columns:
-            enc_attribute = self.alnum_encode(attribute)
-            df = df.rename(columns = {attribute: enc_attribute})
         
-        for sample_index_name in df.index:
-            enc_index = self.alnum_encode(sample_index_name)
-            df = df.rename(index = {sample_index_name: enc_index})
+        print("Encoding dataframe attributes...")
+        columns = []
+        for attribute in df.columns:
+            columns.append(self.alnum_encode(attribute))
+
+        df.columns = columns
         return df
 
     
     @classmethod
     def decode_df(self, df):
+
+        print("Decoding dataframe attributes...")
+        columns = []
         for attribute in df.columns:
-            dec_attribute = self.alnum_decode(attribute)
-            df = df.rename(columns = {attribute: dec_attribute})
-        
-        for sample_index_name in df.index:
-            dec_index = self.alnum_decode(sample_index_name)
-            df = df.rename(index = {sample_index_name: dec_index})  
+            columns.append(self.alnum_decode(attribute))
+
+        df.columns = columns
         return df
 
 
     @classmethod
     def save_encoded_ranking(self, encoded_ranking, file_name_and_dir):
 
-        print("Saving ranking...")
         decoded_ranking = self.decode_df(encoded_ranking)
+        print("Saving ranking...")
         r_decoded_ranking = self.pandas_to_r(decoded_ranking)
         robjects.r["saveRDS"](r_decoded_ranking, file_name_and_dir)
         return
@@ -197,10 +197,3 @@ class DataManager:
         
         path += "bootstrap_" + str(bootstrap_iteration+1) + "/"
         return path
-
-
-    def save_aggregated_ranking(self, ranking, output_path):
-        file = output_path + "aggregated_ranking.rds"
-        rds_format = self.pandas_to_r(ranking)
-        robjects.r['saveRDS'](rds_format, file)
-        return
