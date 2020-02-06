@@ -8,6 +8,7 @@ from rpy2.robjects.conversion import localconverter
 from os import mkdir
 import sys
 import pickle
+import urllib.parse
 
 
 MAX_SEED = 9999999
@@ -24,8 +25,9 @@ class DataManager:
         self.num_bootstraps = num_bootstraps
         self.num_folds = num_folds
 
-        self.r_df = self.load_RDS(self.file_path)
-        self.pd_df = self.r_to_pandas(self.r_df)
+        r_df = self.load_RDS(self.file_path)
+        self.pd_df = self.encode_df(self.r_to_pandas(r_df))
+        self.r_df = self.pandas_to_r(self.pd_df)
 
         self.results_path = results_path
         try:
@@ -78,6 +80,53 @@ class DataManager:
                 pandas_from_r_df = robjects.conversion.rpy2py(df)
         return pandas_from_r_df
 
+
+    # The above alnum encode and decode methods were taken from a StackOverflow's 
+    # topic answer. They are available in:
+    # https://stackoverflow.com/questions/32035520/how-to-encode-utf-8-strings-with-only-a-z-a-z-0-9-and-in-python
+    @classmethod
+    def alnum_encode(self, text):
+        return urllib.parse.quote(text, safe='')\
+            .replace('-', '%2d').replace('.', '%2e').replace('_', '%5f')\
+            .replace('%', '_')
+
+    @classmethod
+    def alnum_decode(self, underscore_encoded):
+        return urllib.parse.unquote(underscore_encoded.replace('_','%'), errors='strict')
+
+
+    @classmethod
+    def encode_df(self, df):
+        for attribute in df.columns:
+            enc_attribute = self.alnum_encode(attribute)
+            df = df.rename(columns = {attribute: enc_attribute})
+        
+        for sample_index_name in df.index:
+            enc_index = self.alnum_encode(sample_index_name)
+            df = df.rename(index = {sample_index_name: enc_index})
+        return df
+
+    
+    @classmethod
+    def decode_df(self, df):
+        for attribute in df.columns:
+            dec_attribute = self.alnum_decode(attribute)
+            df = df.rename(columns = {attribute: dec_attribute})
+        
+        for sample_index_name in df.index:
+            dec_index = self.alnum_decode(sample_index_name)
+            df = df.rename(index = {sample_index_name: dec_index})  
+        return df
+
+
+    @classmethod
+    def save_encoded_ranking(self, encoded_ranking, file_name_and_dir):
+
+        print("Saving ranking...")
+        decoded_ranking = self.decode_df(encoded_ranking)
+        r_decoded_ranking = self.pandas_to_r(decoded_ranking)
+        robjects.r["saveRDS"](r_decoded_ranking, file_name_and_dir)
+        return
 
 
     def __calculate_folds(self):

@@ -2,6 +2,7 @@ from Selector import PySelector, RSelector
 from Aggregator import Aggregator
 from DataManager import DataManager
 import time
+from Constants import *
 
 class EFS:
     
@@ -64,11 +65,16 @@ class EFS:
                         fs_method.select(bootstrap_data, output_path)
                     )
                 
+                print("\nAggregating Level 1 rankings...")
                 fs_aggregation = self.fst_aggregator.aggregate(fst_layer_rankings)
-                self.dm.save_aggregated_ranking(fs_aggregation, output_path)
+                self.dm.save_encoded_ranking(fs_aggregation, 
+                                            output_path+AGGREGATED_RANKING_FILE_NAME)
                 snd_layer_rankings.append(fs_aggregation)
                 self.end_time_and_print(start)
             
-            output_path = self.dm.get_output_path(fold_iteration=i)
+            file_path = self.dm.get_output_path(fold_iteration=i) + \
+                            AGGREGATED_RANKING_FILE_NAME
+            print("\nAggregating Level 2 rankings...")
             final_ranking = self.snd_aggregator.aggregate(snd_layer_rankings)
-            self.dm.save_aggregated_ranking(final_ranking, output_path)
+            self.dm.save_encoded_ranking(final_ranking, file_path)
+        return

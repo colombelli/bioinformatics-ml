@@ -1,4 +1,4 @@
-select <- function(df, outputPath) {
+select <- function(df) {
 
 
   df$class <- as.factor(df$class)
@@ -10,10 +10,6 @@ select <- function(df, outputPath) {
   rankDf <- rankDf[order(-rankDf$attr_importance),,drop=FALSE]
   rankDf["rank"] <- c(1:length(rankDf$attr_importance))
   rankDf["attr_importance"] <- NULL
-
-
-  print("Saving ranking...")
-  saveRDS(rankDf, outputPath)
 
   return(rankDf)
 }

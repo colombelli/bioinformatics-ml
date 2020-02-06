@@ -20,8 +20,10 @@ class RSelector(FSelector):
         call = "./fs_algorithms/" + self.script_name + ".r"
         robjects.r.source(call)
 
-        ranking = robjects.r["select"](dataframe, output_path+self.rds_name+".rds")
+        ranking = robjects.r["select"](dataframe)
         ranking = dm.r_to_pandas(ranking)
+        
+        dm.save_encoded_ranking(ranking, output_path+self.rds_name+".rds")
 
         robjects.r['rm']('list = ls()')
         return ranking
@@ -35,7 +37,5 @@ class PySelector(FSelector):
 
     def select(self, dataframe, output_path):
         ranking = self.py_selection(dataframe)
-        
-        print("Saving data...")
-        robjects.r['saveRDS'](dm.pandas_to_r(ranking), output_path+self.rds_name+".rds")
+        dm.save_encoded_ranking(ranking, output_path+self.rds_name+".rds")
         return ranking

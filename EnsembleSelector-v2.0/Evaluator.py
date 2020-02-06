@@ -6,6 +6,7 @@ from sklearn import metrics
 import numpy as np
 import kuncheva_index as ki
 from DataManager import DataManager
+from Constants import *
 
 class Evaluator:
 
@@ -137,7 +138,7 @@ class Evaluator:
         final_rankings = []
         for fold_iteration in range(self.dm.num_folds):
             ranking_path = self.dm.results_path + "fold_" + str(fold_iteration+1) + "/"
-            file = ranking_path + "aggregated_ranking.rds"
+            file = ranking_path + AGGREGATED_RANKING_FILE_NAME
             ranking = self.dm.load_RDS(file)
             ranking = self.dm.r_to_pandas(ranking)
             final_rankings.append(ranking)

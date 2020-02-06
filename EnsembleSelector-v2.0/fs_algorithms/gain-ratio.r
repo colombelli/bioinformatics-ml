@@ -1,4 +1,4 @@
-select <- function(df, outputPath) {
+select <- function(df) {
   
   df$class <- as.factor(df$class)
   dfx <- df[c(1:nrow(df)), c(1:length(df)-1)]
@@ -15,13 +15,6 @@ select <- function(df, outputPath) {
   rankDf$attributes <- NULL
   rankDf["rank"] <- c(1:length(rankDf$importance))
   rankDf$importance <- NULL
-
-
-  print("Saving ranking...")
-  saveRDS(rankDf, outputPath)
-
-  print("Ranking saved on:")
-  print(outputPath)
   
   return(rankDf)
 }

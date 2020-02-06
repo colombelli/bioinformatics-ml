@@ -1,0 +1,1 @@
+AGGREGATED_RANKING_FILE_NAME = "agg_ranking.rds"
