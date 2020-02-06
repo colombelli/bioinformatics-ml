@@ -1,7 +1,6 @@
 from Selector import PySelector, RSelector
 from Aggregator import Aggregator
 from DataManager import DataManager
-import time
 from Constants import *
 
 class EFS:
@@ -33,17 +32,6 @@ class EFS:
 
 
 
-
-    def end_time_and_print(self, start):
-        end = time.time()
-        hours, rem = divmod(end-start, 3600)
-        minutes, seconds = divmod(rem, 60)
-        print("\nTime taken:")
-        print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
-        print("\n")
-        return
-
-
     def select_features(self):
 
         for i in range(self.dm.num_folds):
@@ -54,7 +42,6 @@ class EFS:
             snd_layer_rankings = []
             for j, (bootstrap, _) in enumerate(self.dm.current_bootstraps):
                 print("\n\nBootstrap: ", j+1, "\n")
-                start = time.time()
                 output_path = self.dm.get_output_path(i, j)
                 bootstrap_data = self.dm.pd_df.loc[bootstrap]
 
@@ -70,11 +57,10 @@ class EFS:
                 self.dm.save_encoded_ranking(fs_aggregation, 
                                             output_path+AGGREGATED_RANKING_FILE_NAME)
                 snd_layer_rankings.append(fs_aggregation)
-                self.end_time_and_print(start)
             
             file_path = self.dm.get_output_path(fold_iteration=i) + \
                             AGGREGATED_RANKING_FILE_NAME
-            print("\nAggregating Level 2 rankings...")
+            print("\n\nAggregating Level 2 rankings...")
             final_ranking = self.snd_aggregator.aggregate(snd_layer_rankings)
             self.dm.save_encoded_ranking(final_ranking, file_path)
         return
