@@ -5,7 +5,9 @@ import rpy2.robjects.packages as rpackages
 
 
 dataset_path = "/home/colombelli/Documents/THCA/iqrSelectedGenes.rds"
-results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
+#results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
+results_path = "/home/colombelli/Documents/test/"
+
 
 rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
