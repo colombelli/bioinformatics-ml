@@ -23,16 +23,16 @@ rpackages.importr('FSelector')
 seed = 42
 #num_bootstraps = 2
 #num_bootstraps = 0
-num_bootstraps = 5
-num_folds = 5
+num_bootstraps = 50
+num_folds = 10
 
 
 fs_methods = [
-    #("gain-ratio", "r", "gr"),
-    #("symmetrical-uncertainty", "r", "su"),
     ("reliefF", "python", "rf"),
-    ("geoDE", "python", "gd")#,
-    #("oneR", "r", "or")#,
+    ("geoDE", "python", "gd"),
+    ("gain-ratio", "r", "gr"),
+    ("symmetrical-uncertainty", "r", "su"),
+    ("oneR", "r", "or")
 ]
 
 aggregator = "mean"
@@ -44,7 +44,7 @@ ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
 #homo_method=("geoDE", "python", "gd")
 #ensemble = Homogeneous(dm, homo_method, aggregator)
 
-"""
+
 from time import time
 st = time()
 ensemble.select_features()
@@ -59,7 +59,7 @@ try:
             "!!!!!")
 except:
     pass
-"""
+
 #method = ("gain-ratio", "r", "gr")#("geoDE", "python", "gd")
 #single_fs = SingleFS(dm, method)
 #single_fs.select_features()
