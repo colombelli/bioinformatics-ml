@@ -204,3 +204,9 @@ class DataManager:
         
         path += "bootstrap_" + str(bootstrap_iteration+1) + "/"
         return path
+
+
+    def get_fold_data(self):
+        training_data = self.folds[self.current_fold_iteration][0]
+        testing_data = self.folds[self.current_fold_iteration][1]
+        return (training_data, testing_data)
