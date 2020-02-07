@@ -3,7 +3,7 @@ from Aggregator import Aggregator
 from DataManager import DataManager
 from Constants import *
 
-class EFS:
+class Hybrid:
     
     # fs_methods: a tuple (script name, language which the script was written, .rds output name)
     def __init__(self, data_manager:DataManager, fs_methods, first_aggregator, second_aggregator):
