@@ -4,6 +4,7 @@ from Heterogeneous import Heterogeneous
 from Homogeneous import Homogeneous
 from SingleFS import SingleFS
 from Evaluator import Evaluator
+from InformationManager import InformationManager
 import rpy2.robjects.packages as rpackages
 
 
@@ -11,7 +12,7 @@ import rpy2.robjects.packages as rpackages
 #results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
 #dataset_path = "/home/colombelli/Documents/datasets/thyroid_log2.rds"
 #results_path = "/home/colombelli/Documents/single2/"
-dataset_path = "/home/colombelli/Documents/datasets/iqrSelectedGenesAllSamples.rds"
+dataset_path = "/home/colombelli/Documents/datasets/brca.rds"
 results_path = "/home/colombelli/Documents/BRCA_Hybrid_mean_mean/"
 
 
@@ -22,8 +23,8 @@ rpackages.importr('FSelector')
 
 seed = 42
 #num_bootstraps = 2
-#num_bootstraps = 0
-num_bootstraps = 50
+num_bootstraps = 0
+#num_bootstraps = 50
 num_folds = 10
 
 
@@ -39,11 +40,15 @@ aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 
-ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
+#ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
 #ensemble = Heterogeneous(dm, fs_methods, aggregator)
 #homo_method=("geoDE", "python", "gd")
 #ensemble = Homogeneous(dm, homo_method, aggregator)
 
+str_methods = ["ReliefF"]#, "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "One Rule"]
+str_aggregators = ["Mean Aggregation"]#, "Mean Aggregation"]
+im = InformationManager(dm, str_methods)
+input()
 
 from time import time
 st = time()

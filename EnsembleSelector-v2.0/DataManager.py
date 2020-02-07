@@ -1,4 +1,5 @@
 from StratifiedKFold import StratifiedKFold
+from Constants import *
 import numpy as np
 import pandas as pd
 from sklearn.utils import resample
@@ -11,7 +12,6 @@ import pickle
 import urllib.parse
 from copy import deepcopy
 
-MAX_SEED = 9999999
 
 class DataManager:
 
