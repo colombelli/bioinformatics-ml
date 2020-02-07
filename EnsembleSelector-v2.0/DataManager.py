@@ -9,7 +9,7 @@ from os import mkdir
 import sys
 import pickle
 import urllib.parse
-
+from copy import deepcopy
 
 MAX_SEED = 9999999
 
@@ -34,6 +34,7 @@ class DataManager:
             self.__create_results_dir()
         except:
             print("Given directory already created, files will be replaced.")
+            print("Note that if there's any missing folder inside this existent one, the execution will fail.")
             if input("Input c to cancel or any other key to continue... ") == "c":
                 sys.exit()
 
@@ -82,16 +83,21 @@ class DataManager:
 
 
     # The above alnum encode and decode methods were taken from a StackOverflow's 
-    # topic answer. They are available in:
+    # topic answer and sligthly modified. Their original versions are available in:
     # https://stackoverflow.com/questions/32035520/how-to-encode-utf-8-strings-with-only-a-z-a-z-0-9-and-in-python
     @classmethod
     def alnum_encode(self, text):
-        return urllib.parse.quote(text, safe='')\
+        if text == "class":
+            return text
+        return "X" + urllib.parse.quote(text, safe='')\
             .replace('-', '%2d').replace('.', '%2e').replace('_', '%5f')\
             .replace('%', '_')
 
     @classmethod
     def alnum_decode(self, underscore_encoded):
+        if underscore_encoded == "class":
+            return underscore_encoded
+        underscore_encoded = underscore_encoded[1:]
         return urllib.parse.unquote(underscore_encoded.replace('_','%'), errors='strict')
 
 
@@ -120,8 +126,8 @@ class DataManager:
 
 
     @classmethod
-    def save_encoded_ranking(self, encoded_ranking, file_name_and_dir):
-
+    def save_encoded_ranking(self, ranking, file_name_and_dir):
+        encoded_ranking = deepcopy(ranking)
         decoded_ranking = self.decode_df(encoded_ranking)
         print("Saving ranking...")
         r_decoded_ranking = self.pandas_to_r(decoded_ranking)

@@ -6,7 +6,7 @@ import rpy2.robjects.packages as rpackages
 
 dataset_path = "/home/colombelli/Documents/THCA/iqrSelectedGenes.rds"
 #results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
-results_path = "/home/colombelli/Documents/test/"
+results_path = "/home/colombelli/Documents/test2/"
 
 
 rpackages.importr('CORElearn')
@@ -21,7 +21,8 @@ num_folds = 3
 
 fs_methods = [
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su")#,
+    ("geoDE", "python", "gd")
+    #("symmetrical-uncertainty", "r", "su")#,
     #("relief", "r", "rf"),
     #("oneR", "r", "or"),
     #("svm_rfe", "python", "svmrfe")

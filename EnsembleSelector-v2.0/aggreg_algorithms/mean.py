@@ -1,6 +1,6 @@
 import pandas as pd
 
-def aggregate(rankings):
+def aggregate(self, rankings):
         
         aggregated_ranking = {}  # it's a dictionary where the keys 
                                 # represent the genes and its values 
@@ -9,11 +9,11 @@ def aggregate(rankings):
                                 # value of the rankings 
 
 
-        for gene in rankings[0].index.values:
+        for gene in rankings[0].index:
             aggregated_ranking[gene] = 0
 
         for ranking in rankings:
-            for gene in ranking.index.values: 
+            for gene in ranking.index: 
                 aggregated_ranking[gene] += ranking.loc[gene, 'rank']
 
         num_rankings = len(rankings)
