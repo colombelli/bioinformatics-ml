@@ -1,12 +1,15 @@
 from DataManager import DataManager
+from Evaluator import Evaluator
 from Constants import *
+import csv
 
 class InformationManager:
 
     # aggregators: if there are, then it must be a python list cointaining either one string 
     # or two (in case the hybrid design was chosen); if there aren't (single FS), keep it None
     # methods: a list containing one or more strings representing the fs methods used
-    def __init__(self, data_manager:DataManager, methods:list, aggregators=None):
+    def __init__(self, data_manager:DataManager, evaluator:Evaluator,
+                 methods:list, aggregators=None):
 
         self.dm = data_manager
         self.aggregators = aggregators
@@ -102,4 +105,27 @@ class InformationManager:
 
 
     
+    def create_csv_tables(self):
 
+
+        return
+    
+
+    def __create_csv_auc_table(self):
+        
+        with open(self.dm.results_path+CSV_AUC_TABLE_FILE_NAME, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(CSV_AUC_TABLE_COLUMNS)
+
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_th[i]
+                stability = self.stabilities[i]
+                
+                sum_auc = 0
+                for auc in self.evaluator.aucs:
+                    sum_auc += auc
+
+                row = [frac_th, th, stability]
+
+        return
+        

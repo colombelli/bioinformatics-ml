@@ -13,8 +13,10 @@ class Evaluator:
     def __init__(self, data_manager:DataManager, thresholds):
 
         self.dm = data_manager
-        self.thresholds = self.__get_int_thresholds(thresholds)
+        self.thresholds, self.frac_thresholds = self.get_int_thresholds(thresholds)
         
+        self.aucs = None
+        self.stabilities = None
         self.rankings = None
         self.training_x = None
         self.training_y = None
@@ -22,22 +24,25 @@ class Evaluator:
         self.testing_y = None
 
 
-    def __get_int_thresholds(self, thresholds):
+    def get_int_thresholds(self, thresholds):
 
         dataset_len = len(self.dm.pd_df.columns)
 
+        updated_fraction_thresholds = []
         int_thresholds = []
         for th in thresholds:
+
             int_th = int(dataset_len * th/100)
             if not(int_th):
                 print("0 int threshold value detected for fraction", th, "- skipping.")
                 continue
-            int_thresholds.append(
-                    int_th
-                )
+
+            updated_fraction_thresholds.append(th)
+            int_thresholds.append(int_th)
+
         print("\nNumber of genes to select given the threshold percentages:")
         print(int_thresholds, "\n\n")
-        return int_thresholds
+        return int_thresholds, updated_fraction_thresholds
 
 
     def __get_gene_lists(self, pd_rankings):
@@ -98,6 +103,9 @@ class Evaluator:
         print("Computing AUCs...")
         aucs = self.__compute_aucs(folds_sampling)
         
+        self.aucs = aucs
+        self.stabilities = stabilities
+
         return aucs, stabilities
     
 

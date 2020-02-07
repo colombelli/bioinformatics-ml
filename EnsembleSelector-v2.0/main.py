@@ -24,31 +24,31 @@ rpackages.importr('FSelector')
 seed = 42
 #num_bootstraps = 2
 num_bootstraps = 0
-#num_bootstraps = 50
-num_folds = 10
+num_bootstraps = 10
+num_folds = 5
 
 
 fs_methods = [
-    ("reliefF", "python", "rf"),
+    #("reliefF", "python", "rf"),
     ("geoDE", "python", "gd"),
-    ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
+    ("gain-ratio", "r", "gr")#,
+    #("symmetrical-uncertainty", "r", "su"),
+    #("oneR", "r", "or")
 ]
 
 aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 
-#ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
+ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
 #ensemble = Heterogeneous(dm, fs_methods, aggregator)
 #homo_method=("geoDE", "python", "gd")
 #ensemble = Homogeneous(dm, homo_method, aggregator)
 
-str_methods = ["ReliefF"]#, "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "One Rule"]
-str_aggregators = ["Mean Aggregation"]#, "Mean Aggregation"]
+str_methods = ["GeoDE", "Gain Ratio"]
+str_aggregators = ["Mean Aggregation", "Mean Aggregation"]
 im = InformationManager(dm, str_methods)
-input()
+
 
 from time import time
 st = time()
@@ -59,12 +59,11 @@ try:
     hours, rem = divmod(end-start, 3600)
     minutes, seconds = divmod(rem, 60)
 
-    print("\n\n!!!!! TIME TAKEN:", 
-            "{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds), 
-            "!!!!!")
+    print("\n\nTIME TAKEN:") 
+    print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
 except:
     pass
-
+"""
 #method = ("gain-ratio", "r", "gr")#("geoDE", "python", "gd")
 #single_fs = SingleFS(dm, method)
 #single_fs.select_features()
@@ -80,3 +79,4 @@ print(aucs)
 
 print("\n\nStabilities:")
 print(stabilities)
+"""
