@@ -20,6 +20,7 @@ class DataManager:
         
         self.seed = seed
         np.random.seed(self.seed)
+        robjects.r['set.seed'](self.seed)
 
         self.file_path = file_path
         self.num_bootstraps = num_bootstraps

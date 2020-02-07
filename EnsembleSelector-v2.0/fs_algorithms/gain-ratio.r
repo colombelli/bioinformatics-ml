@@ -5,11 +5,11 @@ select <- function(df) {
   dfy <- dfy <- df$class
 
 
-  print("Calculating Information Gain Ratio...")
+  cat("Calculating Information Gain Ratio...\n")
   rankDf <- information_gain(x=dfx, y=dfy, type = "gainratio")
 
 
-  print("Processing output...")
+  cat("Processing output...\n")
   rankDf <- rankDf[order(-rankDf$importance),,drop=FALSE]
   rownames(rankDf) <- rankDf$attributes
   rankDf$attributes <- NULL
