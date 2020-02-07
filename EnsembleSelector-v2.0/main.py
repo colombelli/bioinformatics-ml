@@ -1,6 +1,7 @@
 from DataManager import DataManager
 from EFS import EFS
 from Heterogeneous import Heterogeneous
+from Homogeneous import Homogeneous
 from Evaluator import Evaluator
 import rpy2.robjects.packages as rpackages
 
@@ -8,7 +9,7 @@ import rpy2.robjects.packages as rpackages
 #dataset_path = "/home/colombelli/Documents/THCA/iqrSelectedGenes.rds"
 #results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
 dataset_path = "/home/colombelli/Documents/datasets/thyroid_log2.rds"
-results_path = "/home/colombelli/Documents/test4/"
+results_path = "/home/colombelli/Documents/geoDE_homo/"
 
 
 rpackages.importr('CORElearn')
@@ -18,8 +19,9 @@ rpackages.importr('FSelector')
 
 seed = 42
 #num_bootstraps = 2
-num_bootstraps = 0
-num_folds = 5
+#num_bootstraps = 0
+num_bootstraps = 50
+num_folds = 3
 
 
 fs_methods = [
@@ -35,7 +37,9 @@ aggregator = "mean"
 
 dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
 
-ensemble = Heterogeneous(dm, fs_methods, aggregator)
+#ensemble = Heterogeneous(dm, fs_methods, aggregator)
+homo_method=("geoDE", "python", "gd")
+ensemble = Homogeneous(dm, homo_method, aggregator)
 ensemble.select_features()
 
 print("\n\nStarting evaluation process...")
