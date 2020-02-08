@@ -2,6 +2,7 @@ from DataManager import DataManager
 from Evaluator import Evaluator
 from Constants import *
 import csv
+from copy import deepcopy
 
 class InformationManager:
 
@@ -116,8 +117,8 @@ class InformationManager:
         
         with open(self.dm.results_path+CSV_AUC_TABLE_FILE_NAME, 'w', newline='') as file:
             writer = csv.writer(file)
-
-            columns = CSV_AUC_TABLE_COLUMNS
+            
+            columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
             for i in range(self.dm.num_folds):
                 columns.append("AUC_"+str(i+1))
 

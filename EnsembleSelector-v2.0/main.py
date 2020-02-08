@@ -6,39 +6,27 @@ from SingleFS import SingleFS
 from Evaluator import Evaluator
 from InformationManager import InformationManager
 import rpy2.robjects.packages as rpackages
+from time import time
 
 
-#dataset_path = "/home/colombelli/Documents/THCA/iqrSelectedGenes.rds"
-#results_path = "/home/colombelli/Documents/bioinformatics-ml/EnsembleSelector-v2.0/resultsTHCA/"
+
+def compute_print_time(st):
+    
+    print("\n\nTIME TAKEN:")
+    end = time()
+    try:
+        hours, rem = divmod(end-st, 3600)
+        minutes, seconds = divmod(rem, 60)
+ 
+        print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
+    except:
+        print(end-st)
+    return
+
+
+
+
 #dataset_path = "/home/colombelli/Documents/datasets/thyroid_log2.rds"
-
-dataset_path = "/home/colombelli/Documents/datasets/brca.rds"
-results_path = "/home/colombelli/Documents/BRCA_Hybrid_mean_mean/"
-
-
-rpackages.importr('CORElearn')
-rpackages.importr('FSelectorRcpp')
-rpackages.importr('FSelector')
-
-
-seed = 42
-num_bootstraps = 10
-num_folds = 5
-
-
-fs_methods = [
-    #("reliefF", "python", "rf"),
-    ("geoDE", "python", "gd"),
-    ("gain-ratio", "r", "gr")#,
-    #("symmetrical-uncertainty", "r", "su"),
-    #("oneR", "r", "or")
-]
-
-aggregator = "mean"
-
-dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
-ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07]
-ev = Evaluator(dm, ths)
 
 #ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
 #ensemble = Heterogeneous(dm, fs_methods, aggregator)
@@ -48,36 +36,72 @@ ev = Evaluator(dm, ths)
 #single_fs = SingleFS(dm, method)
 
 
-str_methods = ["GeoDE", "Gain Ratio"]
+rpackages.importr('CORElearn')
+rpackages.importr('FSelectorRcpp')
+rpackages.importr('FSelector')
+
+
+num_bootstraps = 50
+num_folds = 10
+
+fs_methods = [
+    ("reliefF", "python", "rf"),
+    ("geoDE", "python", "gd"),
+    ("gain-ratio", "r", "gr"),
+    ("symmetrical-uncertainty", "r", "su"),
+    ("oneR", "r", "or")
+]
+
+aggregator = "mean"
+
+ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
+seed = 42
+
+str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "OneR"]
 str_aggregators = ["Mean Aggregation", "Mean Aggregation"]
-im = InformationManager(dm, ev, str_methods, str_aggregators)
 
-"""
-from time import time
-st = time()
-ensemble.select_features()
-ed = time()
 
-try:
-    hours, rem = divmod(end-start, 3600)
-    minutes, seconds = divmod(rem, 60)
 
-    print("\n\nTIME TAKEN:") 
-    print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
-except:
-    pass
-"""
+def perform_selection_hyb(dataset_path, results_path):
+    
+    dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    ev = Evaluator(dm, ths)
+    im = InformationManager(dm, ev, str_methods, str_aggregators)
+    ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
 
-print("\n\nStarting evaluation process...")
-aucs, stabilities = ev.evaluate_final_rankings()
+    st = time()
+    ensemble.select_features()
+    compute_print_time(st)
 
-print("\n\nAUCs:")
-print(aucs)
+    print("\n\nStarting evaluation process...")
+    aucs, stabilities = ev.evaluate_final_rankings()
 
-print("\n\nStabilities:")
-print(stabilities)
+    print("\n\nAUCs:")
+    print(aucs)
 
-print("\n\nCreating csv files...")
-im.create_csv_tables()
+    print("\n\nStabilities:")
+    print(stabilities)
 
-print("\nDone!")
+    print("\n\nCreating csv files...")
+    im.create_csv_tables()
+
+    print("\nDone!\n\n")
+    print("#################################################################\n")
+    return
+
+
+dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+results_path = "/home/colombelli/Documents/Experiments/KIRP/Hyb_mean_mean/"
+perform_selection_hyb(dataset_path, results_path)
+
+dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
+results_path = "/home/colombelli/Documents/Experiments/UCEC/Hyb_mean_mean/"
+perform_selection_hyb(dataset_path, results_path)
+
+dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
+results_path = "/home/colombelli/Documents/Experiments/THCA/Hyb_mean_mean/"
+perform_selection_hyb(dataset_path, results_path)
+
+dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+results_path = "/home/colombelli/Documents/Experiments/BRCA/Hyb_mean_mean/"
+perform_selection_hyb(dataset_path, results_path)
