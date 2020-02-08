@@ -25,4 +25,4 @@ SEED_INFO_FILE = "Seed: "
 CSV_AUC_TABLE_FILE_NAME = "aucs_results.csv"
 CSV_FINAL_RESULTS_TABLE_FILE_NAME = "final_results.csv"
 CSV_AUC_TABLE_COLUMNS = ["th_frac", "th_int"] #auc1, auc2, ..., aucn
-CSV_FINAL_RESULTS_TABLE = ["th_frac", "th_int", "stabilities", "mean_AUC"]
+CSV_FINAL_RESULTS_TABLE_COLUMNS = ["th_frac", "th_int", "stabilities", "mean_AUC"]

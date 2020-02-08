@@ -12,6 +12,7 @@ class InformationManager:
                  methods:list, aggregators=None):
 
         self.dm = data_manager
+        self.evaluator = evaluator
         self.aggregators = aggregators
         self.methods = methods
         
@@ -106,8 +107,8 @@ class InformationManager:
 
     
     def create_csv_tables(self):
-
-
+        self.__create_csv_auc_table()
+        self.__create_csv_final_results()
         return
     
 
@@ -115,17 +116,41 @@ class InformationManager:
         
         with open(self.dm.results_path+CSV_AUC_TABLE_FILE_NAME, 'w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(CSV_AUC_TABLE_COLUMNS)
+
+            columns = CSV_AUC_TABLE_COLUMNS
+            for i in range(self.dm.num_folds):
+                columns.append("AUC_"+str(i+1))
+
+            writer.writerow(columns)
 
             for i, th in enumerate(self.evaluator.thresholds):
-                frac_th = self.evaluator.frac_th[i]
-                stability = self.stabilities[i]
+                frac_th = self.evaluator.frac_thresholds[i]
                 
-                sum_auc = 0
+                aucs = []
                 for auc in self.evaluator.aucs:
-                    sum_auc += auc
+                    aucs.append(auc[i])
 
-                row = [frac_th, th, stability]
-
+                row = [frac_th, th] + aucs
+                writer.writerow(row)
         return
         
+
+    def __create_csv_final_results(self):
+        
+        with open(self.dm.results_path+CSV_FINAL_RESULTS_TABLE_FILE_NAME, 'w', newline='') as file:
+            writer = csv.writer(file)
+
+            writer.writerow(CSV_FINAL_RESULTS_TABLE_COLUMNS)
+
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_thresholds[i]
+                stability = self.evaluator.stabilities[i]
+                
+                sum_aucs = 0
+                for auc in self.evaluator.aucs:
+                    sum_aucs += auc[i]
+                mean_auc = sum_aucs / len(self.evaluator.aucs)
+
+                row = [frac_th, th, stability, mean_auc]
+                writer.writerow(row)
+        return
