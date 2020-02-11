@@ -36,20 +36,20 @@ def compute_print_time(st):
 #single_fs = SingleFS(dm, method)
 
 
-rpackages.importr('CORElearn')
+#rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 
 
-num_bootstraps = 50
-num_folds = 10
+num_bootstraps = 3
+num_folds = 3
 
 fs_methods = [
     ("reliefF", "python", "rf"),
-    ("geoDE", "python", "gd"),
-    ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
+    ("geoDE", "python", "gd")#,
+    #("gain-ratio", "r", "gr"),
+    #("symmetrical-uncertainty", "r", "su"),
+    #("oneR", "r", "or")
 ]
 
 aggregator = "mean"
@@ -91,9 +91,10 @@ def perform_selection_hyb(dataset_path, results_path):
 
 
 dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-results_path = "/home/colombelli/Documents/Experiments/KIRP/Hyb_mean_mean/"
-perform_selection_hyb(dataset_path, results_path)
+results_path = "/home/colombelli/Documents/Experiments/ttt/Hyb_mean_mean/"
+#perform_selection_hyb(dataset_path, results_path)
 
+""" 
 dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
 results_path = "/home/colombelli/Documents/Experiments/UCEC/Hyb_mean_mean/"
 perform_selection_hyb(dataset_path, results_path)
@@ -105,3 +106,4 @@ perform_selection_hyb(dataset_path, results_path)
 dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 results_path = "/home/colombelli/Documents/Experiments/BRCA/Hyb_mean_mean/"
 perform_selection_hyb(dataset_path, results_path)
+"""

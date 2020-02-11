@@ -29,6 +29,7 @@ class DataManager:
         r_df = self.load_RDS(self.file_path)
         self.pd_df = self.encode_df(self.r_to_pandas(r_df))
         self.r_df = self.pandas_to_r(self.pd_df)
+    
 
         self.results_path = results_path
         try:
@@ -102,6 +103,7 @@ class DataManager:
         return urllib.parse.unquote(underscore_encoded.replace('_','%'), errors='strict')
 
 
+    # Important note: The method only encodes columns (the genes)
     @classmethod
     def encode_df(self, df):
         
@@ -113,28 +115,39 @@ class DataManager:
         df.columns = columns
         return df
 
-    
+
+    # rows is a boolean parameter telling wheter the method must also decode its rows;
+    # it is basically used when decoding ranking-like dataframes (where genes are indexes) 
     @classmethod
-    def decode_df(self, df):
+    def decode_df(self, df, rows:bool):
 
         print("Decoding dataframe attributes...")
-        columns = []
-        for attribute in df.columns:
-            columns.append(self.alnum_decode(attribute))
+        if not rows:
+            columns = []
+            for attribute in df.columns:
+                columns.append(self.alnum_decode(attribute))
+            df.columns = columns
+        
+        if rows:
+            indexes = []
+            for ind in df.index:
+                indexes.append(self.alnum_decode(ind))
+            df.index = indexes
 
-        df.columns = columns
         return df
 
 
     @classmethod
     def save_encoded_ranking(self, ranking, file_name_and_dir):
         encoded_ranking = deepcopy(ranking)
-        decoded_ranking = self.decode_df(encoded_ranking)
-        print("Saving ranking...")
+        decoded_ranking = self.decode_df(encoded_ranking, True)
+
+        print("Saving rankingranking...")
         r_decoded_ranking = self.pandas_to_r(decoded_ranking)
         robjects.r["saveRDS"](r_decoded_ranking, file_name_and_dir)
         return
 
+    
 
     def __calculate_folds(self):
 
