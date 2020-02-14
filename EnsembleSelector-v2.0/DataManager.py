@@ -142,7 +142,7 @@ class DataManager:
         encoded_ranking = deepcopy(ranking)
         decoded_ranking = self.decode_df(encoded_ranking, True)
 
-        print("Saving rankingranking...")
+        print("Saving ranking...")
         r_decoded_ranking = self.pandas_to_r(decoded_ranking)
         robjects.r["saveRDS"](r_decoded_ranking, file_name_and_dir)
         return
