@@ -90,11 +90,6 @@ def perform_selection_hyb(dataset_path, results_path):
     return
 
 
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-results_path = "/home/colombelli/Documents/Experiments2/KIRP/Hyb_mean_mean/"
-perform_selection_hyb(dataset_path, results_path)
-
-
 dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
 results_path = "/home/colombelli/Documents/Experiments2/UCEC/Hyb_mean_mean/"
 perform_selection_hyb(dataset_path, results_path)
