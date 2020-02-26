@@ -180,7 +180,7 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 
 
 
-
+"""
 ########### HETEROGENOUS EXPERIMENTS ##############
 
 dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
@@ -199,7 +199,7 @@ dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 results_path = "/home/colombelli/Documents/Experiments2/BRCA/Het_mean/"
 perform_selection_het(dataset_path, results_path)
 
-
+"""
 
 
 ########### HOMOGENEOUS EXPERIMENTS ##############
@@ -209,7 +209,7 @@ method_geode = ("geoDE", "python", "gd")
 method_gr = ("gain-ratio", "r", "gr")
 method_su = ("symmetrical-uncertainty", "r", "su")
 method_oner = ("oneR", "r", "or")
-
+"""
 ############ KIRP HOMOGENEOUS ############
 dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
 
@@ -308,6 +308,7 @@ perform_selection_single(dataset_path, results_path, method_relief)
 results_path = "/home/colombelli/Documents/Experiments2/UCEC/sin_oner/"
 perform_selection_single(dataset_path, results_path, method_oner)
 
+"""
 
 ######### THCA
 dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
@@ -328,13 +329,13 @@ perform_selection_single(dataset_path, results_path, method_oner)
 dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 
 
-results_path = "/home/colombelli/Documents/Experiments2/THCA/sin_gr/"
+results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_gr/"
 perform_selection_single(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments2/THCA/sin_su/"
+results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_su/"
 perform_selection_single(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments2/THCA/sin_geode/"
+results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_geode/"
 perform_selection_single(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments2/THCA/sin_relieff/"
+results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_relieff/"
 perform_selection_single(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments2/THCA/sin_oner/"
+results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_oner/"
 perform_selection_single(dataset_path, results_path, method_oner)
