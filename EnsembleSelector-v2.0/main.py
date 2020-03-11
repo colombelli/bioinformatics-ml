@@ -54,7 +54,8 @@ fs_methods = [
 
 aggregator = "mean"
 
-ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
+#ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
+ths = [0.01, 0.02, 0.03, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4]
 seed = 42
 
 str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "OneR"]
@@ -128,7 +129,7 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
     ensemble = Homogeneous(dm, fs_method, aggregator)
 
     st = time()
-    ensemble.select_features()
+    ensemble.select_features() 
     compute_print_time(st)
 
     print("\n\nStarting evaluation process...")
@@ -308,7 +309,7 @@ perform_selection_single(dataset_path, results_path, method_relief)
 results_path = "/home/colombelli/Documents/Experiments2/UCEC/sin_oner/"
 perform_selection_single(dataset_path, results_path, method_oner)
 
-"""
+
 
 ######### THCA
 dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
@@ -335,7 +336,28 @@ results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_su/"
 perform_selection_single(dataset_path, results_path, method_su)
 results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_geode/"
 perform_selection_single(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_relieff/"
+results_path = "/home/colombelli/Documents/Experiments2/BRCA/s0.05, in_relieff/"
 perform_selection_single(dataset_path, results_path, method_relief)
 results_path = "/home/colombelli/Documents/Experiments2/BRCA/sin_oner/"
 perform_selection_single(dataset_path, results_path, method_oner)
+"""
+
+
+dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+results_path = "/home/colombelli/Documents/ExperimentsDebug/"
+#perform_selection_single(dataset_path, results_path, method_gr)
+
+ths=[0.01, 0.03, 0.5, 0.9]
+dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+ev = Evaluator(dm, ths)
+
+
+print("\n\nStarting evaluation process...")
+aucs, stabilities = ev.evaluate_final_rankings()
+
+print("\n\nAUCs:")
+print(aucs)
+
+print("\n\nStabilities:")
+print(stabilities)
+input("inpt ")

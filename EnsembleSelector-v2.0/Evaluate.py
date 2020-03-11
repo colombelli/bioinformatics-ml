@@ -39,13 +39,12 @@ class Evaluate:
         
         clf = SVC(gamma='auto', probability=True)
         clf.fit(self.training_x, self.training_y)
-        
+
         y = self.testing_y
         pred = clf.predict_proba(self.testing_x)
         pred = self.__get_probs_positive_class(pred)
-        
-        fpr, tpr, _ = metrics.roc_curve(np.array(y, dtype=int)+1, pred, pos_label=2)
-        return metrics.auc(fpr, tpr)
+
+        return metrics.roc_auc_score(np.array(y, dtype=int), pred)
 
 
     def __get_probs_positive_class(self, pred):
