@@ -26,10 +26,14 @@ class DataManager:
         self.num_bootstraps = num_bootstraps
         self.num_folds = num_folds
 
-        r_df = self.load_RDS(self.file_path)
-        self.pd_df = self.encode_df(self.r_to_pandas(r_df))
-        self.r_df = self.pandas_to_r(self.pd_df)
-    
+       
+        self.pd_df = None
+        self.r_df = None
+
+        self.folds = None
+        self.current_fold_iteration = 0
+        self.current_bootstraps = None
+
 
         self.results_path = results_path
         try:
@@ -40,12 +44,19 @@ class DataManager:
             if input("Input c to cancel or any other key to continue... ") == "c":
                 sys.exit()
 
-        self.folds = None
+        
+
+
+    def init_data_folding_process(self):
+        
+        # Load and encode dataset
+        r_df = self.load_RDS(self.file_path)
+        self.pd_df = self.encode_df(self.r_to_pandas(r_df))
+        self.r_df = self.pandas_to_r(self.pd_df)
+
         self.__calculate_folds()
         self.__save_folds()
-
-        self.current_fold_iteration = 0
-        self.current_bootstraps = None
+        return
 
 
 
@@ -60,6 +71,7 @@ class DataManager:
             for j in range(1, self.num_bootstraps+1):
                 bag_dir = fold_dir + "/bootstrap_"+str(j)
                 mkdir(bag_dir)
+
 
 
     @classmethod
@@ -84,7 +96,7 @@ class DataManager:
         return pandas_from_r_df
 
 
-    # The above alnum encode and decode methods were taken from a StackOverflow's 
+    # The below alnum encode and decode methods were taken from a StackOverflow's 
     # topic answer and sligthly modified. Their original versions are available in:
     # https://stackoverflow.com/questions/32035520/how-to-encode-utf-8-strings-with-only-a-z-a-z-0-9-and-in-python
     @classmethod

@@ -158,3 +158,8 @@ class Evaluator:
         self.testing_x = self.__get_x(testing_df, genes)
         self.testing_y = self.__get_y(testing_df)
         return
+
+
+
+    def evaluate_level2_hyb_rankings(self):
+        return

@@ -66,6 +66,7 @@ str_aggregators = ["Mean Aggregation", "Mean Aggregation"]
 def perform_selection_hyb(dataset_path, results_path):
     
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
@@ -95,6 +96,7 @@ def perform_selection_hyb(dataset_path, results_path):
 def perform_selection_het(dataset_path, results_path):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Heterogeneous(dm, fs_methods, aggregator)
@@ -124,6 +126,7 @@ def perform_selection_het(dataset_path, results_path):
 def perform_selection_hom(dataset_path, results_path, fs_method):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Homogeneous(dm, fs_method, aggregator)
@@ -153,6 +156,7 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
 def perform_selection_single(dataset_path, results_path, fs_method):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     feature_selector = SingleFS(dm, fs_method)
