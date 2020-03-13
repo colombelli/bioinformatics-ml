@@ -55,7 +55,8 @@ fs_methods = [
 aggregator = "mean"
 
 #ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
-ths = [0.01, 0.02, 0.03, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4]
+#ths = [0.01, 0.02, 0.03, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4]
+ths = [0.2, 0.4, 1, 1.5, 2, 5, 10]
 seed = 42
 
 str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "OneR"]
@@ -67,8 +68,8 @@ def perform_selection_hyb(dataset_path, results_path):
     
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
     dm.encode_main_dm_df()
-    dm.init_data_folding_process()
     dm.create_results_dir()
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
@@ -103,8 +104,8 @@ def perform_selection_het(dataset_path, results_path):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
     dm.encode_main_dm_df()
-    dm.init_data_folding_process()
     dm.create_results_dir()
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Heterogeneous(dm, fs_methods, aggregator)
@@ -137,8 +138,8 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
     dm.encode_main_dm_df()
-    dm.init_data_folding_process()
     dm.create_results_dir()
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Homogeneous(dm, fs_method, aggregator)
@@ -173,8 +174,8 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
     dm.encode_main_dm_df()
-    dm.init_data_folding_process()
     dm.create_results_dir()
+    dm.init_data_folding_process()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     feature_selector = SingleFS(dm, fs_method)
@@ -367,21 +368,40 @@ perform_selection_single(dataset_path, results_path, method_oner)
 """
 
 
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-results_path = "/home/colombelli/Documents/ExperimentsDebug/"
-#perform_selection_single(dataset_path, results_path, method_gr)
+dataset_path = "/home/colombelli/Documents/datasets/thyroid_log2.rds"
 
-ths=[0.01, 0.03, 0.5, 0.9]
-dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
-ev = Evaluator(dm, ths)
+"""
+results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_gr/"
+perform_selection_single(dataset_path, results_path, method_gr)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_relieff/"
+perform_selection_single(dataset_path, results_path, method_relief)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_geode/"
+perform_selection_single(dataset_path, results_path, method_geode)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_su/"
+perform_selection_single(dataset_path, results_path, method_su)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_oner/"
+perform_selection_single(dataset_path, results_path, method_oner)
+"""
+
+"""
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Het_mean/"
+perform_selection_het(dataset_path, results_path)
+"""
 
 
-print("\n\nStarting evaluation process...")
-aucs, stabilities = ev.evaluate_final_rankings()
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Hyb_mean_mean/"
+perform_selection_hyb(dataset_path, results_path)
 
-print("\n\nAUCs:")
-print(aucs)
 
-print("\n\nStabilities:")
-print(stabilities)
-input("inpt ")
+"""
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Hom_mean_gr/"
+perform_selection_hom(dataset_path, results_path, method_gr)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Hom_mean_su/"
+perform_selection_hom(dataset_path, results_path, method_su)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Hom_mean_geode/"
+perform_selection_hom(dataset_path, results_path, method_geode)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Hom_mean_relieff/"
+perform_selection_hom(dataset_path, results_path, method_relief)
+results_path = "/home/colombelli/Documents/ExperimentsDebug/Hom_mean_oner/"
+perform_selection_hom(dataset_path, results_path, method_oner)
+"""
