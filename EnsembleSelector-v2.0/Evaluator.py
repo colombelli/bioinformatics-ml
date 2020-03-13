@@ -91,9 +91,6 @@ class Evaluator:
 
 
     def evaluate_final_rankings(self):
-        
-        # Decode dataframe
-        #self.dm.pd_df = self.dm.decode_df(self.dm.pd_df, False)
 
         final_rankings = self.__get_final_rankings()
         self.rankings = self.__get_gene_lists(final_rankings)

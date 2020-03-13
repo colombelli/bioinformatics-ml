@@ -2,6 +2,9 @@ from DataManager import DataManager
 from Evaluator import Evaluator
 from Constants import *
 import csv
+from numpy import array as np_array
+from numpy import mean as np_mean
+from numpy import std as np_std
 from copy import deepcopy
 
 class InformationManager:
@@ -147,11 +150,10 @@ class InformationManager:
                 frac_th = self.evaluator.frac_thresholds[i]
                 stability = self.evaluator.stabilities[i]
                 
-                sum_aucs = 0
-                for auc in self.evaluator.aucs:
-                    sum_aucs += auc[i]
-                mean_auc = sum_aucs / len(self.evaluator.aucs)
+                aucs = np_array(self.evaluator.aucs).transpose()[i]
+                mean_auc = np_mean(aucs)
+                std_auc = np_std(aucs)
 
-                row = [frac_th, th, stability, mean_auc]
+                row = [frac_th, th, stability, mean_auc, std_auc]
                 writer.writerow(row)
         return

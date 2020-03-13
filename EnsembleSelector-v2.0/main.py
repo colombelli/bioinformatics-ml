@@ -370,7 +370,7 @@ perform_selection_single(dataset_path, results_path, method_oner)
 
 dataset_path = "/home/colombelli/Documents/datasets/thyroid_log2.rds"
 
-"""
+
 results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_gr/"
 perform_selection_single(dataset_path, results_path, method_gr)
 results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_relieff/"
@@ -381,17 +381,17 @@ results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_su/"
 perform_selection_single(dataset_path, results_path, method_su)
 results_path = "/home/colombelli/Documents/ExperimentsDebug/sin_oner/"
 perform_selection_single(dataset_path, results_path, method_oner)
-"""
+
 
 """
 results_path = "/home/colombelli/Documents/ExperimentsDebug/Het_mean/"
 perform_selection_het(dataset_path, results_path)
 """
 
-
+"""
 results_path = "/home/colombelli/Documents/ExperimentsDebug/Hyb_mean_mean/"
 perform_selection_hyb(dataset_path, results_path)
-
+"""
 
 """
 results_path = "/home/colombelli/Documents/ExperimentsDebug/Hom_mean_gr/"
