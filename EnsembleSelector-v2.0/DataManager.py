@@ -27,8 +27,9 @@ class DataManager:
         self.num_folds = num_folds
 
        
-        self.pd_df = None
-        self.r_df = None
+        self.r_df = self.load_RDS(self.file_path)
+        self.pd_df = self.r_to_pandas(self.r_df)
+
 
         self.folds = None
         self.current_fold_iteration = 0
@@ -36,41 +37,31 @@ class DataManager:
 
 
         self.results_path = results_path
+
+
+
+
+    def create_results_dir(self):
+
+        print("Creating results directory...")
         try:
-            self.__create_results_dir()
+            mkdir(self.results_path)
         except:
             print("Given directory already created, files will be replaced.")
             print("Note that if there's any missing folder inside this existent one, the execution will fail.")
             if input("Input c to cancel or any other key to continue... ") == "c":
                 sys.exit()
-
+            else: 
+                return
         
-
-
-    def init_data_folding_process(self):
-        
-        # Load and encode dataset
-        r_df = self.load_RDS(self.file_path)
-        self.pd_df = self.encode_df(self.r_to_pandas(r_df))
-        self.r_df = self.pandas_to_r(self.pd_df)
-
-        self.__calculate_folds()
-        self.__save_folds()
-        return
-
-
-
-    def __create_results_dir(self):
-        print("Creating results directory...")
-        mkdir(self.results_path)
 
         for i in range(1, self.num_folds+1):
             fold_dir = self.results_path+"/fold_"+str(i)
             mkdir(fold_dir)
 
             for j in range(1, self.num_bootstraps+1):
-                bag_dir = fold_dir + "/bootstrap_"+str(j)
-                mkdir(bag_dir)
+                bs_dir = fold_dir + "/bootstrap_"+str(j)
+                mkdir(bs_dir)
 
 
 
@@ -160,6 +151,24 @@ class DataManager:
         return
 
     
+    def encode_main_dm_df(self):
+        self.pd_df = self.encode_df(self.pd_df)
+        self.r_df = self.pandas_to_r(self.pd_df)
+        return
+    
+    def decode_main_dm_df(self):
+        self.pd_df = self.decode_df(self.pd_df, False)
+        self.r_df = self.pandas_to_r(self.pd_df)
+        return
+
+
+
+    def init_data_folding_process(self):
+
+        self.__calculate_folds()
+        self.__save_folds()
+        return
+
 
     def __calculate_folds(self):
 

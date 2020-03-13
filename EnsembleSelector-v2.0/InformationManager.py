@@ -137,7 +137,7 @@ class InformationManager:
         
 
     def __create_csv_final_results(self):
-        
+
         with open(self.dm.results_path+CSV_FINAL_RESULTS_TABLE_FILE_NAME, 'w', newline='') as file:
             writer = csv.writer(file)
 

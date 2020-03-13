@@ -66,7 +66,9 @@ str_aggregators = ["Mean Aggregation", "Mean Aggregation"]
 def perform_selection_hyb(dataset_path, results_path):
     
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.encode_main_dm_df()
     dm.init_data_folding_process()
+    dm.create_results_dir()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
@@ -75,7 +77,9 @@ def perform_selection_hyb(dataset_path, results_path):
     ensemble.select_features()
     compute_print_time(st)
 
-    print("\n\nStarting evaluation process...")
+    print("\n\nDecoding dataframe...")
+    dm.decode_main_dm_df()
+    print("\nStarting evaluation process...")
     aucs, stabilities = ev.evaluate_final_rankings()
 
     print("\n\nAUCs:")
@@ -95,8 +99,12 @@ def perform_selection_hyb(dataset_path, results_path):
 
 def perform_selection_het(dataset_path, results_path):
 
+    num_bootstraps = 0
+
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.encode_main_dm_df()
     dm.init_data_folding_process()
+    dm.create_results_dir()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Heterogeneous(dm, fs_methods, aggregator)
@@ -105,7 +113,9 @@ def perform_selection_het(dataset_path, results_path):
     ensemble.select_features()
     compute_print_time(st)
 
-    print("\n\nStarting evaluation process...")
+    print("\n\nDecoding dataframe...")
+    dm.decode_main_dm_df()
+    print("\nStarting evaluation process...")
     aucs, stabilities = ev.evaluate_final_rankings()
 
     print("\n\nAUCs:")
@@ -126,7 +136,9 @@ def perform_selection_het(dataset_path, results_path):
 def perform_selection_hom(dataset_path, results_path, fs_method):
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.encode_main_dm_df()
     dm.init_data_folding_process()
+    dm.create_results_dir()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Homogeneous(dm, fs_method, aggregator)
@@ -135,7 +147,9 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
     ensemble.select_features() 
     compute_print_time(st)
 
-    print("\n\nStarting evaluation process...")
+    print("\n\nDecoding dataframe...")
+    dm.decode_main_dm_df()
+    print("\nStarting evaluation process...")
     aucs, stabilities = ev.evaluate_final_rankings()
 
     print("\n\nAUCs:")
@@ -155,8 +169,12 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
 
 def perform_selection_single(dataset_path, results_path, fs_method):
 
+    num_bootstraps = 0
+
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
+    dm.encode_main_dm_df()
     dm.init_data_folding_process()
+    dm.create_results_dir()
     ev = Evaluator(dm, ths)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     feature_selector = SingleFS(dm, fs_method)
@@ -165,7 +183,9 @@ def perform_selection_single(dataset_path, results_path, fs_method):
     feature_selector.select_features()
     compute_print_time(st)
 
-    print("\n\nStarting evaluation process...")
+    print("\n\nDecoding dataframe...")
+    dm.decode_main_dm_df()
+    print("\nStarting evaluation process...")
     aucs, stabilities = ev.evaluate_final_rankings()
 
     print("\n\nAUCs:")
