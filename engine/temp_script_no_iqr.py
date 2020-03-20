@@ -38,7 +38,6 @@ fs_methods = [
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
     ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
 ]
 
 aggregator = "mean"
