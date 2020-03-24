@@ -23,8 +23,8 @@ exp = ["Het_mean", "Hom_mean_geode", "Hom_mean_gr", "Hom_mean_oner", "Hom_mean_r
 
 exp_del_bs_folders = ["Het_mean", "sin_geode", "sin_gr", "sin_oner", "sin_relieff", "sin_su"]
 
-experiment_path = "/home/colombelli/Documents/Experiments3/KIRP/"
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+experiment_path = "/home/colombelli/Documents/ExperimentsReeval/BRCA/"
+dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 
 import os
 
