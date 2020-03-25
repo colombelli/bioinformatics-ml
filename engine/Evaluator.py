@@ -10,11 +10,15 @@ from Constants import *
 
 class Evaluator:
 
-    def __init__(self, data_manager:DataManager, thresholds):
+    # th_in_fraction: bool  => if the threshold values are fractions or integers
+    def __init__(self, data_manager:DataManager, thresholds, th_in_fraction):
 
         self.dm = data_manager
-        self.thresholds, self.frac_thresholds = self.get_int_thresholds(thresholds)
         
+        self.thresholds = None
+        self.frac_thresholds = None
+        self.__init_thresholds(thresholds, th_in_fraction)
+
         self.aucs = None
         self.stabilities = None
         self.rankings = None
@@ -22,6 +26,14 @@ class Evaluator:
         self.training_y = None
         self.testing_x = None
         self.testing_y = None
+
+    
+    def __init_thresholds(self, thresholds, th_in_fraction):
+        if th_in_fraction:
+            self.thresholds, self.frac_thresholds = self.get_int_thresholds(thresholds)
+        else:
+            self.thresholds, self.frac_thresholds = self.get_frac_thresholds(thresholds)
+        return
 
 
     def get_int_thresholds(self, thresholds):
@@ -43,6 +55,32 @@ class Evaluator:
         print("\nNumber of genes to select given the threshold percentages:")
         print(int_thresholds, "\n\n")
         return int_thresholds, updated_fraction_thresholds
+
+
+    def get_frac_thresholds(self, thresholds):
+
+        dataset_len = len(self.dm.pd_df.columns)
+
+        updated_int_thresholds = []
+        frac_thresholds = []
+        for th in thresholds:
+
+            if not(th):
+                print("0 int threshold value detected for fraction", th, "- skipping.")
+                continue
+
+            if th > dataset_len - 1:
+                print("Given threshold value,", str(th)+", is greater the number of features - skipping.")
+
+            updated_int_thresholds.append(th)
+            frac_th = (th * 100) / dataset_len
+            frac_thresholds.append(frac_th)
+
+        print("\nNumber of genes to select given the threshold percentages:")
+        print(updated_int_thresholds, "\n\n")
+        return updated_int_thresholds, frac_thresholds
+
+
 
 
     def __get_gene_lists(self, pd_rankings):
