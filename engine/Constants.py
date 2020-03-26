@@ -23,6 +23,10 @@ SEED_INFO_FILE = "Seed: "
 
 # csv files
 CSV_AUC_TABLE_FILE_NAME = "aucs_results.csv"
+LVL2_CSV_AUC_TABLE_FILE_NAME = "lvl2_aucs_results.csv"
+LVL2_CSV_STB_TABLE_FILE_NAME = "lvl2_stbs_results.csv"
 CSV_FINAL_RESULTS_TABLE_FILE_NAME = "final_results.csv"
+LVL2_CSV_FINAL_RESULTS_TABLE_FILE_NAME = "lvl2_final_results.csv"
 CSV_AUC_TABLE_COLUMNS = ["th_frac", "th_int"] #auc1, auc2, ..., aucn
 CSV_FINAL_RESULTS_TABLE_COLUMNS = ["th_frac", "th_int", "stabilities", "mean_AUC", "std_AUC"]
+LVL2_CSV_FINAL_RESULTS_TABLE_COLUMNS = ["th_frac", "th_int", "mean_stb", "std_stb", "mean_AUC", "std_AUC"]

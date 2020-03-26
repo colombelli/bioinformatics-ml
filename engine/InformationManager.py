@@ -157,3 +157,76 @@ class InformationManager:
                 row = [frac_th, th, stability, mean_auc, std_auc]
                 writer.writerow(row)
         return
+
+
+    def create_level2_csv_tables(self, aucs, stabilities):
+        self.__create_intermediate_csv_auc_table(aucs, LVL2_CSV_AUC_TABLE_FILE_NAME)
+        self.__create_intermediate_csv_stabilities_table(stabilities, LVL2_CSV_STB_TABLE_FILE_NAME)
+        self.__create_intermediate_csv_final_results(aucs, stabilities, LVL2_CSV_FINAL_RESULTS_TABLE_FILE_NAME)
+        return
+
+    
+    def __create_intermediate_csv_auc_table(self, aucs, table_name):
+
+        with open(self.dm.results_path+table_name, 'w', newline='') as file:
+            writer = csv.writer(file)
+            
+            columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
+            for i in range(len(aucs)):
+                columns.append("AUC_"+str(i+1))
+
+            writer.writerow(columns)
+
+            aucs = np_array(aucs).transpose()
+
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_thresholds[i]
+                row = [frac_th, th] + list(aucs[i])
+
+                writer.writerow(row)
+        return
+
+    
+    def __create_intermediate_csv_stabilities_table(self, stabilities, table_name):
+
+        with open(self.dm.results_path+table_name, 'w', newline='') as file:
+            writer = csv.writer(file)
+            
+            columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
+            for i in range(len(stabilities)):
+                columns.append("Stb_"+str(i+1))
+
+            writer.writerow(columns)
+
+            stabilities = np_array(stabilities).transpose()
+
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_thresholds[i]
+                row = [frac_th, th] + list(stabilities[i])
+                writer.writerow(row)
+        return
+
+
+    def __create_intermediate_csv_final_results(self, aucs, stabilities, table_name):
+
+        aucs = np_array(aucs).transpose()
+        stabilities = np_array(stabilities).transpose()
+        with open(self.dm.results_path+table_name, 'w', newline='') as file:
+            writer = csv.writer(file)
+
+            writer.writerow(LVL2_CSV_FINAL_RESULTS_TABLE_COLUMNS)
+
+            
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_thresholds[i]
+                
+                mean_auc = np_mean(aucs[i])
+                std_auc = np_std(aucs[i])
+
+                mean_stb = np_mean(stabilities[i])
+                std_stb = np_std(stabilities[i])
+
+                row = [frac_th, th, mean_stb, std_stb, mean_auc, std_auc]
+                writer.writerow(row)
+
+        return
