@@ -199,9 +199,31 @@ class Evaluator:
     def evaluate_intermediate_hyb_rankings(self):
         
         level1_rankings, level2_rankings = self.__get_intermediate_rankings()
+        return self.__evaluate_level2_rankings(level2_rankings)        
+
         
 
-        return
+
+    def __evaluate_level2_rankings(self, final_rankings):
+        
+        with open(self.dm.results_path+"fold_sampling.pkl", 'rb') as file:
+            folds_sampling = pickle.load(file)
+
+        aucs = []
+        stabilities = []
+        for fold_rankings in final_rankings:
+            self.rankings = self.__get_gene_lists(fold_rankings)
+
+            print("Computing stabilities...")
+            stabilities.append(self.__compute_stabilities())
+
+            
+            print("Computing AUCs...")
+            aucs = aucs + self.__compute_aucs(folds_sampling)
+                
+        self.stabilities = stabilities
+        self.aucs = aucs
+        return aucs, stabilities
 
     
     def __get_intermediate_rankings(self):
