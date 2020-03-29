@@ -48,10 +48,6 @@ class StratifiedKFold:
         
             self.__distribute_remaining_samples(amount_per_fold, current_class_folds, final_folds, class_indexes)
             self.class_folds[df_class] = current_class_folds
-            #if self.undersampling:
-            #    self.__random_undersample(final_folds, current_class_folds)
-            #else:
-            #    self.__append_in_final_folds(final_folds, current_class_folds)
             self.__append_in_final_folds(final_folds, current_class_folds)
 
         return final_folds
@@ -73,33 +69,6 @@ class StratifiedKFold:
             len_folds[fold_with_less_samples] += 1
             
         return
-    
-    
-    def __random_undersample(self, final_folds, current_class_folds):
-        
-        base_per_fold = self.minority_count // self.k
-        remaining_samples = self.minority_count - (self.k * base_per_fold)
-        samples_per_fold = [base_per_fold for _ in range(self.k)]
-        
-        len_folds = np.array([len(x)+base_per_fold for x in final_folds])
-        for _ in range(remaining_samples):
-            fold_with_less_samples = len_folds.argmin()
-            samples_per_fold[fold_with_less_samples] += 1
-            len_folds[fold_with_less_samples] += 1
-
-        
-        for i, amount in enumerate(samples_per_fold):
-            final_folds[i] = final_folds[i] + \
-                            random.sample(current_class_folds[i], amount)
-        return
-    
-    
-    def __append_in_final_folds(self, final_folds, current_class_folds):
-        
-        for i, samples in enumerate(current_class_folds):
-            final_folds[i] = final_folds[i] + samples
-        return
-    
     
     
     def __shuffle_each_fold(self):

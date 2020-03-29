@@ -58,7 +58,7 @@ def perform_selection_hyb(dataset_path, results_path):
     dm.encode_main_dm_df()
     dm.create_results_dir()
     dm.init_data_folding_process()
-    ev = Evaluator(dm, ths)
+    ev = Evaluator(dm, ths, True)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
     ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
 
