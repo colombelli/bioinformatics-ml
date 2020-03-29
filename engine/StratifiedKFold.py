@@ -1,6 +1,7 @@
 import random
 import pandas as pd
 import numpy as np
+from copy import deepcopy
 
 class StratifiedKFold:
     
@@ -17,10 +18,17 @@ class StratifiedKFold:
         self.class_counts = self.df[self.class_coloumn_name].value_counts().to_dict()
         self.minority_count = self.class_counts[min(self.class_counts)]
         
-        
-        self.folds = self.__get_folds()   # a list with pandas Index objects, one per fold
+        self.class_folds = {}
+        self.__init_class_folds_dict()   # fold distribution separeted in class key
+        self.folds = self.__get_folds()   # a list with indexes names in another list, one per fold
         self.__shuffle_each_fold()
-        
+
+
+    def __init_class_folds_dict(self):
+
+        for df_class in self.classes:
+            self.class_folds[df_class] = None
+
         
     def __get_folds(self):
         
@@ -35,19 +43,21 @@ class StratifiedKFold:
             current_class_folds = [[] for _ in range(self.k)]
 
             for class_fold in current_class_folds:
-                self.__get_random_samples(class_fold, class_indexes, amount_per_fold)
+                self.__get_samples(class_fold, class_indexes, amount_per_fold)
 
         
             self.__distribute_remaining_samples(amount_per_fold, current_class_folds, final_folds, class_indexes)
-            if self.undersampling:
-                self.__random_undersample(final_folds, current_class_folds)
-            else:
-                self.__append_in_final_folds(final_folds, current_class_folds)
-        
+            self.class_folds[df_class] = current_class_folds
+            #if self.undersampling:
+            #    self.__random_undersample(final_folds, current_class_folds)
+            #else:
+            #    self.__append_in_final_folds(final_folds, current_class_folds)
+            self.__append_in_final_folds(final_folds, current_class_folds)
+
         return final_folds
         
             
-    def __get_random_samples(self, class_fold, samples, amount):
+    def __get_samples(self, class_fold, samples, amount):
         
         for _ in range(amount):
             class_fold.append(samples.pop())
@@ -104,5 +114,46 @@ class StratifiedKFold:
         for i, fold in enumerate(self.folds):
             
             test_set = fold
-            train_set = [item for j,sublist in enumerate(self.folds) if j!=i for item in sublist]
+
+            if self.undersampling:
+                train_set = self.__get_undersampled_train_set(i)
+            else:
+                train_set = [item for j,sublist in enumerate(self.folds) 
+                                if j!=i for item in sublist]
+            
             yield (train_set, test_set)
+
+
+    def __get_undersampled_train_set(self, test_fold_idx):
+
+        undersampled_train_set = []
+        for i in range(len(self.folds)):
+
+            if i == test_fold_idx:
+                continue
+            else:
+                undersampled_train_set += self.__random_undersample_fold(i)
+        return undersampled_train_set
+
+
+    def __random_undersample_fold(self, fold_idx):
+        
+        minority_class = min(self.class_counts)
+        minority_class_fold_count = len(self.class_folds[minority_class][fold_idx])
+        
+        samples_to_remove = []
+        for df_class in self.classes:
+            if df_class == minority_class:
+                continue
+            
+            else:
+                current_class_count = len(self.class_folds[df_class][fold_idx])
+                amount_to_remove = current_class_count - minority_class_fold_count
+                samples_to_remove += random.sample(
+                    self.class_folds[df_class][fold_idx], amount_to_remove)
+          
+        undersampled_fold = deepcopy(self.folds[fold_idx])
+        for sample in samples_to_remove:
+            undersampled_fold.remove(sample)
+
+        return undersampled_fold

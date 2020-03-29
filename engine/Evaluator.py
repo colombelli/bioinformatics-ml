@@ -211,7 +211,7 @@ class Evaluator:
 
         aucs = []
         stabilities = []
-        for fold_rankings in final_rankings:
+        for i, fold_rankings in enumerate(final_rankings):
             self.rankings = self.__get_gene_lists(fold_rankings)
 
             print("Computing stabilities...")
@@ -219,7 +219,7 @@ class Evaluator:
 
             
             print("Computing AUCs...")
-            aucs = aucs + self.__compute_aucs(folds_sampling)
+            aucs = aucs + self.__compute_intermediate_aucs(folds_sampling[i])
                 
         self.stabilities = stabilities
         self.aucs = aucs
@@ -301,3 +301,20 @@ class Evaluator:
         file_names_style = path + "*.rds"
         return [f for f in glob.glob(f"{file_names_style}") 
                     if AGGREGATED_RANKING_FILE_NAME not in f]
+
+    
+    def __compute_intermediate_aucs(self, fold_sampling):
+        
+        training, testing = fold_sampling
+
+        bs_aucs = []
+        for ranking in self.rankings:
+
+            th_aucs = []
+            for th in self.thresholds:
+                genes = ranking[0:th]
+                self.__set_data_axes(training, testing, genes)
+                th_aucs.append(self.get_auc())
+
+            bs_aucs.append(th_aucs)
+        return bs_aucs
