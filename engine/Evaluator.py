@@ -199,12 +199,28 @@ class Evaluator:
     def evaluate_intermediate_hyb_rankings(self):
         
         level1_rankings, level2_rankings = self.__get_intermediate_rankings()
-        return self.__evaluate_level2_rankings(level2_rankings)        
-
+        
+        print("\nEvaluating level 1 rankings...")
+        level1_evaluation = self.__evaluate_level1_rankings(level1_rankings)
+        print("\n\nEvaluating level 2 rankings...")
+        level2_evaluation = self.__evaluate_intermediate_rankings(level2_rankings)        
+        return level1_evaluation, level2_evaluation
         
 
+    def __evaluate_level1_rankings(self, level1_rankings):
+        
+        level1_evaluation = {}  # a dict where each key is a single fs method
+                                # and the value is a intermediate ranking like
+                                # evaluation
 
-    def __evaluate_level2_rankings(self, final_rankings):
+        for fs_method in level1_rankings:
+            print("\nEvaluating", fs_method, "FS method")
+            level1_evaluation[fs_method] = self.__evaluate_intermediate_rankings(
+                                                        level1_rankings[fs_method])
+        return level1_evaluation
+
+
+    def __evaluate_intermediate_rankings(self, final_rankings):
         
         with open(self.dm.results_path+"fold_sampling.pkl", 'rb') as file:
             folds_sampling = pickle.load(file)
@@ -221,8 +237,6 @@ class Evaluator:
             print("Computing AUCs...")
             aucs = aucs + self.__compute_intermediate_aucs(folds_sampling[i])
                 
-        self.stabilities = stabilities
-        self.aucs = aucs
         return aucs, stabilities
 
     
@@ -231,54 +245,99 @@ class Evaluator:
         level2_rankings = []  # each item is a list representing each fold iteration
                               # these lists contain the rankings generated with each bootstrap
 
-        level1_rankings = []  # each item is a list representing each fold iteration
-                              # each item inside this list is also a list representing each bootstrap
-                              # each item of the bootstrap list is single feature selection generated ranking
+        level1_rankings = {}  # each key is a fs method
+                              # each value is a level2_rankings kind-of-structure
+                              
         # so it looks like:
-        # level1_rankings = [
-        #              fold1 = [
-        #                       bootstrap1 = [r1, r2, r3, r4, r5],
-        #                       bootstrap2 = [r1, r2, r3, r4, r5],
-        #                       bootstrap3 = [r1, r2, r3, r4, r5],
+        # level1_rankings = {
+        #              fs1: [
+        #                       fold1 = [r1, r2, r3, ...],
+        #                       fold2 = [r1, r2, r3, ...],
+        #                       fold3 = [r1, r2, r3, ...],
         #                       ...
         #               ], 
-        #               fold2 = [
-        #                       bootstrap1 = [r1, r2, r3, r4, r5],
-        #                       bootstrap2 = [r1, r2, r3, r4, r5],
-        #                       bootstrap3 = [r1, r2, r3, r4, r5],
+        #               fs2: [
+        #                       fold1 = [r1, r2, r3, ...],
+        #                       fold2 = [r1, r2, r3, ...],
+        #                       fold3 = [r1, r2, r3, ...],
         #                       ...
         #               ],
         #               ...         
-        # ]
+        # }
 
-
-        for fold_iteration in range(1, self.dm.num_folds+1):
-            
-            bs_rankings = []
-            bs_single_rankings = []
-            for bootstrap in range(1, self.dm.num_bootstraps+1):
-                
-                ranking_path = self.__build_ranking_path_string(fold_iteration, bootstrap)
-                
-                bs_rankings.append(self.__load_agg_rankings(ranking_path))
-                
-
-                single_ranking_file_names = self.__get_single_fs_ranking_file_names(
-                                                        ranking_path) 
-                single_fs_rankings = self.__load_single_fs_rankings(
-                                                single_ranking_file_names)
-                bs_single_rankings.append(single_fs_rankings)
-                
-
-            level1_rankings.append(bs_single_rankings)
-            level2_rankings.append(bs_rankings)
+        self.__init_level1_rankings_dict(level1_rankings)
+        print("Loading level 1 rankings...")
+        self.__load_level1_rankings(level1_rankings)
+        print("Loading level 2 rankings...")
+        self.__load_level2_rankings(level2_rankings)
 
         return level1_rankings, level2_rankings
+    
+
+    def __init_level1_rankings_dict(self, level1_rankings):
+
+        fs_names = self.__get_single_fs_names()
+        for fs_name in fs_names:
+            level1_rankings[fs_name] = []
+        return
+
+
+    def __get_single_fs_names(self):
+        
+        ranking_path = self.__build_ranking_path_string(1, 1)
+        single_ranking_file_names = self.__get_single_fs_ranking_file_names(
+                                                        ranking_path)
+        single_fs_names = []
+        for path in single_ranking_file_names:
+            single_fs_names.append(
+                self.__get_fs_method_name_by_its_path(path)
+            )
+
+        return single_fs_names
 
 
     def __build_ranking_path_string(self, fold_iteration, bootstrap):
         return self.dm.results_path + "fold_" + str(fold_iteration) + "/" + \
                     "bootstrap_" + str(bootstrap) + "/"
+
+
+    def __get_fs_method_name_by_its_path(self, path):
+        return path.split("/")[-1].split(".")[0]
+
+
+    def __get_single_fs_ranking_file_names(self, path):
+        file_names_style = path + "*.rds"
+        return [f for f in glob.glob(f"{file_names_style}") 
+                    if AGGREGATED_RANKING_FILE_NAME not in f]
+    
+
+    def __load_level1_rankings(self, level1_rankings):
+        
+        for fs_method in level1_rankings:
+            for fold_iteration in range(1, self.dm.num_folds+1):
+                
+                bs_rankings = []
+                for bootstrap in range(1, self.dm.num_bootstraps+1):
+                    
+                    ranking_path = self.__build_ranking_path_string(fold_iteration, bootstrap)
+                    bs_rankings.append(self.__load_single_fs_ranking(ranking_path, fs_method))
+
+                level1_rankings[fs_method].append(bs_rankings)
+        return
+
+    
+    def __load_level2_rankings(self, level2_rankings):
+
+        for fold_iteration in range(1, self.dm.num_folds+1):
+            
+            agg_rankings = []
+            for bootstrap in range(1, self.dm.num_bootstraps+1):
+                
+                ranking_path = self.__build_ranking_path_string(fold_iteration, bootstrap)
+                agg_rankings.append(self.__load_agg_rankings(ranking_path))
+
+            level2_rankings.append(agg_rankings)
+        return
 
 
     def __load_agg_rankings(self, ranking_path):
@@ -288,19 +347,14 @@ class Evaluator:
         return ranking
 
     
-    def __load_single_fs_rankings(self, paths):
-        rankings = []
-        for file in paths:
-            ranking = self.dm.load_RDS(file)
-            ranking = self.dm.r_to_pandas(ranking)
-            rankings.append(ranking)
-        return rankings
+    def __load_single_fs_ranking(self, ranking_path, fs_method):
+        file = ranking_path + fs_method + ".rds"
+        ranking = self.dm.load_RDS(file)
+        ranking = self.dm.r_to_pandas(ranking)
+        return ranking
 
 
-    def __get_single_fs_ranking_file_names(self, path):
-        file_names_style = path + "*.rds"
-        return [f for f in glob.glob(f"{file_names_style}") 
-                    if AGGREGATED_RANKING_FILE_NAME not in f]
+    
 
     
     def __compute_intermediate_aucs(self, fold_sampling):

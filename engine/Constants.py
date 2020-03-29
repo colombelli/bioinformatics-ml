@@ -21,8 +21,11 @@ SINGLE_FS_INFO_FILE = "Feature Selection method: "
 MULTIPLE_FS_INFO_FILE = "Feature Selection methods:"
 SEED_INFO_FILE = "Seed: "
 
+INTERMEDIATE_RESULTS_FOLDER_NAME = "intermediate_results"
+
 # csv files
 CSV_AUC_TABLE_FILE_NAME = "aucs_results.csv"
+CSV_STB_TABLE_FILE_NAME = "stbs_results.csv"
 LVL2_CSV_AUC_TABLE_FILE_NAME = "lvl2_aucs_results.csv"
 LVL2_CSV_STB_TABLE_FILE_NAME = "lvl2_stbs_results.csv"
 CSV_FINAL_RESULTS_TABLE_FILE_NAME = "final_results.csv"

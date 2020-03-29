@@ -6,6 +6,7 @@ from numpy import array as np_array
 from numpy import mean as np_mean
 from numpy import std as np_std
 from copy import deepcopy
+from os import mkdir
 
 class InformationManager:
 
@@ -159,7 +160,40 @@ class InformationManager:
         return
 
 
-    def create_level2_csv_tables(self, aucs, stabilities):
+    def create_intermediate_csv_tables(self, level1_evaluation, level2_evaluation):
+        print("\nCreating intermediate results csv files...")
+        self.__create_intermediate_results_folder()
+        self.__create_level1_csv_tables(level1_evaluation)
+        self.__create_level2_csv_tables(level2_evaluation[0], level2_evaluation[1])
+        return
+
+
+    def __create_intermediate_results_folder(self):
+        fold_dir = self.dm.results_path + "/" + INTERMEDIATE_RESULTS_FOLDER_NAME
+        try:
+            mkdir(fold_dir)
+        except:
+            print("Impossible to create directory:", fold_dir)
+            print("Either due to pre-path inexistence or because folder already exists.")
+        return
+
+
+    def __create_level1_csv_tables(self, level1_evaluation):
+        
+        for fs_method in level1_evaluation:
+            aucs = level1_evaluation[fs_method][0]
+            stabilities = level1_evaluation[fs_method][1]
+
+            auc_table_file_name = fs_method + "_" + CSV_AUC_TABLE_FILE_NAME
+            self.__create_intermediate_csv_auc_table(aucs, auc_table_file_name)
+            stb_table_file_name = fs_method + "_" + CSV_STB_TABLE_FILE_NAME
+            self.__create_intermediate_csv_stabilities_table(stabilities, stb_table_file_name)
+            final_results_file_name = fs_method + "_" + CSV_FINAL_RESULTS_TABLE_FILE_NAME
+            self.__create_intermediate_csv_final_results(aucs, stabilities, final_results_file_name)
+        return
+
+
+    def __create_level2_csv_tables(self, aucs, stabilities):
         self.__create_intermediate_csv_auc_table(aucs, LVL2_CSV_AUC_TABLE_FILE_NAME)
         self.__create_intermediate_csv_stabilities_table(stabilities, LVL2_CSV_STB_TABLE_FILE_NAME)
         self.__create_intermediate_csv_final_results(aucs, stabilities, LVL2_CSV_FINAL_RESULTS_TABLE_FILE_NAME)
@@ -168,7 +202,8 @@ class InformationManager:
     
     def __create_intermediate_csv_auc_table(self, aucs, table_name):
 
-        with open(self.dm.results_path+table_name, 'w', newline='') as file:
+        csv_path = self.dm.results_path+"/"+INTERMEDIATE_RESULTS_FOLDER_NAME+"/"+table_name
+        with open(csv_path, 'w', newline='') as file:
             writer = csv.writer(file)
             
             columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
@@ -188,8 +223,9 @@ class InformationManager:
 
     
     def __create_intermediate_csv_stabilities_table(self, stabilities, table_name):
-
-        with open(self.dm.results_path+table_name, 'w', newline='') as file:
+        
+        csv_path = self.dm.results_path+"/"+INTERMEDIATE_RESULTS_FOLDER_NAME+"/"+table_name
+        with open(csv_path, 'w', newline='') as file:
             writer = csv.writer(file)
             
             columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
@@ -211,7 +247,9 @@ class InformationManager:
 
         aucs = np_array(aucs).transpose()
         stabilities = np_array(stabilities).transpose()
-        with open(self.dm.results_path+table_name, 'w', newline='') as file:
+
+        csv_path = self.dm.results_path+"/"+INTERMEDIATE_RESULTS_FOLDER_NAME+"/"+table_name
+        with open(csv_path, 'w', newline='') as file:
             writer = csv.writer(file)
 
             writer.writerow(LVL2_CSV_FINAL_RESULTS_TABLE_COLUMNS)

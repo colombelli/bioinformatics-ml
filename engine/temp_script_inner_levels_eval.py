@@ -28,16 +28,17 @@ ev = Evaluator(dm, ths, False)
 im = InformationManager(dm, ev, str_methods, str_aggregators)
 
 print("\n\nStarting evaluation process...")
-aucs, stabilities = ev.evaluate_intermediate_hyb_rankings()
+level1_evaluation, level2_evaluation = ev.evaluate_intermediate_hyb_rankings()
 
-
+"""
 print("\n\nAUCs:")
 print(aucs)
 
 print("\n\nStabilities:")
 print(stabilities)
+"""
 
-im.create_level2_csv_tables(aucs, stabilities)
+im.create_intermediate_csv_tables(level1_evaluation, level2_evaluation)
 
 """
     print("\n\nCreating csv files...")
