@@ -69,6 +69,13 @@ class StratifiedKFold:
             len_folds[fold_with_less_samples] += 1
             
         return
+
+
+    def __append_in_final_folds(self, final_folds, current_class_folds):
+        
+        for i, samples in enumerate(current_class_folds):
+            final_folds[i] = final_folds[i] + samples
+        return
     
     
     def __shuffle_each_fold(self):
