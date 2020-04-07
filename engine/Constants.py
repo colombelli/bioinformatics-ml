@@ -1,6 +1,11 @@
 MAX_SEED = 9999999
 AGGREGATED_RANKING_FILE_NAME = "agg_ranking.rds"
 
+# Used in Evaluator
+ROC_AUC_METRIC = "roc"
+PRECISION_RECALL_AUC_METRIC = "prc" 
+ACCURACY_METRIC = "acc"
+
 # Used in InformationManager
 SINGLE_FS_DESIGN = "Single FS Method"
 HYBRID_FS_DESIGN = "Hybrid Ensemble"

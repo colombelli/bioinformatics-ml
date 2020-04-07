@@ -19,14 +19,19 @@ class Evaluator:
         self.thresholds = None
         self.frac_thresholds = None
         self.__init_thresholds(thresholds, th_in_fraction)
+        
+        self.classifier = None
 
-        self.aucs = None
+        self.roc_aucs = None
+        self.pr_aucs = None
+        self.accuracies = None
         self.stabilities = None
         self.rankings = None
         self.training_x = None
         self.training_y = None
         self.testing_x = None
         self.testing_y = None
+
 
     
     def __init_thresholds(self, thresholds, th_in_fraction):
@@ -82,6 +87,9 @@ class Evaluator:
         return updated_int_thresholds, frac_thresholds
 
 
+    def __reset_classifier(self):
+        self.classifier = SVC(gamma='auto', probability=True)
+        return
 
 
     def __get_gene_lists(self, pd_rankings):
@@ -102,19 +110,24 @@ class Evaluator:
 
 
 
-    def get_auc(self):
+    def get_prediction_performance(self):
         
-        clf = SVC(gamma='auto', probability=True)
-        clf.fit(self.training_x, self.training_y)
+        self.__reset_classifier()
+        self.classifier.fit(self.training_x, self.training_y)
+        
+        accuracy = self.classifier.score(self.testing_x, self.testing_y)
 
-        y = self.testing_y
-        pred = clf.predict_proba(self.testing_x)
+        pred = self.classifier.predict_proba(self.testing_x)
         pred = self.__get_probs_positive_class(pred)
 
-        return metrics.roc_auc_score(np.array(y, dtype=int), pred)
+        roc_auc = metrics.roc_auc_score(np.array(self.testing_y, dtype=int), pred)
 
+        precision, recall, _ = metrics.precision_recall_curve(self.testing_y, pred)
+        pr_auc = metrics.auc(recall, precision)
+        
+        return accuracy, roc_auc, pr_auc
 
-
+        
     def __get_probs_positive_class(self, pred):
         positive_probs = []
 
@@ -128,7 +141,6 @@ class Evaluator:
 
 
 
-
     def evaluate_final_rankings(self):
 
         final_rankings = self.__get_final_rankings()
@@ -139,13 +151,16 @@ class Evaluator:
 
         with open(self.dm.results_path+"fold_sampling.pkl", 'rb') as file:
                 folds_sampling = pickle.load(file)
-        print("Computing AUCs...")
-        aucs = self.__compute_aucs(folds_sampling)
-        
-        self.aucs = aucs
-        self.stabilities = stabilities
+        print("Computing prediction performances...")
+        prediction_performances = self.__compute_prediction_performances(folds_sampling)
 
-        return aucs, stabilities
+
+        self.stabilities = stabilities
+        self.accuracies = prediction_performances[ACCURACY_METRIC]
+        self.roc_aucs = prediction_performances[ROC_AUC_METRIC]
+        self.pr_aucs = prediction_performances[PRECISION_RECALL_AUC_METRIC]
+        
+        return self.stabilities, self.accuracies, self.roc_aucs, self.pr_aucs
     
 
     def __get_final_rankings(self):
@@ -169,19 +184,34 @@ class Evaluator:
         return th_stabilities
 
     
-    def __compute_aucs(self, folds_sampling):
+    def __compute_prediction_performances(self, folds_sampling):
         
-        fold_aucs = []
+        prediction_performances = {
+            ACCURACY_METRIC: [],
+            ROC_AUC_METRIC: [],
+            PRECISION_RECALL_AUC_METRIC: []
+        }
+
         for i, (training, testing) in enumerate(folds_sampling):
 
-            th_aucs = []
+            th_accuracies = []
+            th_roc_aucs = []
+            th_pr_aucs = []
+            
             for th in self.thresholds:
                 genes = self.rankings[i][0:th]
                 self.__set_data_axes(training, testing, genes)
-                th_aucs.append(self.get_auc())
+                acc, roc, pr = self.get_prediction_performance()
+                th_accuracies.append(acc)
+                th_roc_aucs.append(roc)
+                th_pr_aucs.append(pr)
 
-            fold_aucs.append(th_aucs)
-        return fold_aucs
+            prediction_performances[ACCURACY_METRIC].append(th_accuracies)
+            prediction_performances[ROC_AUC_METRIC].append(th_roc_aucs)
+            prediction_performances[PRECISION_RECALL_AUC_METRIC].append(th_pr_aucs)
+        
+        return prediction_performances
+
 
 
     def __set_data_axes(self, training, testing, genes):
@@ -196,6 +226,7 @@ class Evaluator:
         return
 
 
+    #TO-DO: FIX THIS METHODS
     def evaluate_intermediate_hyb_rankings(self):
         
         level1_rankings, level2_rankings = self.__get_intermediate_rankings()
@@ -355,9 +386,8 @@ class Evaluator:
 
 
     
-
-    
-    def __compute_intermediate_aucs(self, fold_sampling):
+    #TO-DO: FIX THIS METHOD
+    def __compute_intermediate_aucs(self, fold_sampling, curve=ROC_CURVE_SELECTION):
         
         training, testing = fold_sampling
 
@@ -368,7 +398,7 @@ class Evaluator:
             for th in self.thresholds:
                 genes = ranking[0:th]
                 self.__set_data_axes(training, testing, genes)
-                th_aucs.append(self.get_auc())
+                th_aucs.append(self.get_auc(curve))
 
             bs_aucs.append(th_aucs)
         return bs_aucs
