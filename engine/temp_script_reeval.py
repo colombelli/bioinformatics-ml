@@ -47,13 +47,7 @@ for e in exp:
     im = InformationManager(dm, ev, str_methods, str_aggregators)
 
     print("\n\nStarting evaluation process...")
-    aucs, stabilities = ev.evaluate_final_rankings()
-
-    print("\n\nAUCs:")
-    print(aucs)
-
-    print("\n\nStabilities:")
-    print(stabilities)
+    ev.evaluate_final_rankings()
 
     print("\n\nCreating csv files...")
     im.create_csv_tables()

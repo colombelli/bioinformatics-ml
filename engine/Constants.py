@@ -1,9 +1,9 @@
 MAX_SEED = 9999999
 AGGREGATED_RANKING_FILE_NAME = "agg_ranking.rds"
 
-# Used in Evaluator
+# Used in Evaluator and InformationManager
 ROC_AUC_METRIC = "roc"
-PRECISION_RECALL_AUC_METRIC = "prc" 
+PRECISION_RECALL_AUC_METRIC = "pr" 
 ACCURACY_METRIC = "acc"
 
 # Used in InformationManager
@@ -29,12 +29,14 @@ SEED_INFO_FILE = "Seed: "
 INTERMEDIATE_RESULTS_FOLDER_NAME = "intermediate_results"
 
 # csv files
-CSV_AUC_TABLE_FILE_NAME = "aucs_results.csv"
+CSV_PRED_TABLE_FILE_NAME = "prediction_performance_results.csv"
+CSV_AUC_TABLE_FILE_NAME = "_aucs_results.csv"
+CSV_ACCURACY_TABLE_FILE_NAME = "accuracies_results.csv"
 CSV_STB_TABLE_FILE_NAME = "stbs_results.csv"
 LVL2_CSV_AUC_TABLE_FILE_NAME = "lvl2_aucs_results.csv"
 LVL2_CSV_STB_TABLE_FILE_NAME = "lvl2_stbs_results.csv"
 CSV_FINAL_RESULTS_TABLE_FILE_NAME = "final_results.csv"
 LVL2_CSV_FINAL_RESULTS_TABLE_FILE_NAME = "lvl2_final_results.csv"
 CSV_AUC_TABLE_COLUMNS = ["th_frac", "th_int"] #auc1, auc2, ..., aucn
-CSV_FINAL_RESULTS_TABLE_COLUMNS = ["th_frac", "th_int", "stabilities", "mean_AUC", "std_AUC"]
+CSV_FINAL_RESULTS_TABLE_COLUMNS = ["th_frac", "th_int", "stabilities", "mean_ACC", "std_ACC", "mean_ROC_AUC", "std_ROC_AUC", "mean_PR_AUC", "std_PR_AUC"]
 LVL2_CSV_FINAL_RESULTS_TABLE_COLUMNS = ["th_frac", "th_int", "mean_stb", "std_stb", "mean_AUC", "std_AUC"]

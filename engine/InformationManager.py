@@ -112,14 +112,18 @@ class InformationManager:
 
     
     def create_csv_tables(self):
-        self.__create_csv_auc_table()
+        self.__create_csv_auc_table(ROC_AUC_METRIC)
+        self.__create_csv_auc_table(PRECISION_RECALL_AUC_METRIC)
+        self.__create_csv_accuracy_table()
         self.__create_csv_final_results()
         return
     
 
-    def __create_csv_auc_table(self):
+
+    def __create_csv_auc_table(self, curve=ROC_AUC_METRIC):
         
-        with open(self.dm.results_path+CSV_AUC_TABLE_FILE_NAME, 'w', newline='') as file:
+        file_name = curve + CSV_AUC_TABLE_FILE_NAME
+        with open(self.dm.results_path+file_name, 'w', newline='') as file:
             writer = csv.writer(file)
             
             columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
@@ -132,10 +136,33 @@ class InformationManager:
                 frac_th = self.evaluator.frac_thresholds[i]
                 
                 aucs = []
-                for auc in self.evaluator.aucs:
+                for auc in self.evaluator.prediction_performances[curve]:
                     aucs.append(auc[i])
 
                 row = [frac_th, th] + aucs
+                writer.writerow(row)
+        return
+
+
+    def __create_csv_accuracy_table(self):
+        
+        with open(self.dm.results_path+CSV_ACCURACY_TABLE_FILE_NAME, 'w', newline='') as file:
+            writer = csv.writer(file)
+            
+            columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
+            for i in range(self.dm.num_folds):
+                columns.append("ACC_"+str(i+1))
+
+            writer.writerow(columns)
+
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_thresholds[i]
+                
+                accuracies = []
+                for acc in self.evaluator.prediction_performances[ACCURACY_METRIC]:
+                    accuracies.append(acc[i])
+
+                row = [frac_th, th] + accuracies
                 writer.writerow(row)
         return
         
@@ -151,11 +178,25 @@ class InformationManager:
                 frac_th = self.evaluator.frac_thresholds[i]
                 stability = self.evaluator.stabilities[i]
                 
-                aucs = np_array(self.evaluator.aucs).transpose()[i]
-                mean_auc = np_mean(aucs)
-                std_auc = np_std(aucs)
+                accuracies = np_array(
+                    self.evaluator.prediction_performances[ACCURACY_METRIC]).transpose()[i]
+                mean_acc = np_mean(accuracies)
+                std_acc = np_std(accuracies)
 
-                row = [frac_th, th, stability, mean_auc, std_auc]
+                roc_aucs = np_array(
+                    self.evaluator.prediction_performances[ROC_AUC_METRIC]).transpose()[i]
+                mean_roc_auc = np_mean(roc_aucs)
+                std_roc_auc = np_std(roc_aucs)
+
+                pr_aucs = np_array(
+                    self.evaluator.prediction_performances[PRECISION_RECALL_AUC_METRIC]).transpose()[i]
+                mean_pr_auc = np_mean(pr_aucs)
+                std_pr_auc = np_std(pr_aucs)
+
+                row = [frac_th, th, stability, 
+                        mean_acc, std_acc,
+                        mean_roc_auc, std_roc_auc,
+                        mean_pr_auc, std_pr_auc]
                 writer.writerow(row)
         return
 

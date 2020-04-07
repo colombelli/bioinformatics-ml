@@ -22,9 +22,7 @@ class Evaluator:
         
         self.classifier = None
 
-        self.roc_aucs = None
-        self.pr_aucs = None
-        self.accuracies = None
+        self.prediction_performances = None
         self.stabilities = None
         self.rankings = None
         self.training_x = None
@@ -156,11 +154,9 @@ class Evaluator:
 
 
         self.stabilities = stabilities
-        self.accuracies = prediction_performances[ACCURACY_METRIC]
-        self.roc_aucs = prediction_performances[ROC_AUC_METRIC]
-        self.pr_aucs = prediction_performances[PRECISION_RECALL_AUC_METRIC]
+        self.prediction_performances = prediction_performances
         
-        return self.stabilities, self.accuracies, self.roc_aucs, self.pr_aucs
+        return self.stabilities, self.prediction_performances
     
 
     def __get_final_rankings(self):
