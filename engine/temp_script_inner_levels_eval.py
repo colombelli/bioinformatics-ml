@@ -30,19 +30,5 @@ im = InformationManager(dm, ev, str_methods, str_aggregators)
 print("\n\nStarting evaluation process...")
 level1_evaluation, level2_evaluation = ev.evaluate_intermediate_hyb_rankings()
 
-"""
-print("\n\nAUCs:")
-print(aucs)
-
-print("\n\nStabilities:")
-print(stabilities)
-"""
 
 im.create_intermediate_csv_tables(level1_evaluation, level2_evaluation)
-
-"""
-    print("\n\nCreating csv files...")
-    im.create_csv_tables()
-
-    print("\nExperiment", e,"reevaluated!\n\n")
-"""

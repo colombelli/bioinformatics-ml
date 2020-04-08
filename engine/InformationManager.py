@@ -222,27 +222,66 @@ class InformationManager:
     def __create_level1_csv_tables(self, level1_evaluation):
         
         for fs_method in level1_evaluation:
-            aucs = level1_evaluation[fs_method][0]
-            stabilities = level1_evaluation[fs_method][1]
+            stabilities = level1_evaluation[fs_method][0]
+            prediction_performances = level1_evaluation[fs_method][1]
+            
+            accs = prediction_performances[ACCURACY_METRIC]
+            roc_aucs = prediction_performances[ROC_AUC_METRIC]
+            pr_aucs = prediction_performances[PRECISION_RECALL_AUC_METRIC]
 
-            auc_table_file_name = fs_method + "_" + CSV_AUC_TABLE_FILE_NAME
-            self.__create_intermediate_csv_auc_table(aucs, auc_table_file_name)
+
+            accs_table_file_name = fs_method + "_" + CSV_ACCURACY_TABLE_FILE_NAME
+            self.__create_intermediate_csv_accuracy_table(
+                accs, accs_table_file_name) 
+
+            roc_aucs_table_file_name = fs_method + "_roc" + CSV_AUC_TABLE_FILE_NAME
+            self.__create_intermediate_csv_auc_table(
+                roc_aucs, roc_aucs_table_file_name, ROC_AUC_METRIC)
+
+            pr_aucs_table_file_name = fs_method + "_pr" + CSV_AUC_TABLE_FILE_NAME
+            self.__create_intermediate_csv_auc_table(
+                pr_aucs, pr_aucs_table_file_name, PRECISION_RECALL_AUC_METRIC)
+
             stb_table_file_name = fs_method + "_" + CSV_STB_TABLE_FILE_NAME
             self.__create_intermediate_csv_stabilities_table(stabilities, stb_table_file_name)
+
             final_results_file_name = fs_method + "_" + CSV_FINAL_RESULTS_TABLE_FILE_NAME
-            self.__create_intermediate_csv_final_results(aucs, stabilities, final_results_file_name)
+            self.__create_intermediate_csv_final_results(prediction_performances, stabilities, final_results_file_name)
         return
 
 
-    def __create_level2_csv_tables(self, aucs, stabilities):
-        self.__create_intermediate_csv_auc_table(aucs, LVL2_CSV_AUC_TABLE_FILE_NAME)
-        self.__create_intermediate_csv_stabilities_table(stabilities, LVL2_CSV_STB_TABLE_FILE_NAME)
-        self.__create_intermediate_csv_final_results(aucs, stabilities, LVL2_CSV_FINAL_RESULTS_TABLE_FILE_NAME)
+    def __create_level2_csv_tables(self, stabilities, prediction_performances):
+        
+        self.__create_intermediate_csv_auc_table(
+            prediction_performances[ROC_AUC_METRIC], 
+            LVL2_CSV_ROC_AUC_TABLE_FILE_NAME,
+            ROC_AUC_METRIC
+        )
+        
+        self.__create_intermediate_csv_auc_table(
+            prediction_performances[PRECISION_RECALL_AUC_METRIC], 
+            LVL2_CSV_PR_AUC_TABLE_FILE_NAME, 
+            PRECISION_RECALL_AUC_METRIC
+        )
+
+        self.__create_intermediate_csv_accuracy_table(
+            prediction_performances[ACCURACY_METRIC],
+            LVL2_CSV_ACCURACY_TABLE_FILE_NAME
+        )
+
+        self.__create_intermediate_csv_stabilities_table(
+            stabilities, LVL2_CSV_STB_TABLE_FILE_NAME)
+
+        self.__create_intermediate_csv_final_results(
+            prediction_performances, 
+            stabilities, 
+            LVL2_CSV_FINAL_RESULTS_TABLE_FILE_NAME
+        )
         return
 
     
-    def __create_intermediate_csv_auc_table(self, aucs, table_name):
-
+    def __create_intermediate_csv_auc_table(self, aucs, table_name, curve=ROC_AUC_METRIC):
+        
         csv_path = self.dm.results_path+"/"+INTERMEDIATE_RESULTS_FOLDER_NAME+"/"+table_name
         with open(csv_path, 'w', newline='') as file:
             writer = csv.writer(file)
@@ -258,6 +297,28 @@ class InformationManager:
             for i, th in enumerate(self.evaluator.thresholds):
                 frac_th = self.evaluator.frac_thresholds[i]
                 row = [frac_th, th] + list(aucs[i])
+
+                writer.writerow(row)
+        return
+
+
+    def __create_intermediate_csv_accuracy_table(self, accs, table_name):
+        
+        csv_path = self.dm.results_path+"/"+INTERMEDIATE_RESULTS_FOLDER_NAME+"/"+table_name
+        with open(csv_path, 'w', newline='') as file:
+            writer = csv.writer(file)
+            
+            columns = deepcopy(CSV_AUC_TABLE_COLUMNS)
+            for i in range(len(accs)):
+                columns.append("ACC_"+str(i+1))
+
+            writer.writerow(columns)
+
+            accs = np_array(accs).transpose()
+
+            for i, th in enumerate(self.evaluator.thresholds):
+                frac_th = self.evaluator.frac_thresholds[i]
+                row = [frac_th, th] + list(accs[i])
 
                 writer.writerow(row)
         return
@@ -284,10 +345,13 @@ class InformationManager:
         return
 
 
-    def __create_intermediate_csv_final_results(self, aucs, stabilities, table_name):
+    def __create_intermediate_csv_final_results(self, prediction_performances, stabilities, table_name):
 
-        aucs = np_array(aucs).transpose()
         stabilities = np_array(stabilities).transpose()
+
+        accs = np_array(prediction_performances[ACCURACY_METRIC]).transpose()
+        roc_aucs = np_array(prediction_performances[ROC_AUC_METRIC]).transpose()
+        pr_aucs = np_array(prediction_performances[PRECISION_RECALL_AUC_METRIC]).transpose()
 
         csv_path = self.dm.results_path+"/"+INTERMEDIATE_RESULTS_FOLDER_NAME+"/"+table_name
         with open(csv_path, 'w', newline='') as file:
@@ -295,17 +359,26 @@ class InformationManager:
 
             writer.writerow(LVL2_CSV_FINAL_RESULTS_TABLE_COLUMNS)
 
-            
             for i, th in enumerate(self.evaluator.thresholds):
                 frac_th = self.evaluator.frac_thresholds[i]
-                
-                mean_auc = np_mean(aucs[i])
-                std_auc = np_std(aucs[i])
 
                 mean_stb = np_mean(stabilities[i])
                 std_stb = np_std(stabilities[i])
+                
+                mean_acc = np_mean(accs[i])
+                std_acc = np_std(accs[i])
 
-                row = [frac_th, th, mean_stb, std_stb, mean_auc, std_auc]
+                mean_roc_auc = np_mean(roc_aucs[i])
+                std_roc_auc = np_std(roc_aucs[i])
+
+                mean_pr_auc = np_mean(pr_aucs[i])
+                std_pr_auc = np_std(pr_aucs[i])
+
+                row = [frac_th, th, mean_stb, std_stb, 
+                    mean_acc, std_acc, 
+                    mean_roc_auc, std_roc_auc,
+                    mean_pr_auc, std_pr_auc
+                ]
                 writer.writerow(row)
 
         return

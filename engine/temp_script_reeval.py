@@ -16,11 +16,12 @@ seed = 42
 str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "OneR"]
 str_aggregators = ["Mean Aggregation", "Mean Aggregation"]
 
-
+'''
 exp = ["Het_mean", "Hom_mean_geode", "Hom_mean_gr", "Hom_mean_oner", "Hom_mean_relieff",
         "Hom_mean_su", "sin_geode", "sin_gr", "sin_oner", "sin_relieff", "sin_su",
         "Hyb_mean_mean"]
-
+'''
+exp=["test"]
 exp_del_bs_folders = ["Het_mean", "sin_geode", "sin_gr", "sin_oner", "sin_relieff", "sin_su"]
 
 experiment_path = "/home/colombelli/Documents/ExperimentsNewTHs/KIRP/"

@@ -222,7 +222,6 @@ class Evaluator:
         return
 
 
-    #TO-DO: FIX THIS METHODS
     def evaluate_intermediate_hyb_rankings(self):
         
         level1_rankings, level2_rankings = self.__get_intermediate_rankings()
@@ -247,12 +246,17 @@ class Evaluator:
         return level1_evaluation
 
 
+
     def __evaluate_intermediate_rankings(self, final_rankings):
         
         with open(self.dm.results_path+"fold_sampling.pkl", 'rb') as file:
             folds_sampling = pickle.load(file)
 
-        aucs = []
+        prediction_performances = {
+            ACCURACY_METRIC: [],
+            ROC_AUC_METRIC: [],
+            PRECISION_RECALL_AUC_METRIC: []
+        }
         stabilities = []
         for i, fold_rankings in enumerate(final_rankings):
             self.rankings = self.__get_gene_lists(fold_rankings)
@@ -261,10 +265,13 @@ class Evaluator:
             stabilities.append(self.__compute_stabilities())
 
             
-            print("Computing AUCs...")
-            aucs = aucs + self.__compute_intermediate_aucs(folds_sampling[i])
+            print("Computing prediction performances...")
+            acc, roc, pr = self.__compute_intermediate_pred_perf(folds_sampling[i]) 
+            prediction_performances[ACCURACY_METRIC] += acc
+            prediction_performances[ROC_AUC_METRIC] += roc
+            prediction_performances[PRECISION_RECALL_AUC_METRIC] += pr
                 
-        return aucs, stabilities
+        return stabilities, prediction_performances
 
     
     def __get_intermediate_rankings(self):
@@ -382,19 +389,28 @@ class Evaluator:
 
 
     
-    #TO-DO: FIX THIS METHOD
-    def __compute_intermediate_aucs(self, fold_sampling, curve=ROC_CURVE_SELECTION):
+    def __compute_intermediate_pred_perf(self, fold_sampling):
         
         training, testing = fold_sampling
 
-        bs_aucs = []
+        bs_accs = []
+        bs_roc_aucs = []
+        bs_pr_aucs = []
         for ranking in self.rankings:
 
-            th_aucs = []
+            th_accs = []
+            th_roc_aucs = []
+            th_pr_aucs = []
             for th in self.thresholds:
                 genes = ranking[0:th]
                 self.__set_data_axes(training, testing, genes)
-                th_aucs.append(self.get_auc(curve))
+                acc, roc, pr = self.get_prediction_performance()
+                th_accs.append(acc)
+                th_roc_aucs.append(roc)
+                th_pr_aucs.append(pr)
 
-            bs_aucs.append(th_aucs)
-        return bs_aucs
+            bs_accs.append(th_accs)
+            bs_roc_aucs.append(th_roc_aucs)
+            bs_pr_aucs.append(th_pr_aucs)
+        return bs_accs, bs_roc_aucs, bs_pr_aucs
+    
