@@ -196,21 +196,21 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 
 dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
 results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hyb_mean_mean/"
-perform_selection_het(dataset_path, results_path)
+perform_selection_hyb(dataset_path, results_path)
 
 dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
 results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hyb_mean_mean/"
-perform_selection_het(dataset_path, results_path)
+perform_selection_hyb(dataset_path, results_path)
 
 dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
 results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hyb_mean_mean/"
-perform_selection_het(dataset_path, results_path)
+perform_selection_hyb(dataset_path, results_path)
 
 dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hyb_mean_mean/"
-perform_selection_het(dataset_path, results_path)
+perform_selection_hyb(dataset_path, results_path)
 
-
+"""
 
 ########### HETEROGENOUS EXPERIMENTS ##############
 
@@ -369,3 +369,4 @@ results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_relieff/"
 perform_selection_single(dataset_path, results_path, method_relief)
 results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_oner/"
 perform_selection_single(dataset_path, results_path, method_oner)
+"""
