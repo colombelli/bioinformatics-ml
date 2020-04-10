@@ -5,6 +5,7 @@ AGGREGATED_RANKING_FILE_NAME = "agg_ranking.rds"
 ROC_AUC_METRIC = "roc"
 PRECISION_RECALL_AUC_METRIC = "pr" 
 ACCURACY_METRIC = "acc"
+FINAL_CONFUSION_MATRICES_FILE_NAME = "final_confusion_matrices.pkl"
 
 # Used in InformationManager
 SINGLE_FS_DESIGN = "Single FS Method"

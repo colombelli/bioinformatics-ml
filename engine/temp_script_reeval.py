@@ -51,6 +51,6 @@ for e in exp:
     ev.evaluate_final_rankings()
 
     print("\n\nCreating csv files...")
-    im.create_csv_tables()
+    #im.create_csv_tables()
 
     print("\nExperiment", e,"reevaluated!\n\n")

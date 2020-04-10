@@ -2,7 +2,6 @@ import pandas as pd
 import pickle
 import glob
 from sklearn.svm import SVC
-from sklearn.metrics import classification_report, confusion_matrix
 from sklearn import metrics
 import numpy as np
 import kuncheva_index as ki
@@ -30,6 +29,7 @@ class Evaluator:
         self.testing_x = None
         self.testing_y = None
 
+        self.confusion_matrices = []
 
     
     def __init_thresholds(self, thresholds, th_in_fraction):
@@ -88,6 +88,10 @@ class Evaluator:
     def __reset_classifier(self):
         self.classifier = SVC(gamma='auto', probability=True)
         return
+    
+    def __reset_confusion_matrices(self):
+        self.confusion_matrices = []
+        return
 
 
     def __get_gene_lists(self, pd_rankings):
@@ -112,7 +116,7 @@ class Evaluator:
         
         self.__reset_classifier()
         self.classifier.fit(self.training_x, self.training_y)
-        
+
         accuracy = self.classifier.score(self.testing_x, self.testing_y)
 
         pred = self.classifier.predict_proba(self.testing_x)
@@ -125,7 +129,7 @@ class Evaluator:
         
         return accuracy, roc_auc, pr_auc
 
-        
+
     def __get_probs_positive_class(self, pred):
         positive_probs = []
 
@@ -152,7 +156,8 @@ class Evaluator:
         print("Computing prediction performances...")
         prediction_performances = self.__compute_prediction_performances(folds_sampling)
 
-
+        self.__save_confusion_matrices(FINAL_CONFUSION_MATRICES_FILE_NAME)
+        self.__reset_confusion_matrices()
         self.stabilities = stabilities
         self.prediction_performances = prediction_performances
         
@@ -193,7 +198,8 @@ class Evaluator:
             th_accuracies = []
             th_roc_aucs = []
             th_pr_aucs = []
-            
+            th_conf_matrices = {}
+
             for th in self.thresholds:
                 genes = self.rankings[i][0:th]
                 self.__set_data_axes(training, testing, genes)
@@ -201,14 +207,14 @@ class Evaluator:
                 th_accuracies.append(acc)
                 th_roc_aucs.append(roc)
                 th_pr_aucs.append(pr)
+                th_conf_matrices[th] = self.__compute_confusion_matrix()
 
             prediction_performances[ACCURACY_METRIC].append(th_accuracies)
             prediction_performances[ROC_AUC_METRIC].append(th_roc_aucs)
             prediction_performances[PRECISION_RECALL_AUC_METRIC].append(th_pr_aucs)
+            self.confusion_matrices.append(th_conf_matrices)
         
         return prediction_performances
-
-
 
     def __set_data_axes(self, training, testing, genes):
 
@@ -219,6 +225,19 @@ class Evaluator:
         self.training_y = self.__get_y(training_df)
         self.testing_x = self.__get_x(testing_df, genes)
         self.testing_y = self.__get_y(testing_df)
+        return
+
+
+    def __compute_confusion_matrix(self):
+        predicted = self.classifier.predict(self.testing_x)
+        real = self.testing_y
+        confusion_matrix = metrics.confusion_matrix(real, predicted)
+        return confusion_matrix
+
+    def __save_confusion_matrices(self, file_name):
+        path = self.dm.results_path + file_name
+        with open(path, 'wb') as handle:
+            pickle.dump(self.confusion_matrices, handle, protocol=pickle.HIGHEST_PROTOCOL)
         return
 
 
