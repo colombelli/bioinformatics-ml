@@ -1,4 +1,5 @@
 *.ipynb linguist-vendored
 *.css linguist-detectable=false
 *.css.map linguist-detectable=false
+*.scss linguist-detectable=false
 
