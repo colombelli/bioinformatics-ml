@@ -34,7 +34,8 @@ class DataManager:
         self.folds = None
         self.current_fold_iteration = 0
         self.current_bootstraps = None
-
+        self.bs_rankings = None     # only used if heavy selection is required by 
+                                    # any of the aggregation methods
 
         self.results_path = results_path
 
