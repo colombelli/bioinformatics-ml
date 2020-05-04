@@ -7,8 +7,9 @@ import multiprocessing as mp
 class Hybrid:
     
     # fs_methods: a tuple (script name, language which the script was written, .rds output name)
+    # thresholds: must be list with integer values
     def __init__(self, data_manager:DataManager, fs_methods, 
-    first_aggregator, second_aggregator, thresholds):
+    first_aggregator, second_aggregator, thresholds:list):
 
         self.dm = data_manager
         self.thresholds = thresholds
@@ -125,6 +126,12 @@ class Hybrid:
             self.dm.save_encoded_ranking(final_ranking, file_path)
         return
 
+
+    # method for reusing the selection results of previous selection proccess
+    # also useful for getting the performance of different thresholds used in stability
+    # wheightened aggregation (which, if has more than one th, uses the mean th value)
+    def post_aggregation(self):
+        return
 
 
     def __set_rankings_to_aggregate(self, rankings):
