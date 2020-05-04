@@ -1,5 +1,5 @@
-from StratifiedKFold import StratifiedKFold
-from Constants import *
+from engine.StratifiedKFold import StratifiedKFold
+from engine.Constants import *
 import numpy as np
 import pandas as pd
 from sklearn.utils import resample
@@ -245,3 +245,9 @@ class DataManager:
         training_data = self.folds[self.current_fold_iteration][0]
         testing_data = self.folds[self.current_fold_iteration][1]
         return (training_data, testing_data)
+
+
+    
+    def set_bs_rankings(self, bs_rankings):
+        self.bs_rankings = bs_rankings
+        return

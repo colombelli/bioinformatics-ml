@@ -1,6 +1,6 @@
-from DataManager import DataManager
-from Evaluator import Evaluator
-from Constants import *
+from engine.DataManager import DataManager
+from engine.Evaluator import Evaluator
+from engine.Constants import *
 import csv
 from numpy import array as np_array
 from numpy import mean as np_mean

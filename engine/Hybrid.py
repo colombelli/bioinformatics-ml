@@ -1,8 +1,7 @@
-from Selector import PySelector, RSelector
-from Aggregator import Aggregator
-from DataManager import DataManager
-from Constants import *
-import multiprocessing as mp
+from engine.Selector import PySelector, RSelector
+from engine.Aggregator import Aggregator
+from engine.DataManager import DataManager
+from engine.Constants import *
 
 class Hybrid:
     
@@ -110,6 +109,8 @@ class Hybrid:
                 bs_rankings[j] = fst_layer_rankings
                 
             print("\nAggregating Level 1 rankings...")
+            self.dm.set_bs_rankings(bs_rankings)
+            
             fs_aggregations = self.fst_aggregator.aggregate(self)
             snd_layer_rankings = []
             for fs_aggregation in fs_aggregations:
@@ -117,7 +118,7 @@ class Hybrid:
                                                 output_path+AGGREGATED_RANKING_FILE_NAME)
                 snd_layer_rankings.append(fs_aggregation)
             
-            self.dm.bs_rankings = bs_rankings
+            
             file_path = self.dm.get_output_path(fold_iteration=i) + \
                             AGGREGATED_RANKING_FILE_NAME
             print("\n\nAggregating Level 2 rankings...")

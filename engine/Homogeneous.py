@@ -1,7 +1,7 @@
-from Selector import PySelector, RSelector
-from Aggregator import Aggregator
-from DataManager import DataManager
-from Constants import *
+from engine.Selector import PySelector, RSelector
+from engine.Aggregator import Aggregator
+from engine.DataManager import DataManager
+from engine.Constants import *
 
 class Homogeneous:
     

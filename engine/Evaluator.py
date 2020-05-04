@@ -4,9 +4,9 @@ import glob
 from sklearn.svm import SVC
 from sklearn import metrics
 import numpy as np
-import kuncheva_index as ki
-from DataManager import DataManager
-from Constants import *
+import engine.kuncheva_index as ki
+from engine.DataManager import DataManager
+from engine.Constants import *
 
 class Evaluator:
 

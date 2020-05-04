@@ -1,13 +1,12 @@
-from DataManager import DataManager
-from Hybrid import Hybrid
-from Heterogeneous import Heterogeneous
-from Homogeneous import Homogeneous
-from SingleFS import SingleFS
-from Evaluator import Evaluator
-from InformationManager import InformationManager
+from engine.DataManager import DataManager
+from engine.Hybrid import Hybrid
+from engine.Heterogeneous import Heterogeneous
+from engine.Homogeneous import Homogeneous
+from engine.SingleFS import SingleFS
+from engine.Evaluator import Evaluator
+from engine.InformationManager import InformationManager
 import rpy2.robjects.packages as rpackages
 from time import time
-
 
 
 def compute_print_time(st):
@@ -41,7 +40,7 @@ rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 
 
-num_bootstraps = 50
+num_bootstraps = 5
 num_folds = 5
 
 fs_methods = [
@@ -52,7 +51,8 @@ fs_methods = [
     ("oneR", "r", "or")
 ]
 
-aggregator = "mean"
+aggregator1 = "stb_weightened_layer1"
+aggregator2 = "mean"
 
 #ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
 #ths = [0.01, 0.02, 0.03, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4]
@@ -74,7 +74,7 @@ def perform_selection_hyb(dataset_path, results_path):
 
     ev = Evaluator(dm, ths, False)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
-    ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
+    ensemble = Hybrid(dm, fs_methods, aggregator1, aggregator2, ths)
 
     st = time()
     ensemble.select_features()
@@ -191,9 +191,15 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 
 
 
+def run():
+    
+    dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
+    results_path = '/home/colombelli/Desktop/thyroid/'
+    perform_selection_hyb(dataset_path, results_path)
+
 
 ########### HYBRID EXPERIMENTS ##############
-
+"""
 dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
 results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hyb_mean_mean/"
 perform_selection_hyb(dataset_path, results_path)
@@ -209,7 +215,7 @@ perform_selection_hyb(dataset_path, results_path)
 dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hyb_mean_mean/"
 perform_selection_hyb(dataset_path, results_path)
-
+"""
 """
 
 ########### HETEROGENOUS EXPERIMENTS ##############
