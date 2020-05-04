@@ -11,10 +11,10 @@ class Aggregator:
         self.aggregation_method = aggregation_method
         self.heavy = self.__is_heavy_required()
 
-    # method: a Hybrid/Heterogeneous/Homogeneous/SingleFS object
-    def aggregate(self, method): 
+    # selector: a Hybrid/Heterogeneous/Homogeneous object
+    def aggregate(self, selector): 
         agg_foo = importlib.import_module("aggreg_algorithms."+self.aggregation_method).aggregate
-        return agg_foo(self, method)
+        return agg_foo(self, selector)
 
     def __is_heavy_required(self):
         try:
