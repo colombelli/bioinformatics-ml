@@ -1,7 +1,9 @@
 import pandas as pd
 
-def aggregate(self, rankings):
+def aggregate(self, method):
         
+        rankings = method.rankings_to_aggregate
+
         aggregated_ranking = {}  # it's a dictionary where the keys 
                                 # represent the genes and its values 
                                 # are, at first, the sum of the ranking

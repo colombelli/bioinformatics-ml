@@ -10,7 +10,8 @@ class Homogeneous:
 
         self.dm = data_manager
         self.fs_method = self.__generate_fselector_object(fs_method)
-        self.aggregator = Aggregator(aggregator, self.dm)
+        self.aggregator = Aggregator(aggregator)
+        self.rankings_to_aggregate = None
 
 
         
@@ -42,9 +43,15 @@ class Homogeneous:
 
                 
             print("\nAggregating rankings...")
+            self.__set_rankings_to_aggregate(rankings)
             output_path = self.dm.get_output_path(fold_iteration=i)
-            aggregation = self.aggregator.aggregate(rankings)
+            aggregation = self.aggregator.aggregate(self)
             self.dm.save_encoded_ranking(aggregation, 
                                         output_path+AGGREGATED_RANKING_FILE_NAME)
             
+        return
+
+
+    def __set_rankings_to_aggregate(self, rankings):
+        self.rankings_to_aggregate = rankings
         return

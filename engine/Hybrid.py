@@ -8,17 +8,21 @@ class Hybrid:
     
     # fs_methods: a tuple (script name, language which the script was written, .rds output name)
     def __init__(self, data_manager:DataManager, fs_methods, 
-    first_aggregator, second_aggregator):
+    first_aggregator, second_aggregator, thresholds):
 
         self.dm = data_manager
+        self.thresholds = thresholds
+
         self.fs_methods = self.__generate_fselectors_object(fs_methods)
-        self.fst_aggregator = Aggregator(first_aggregator, self.dm)
-        self.snd_aggregator = Aggregator(second_aggregator, self.dm)
+        self.fst_aggregator = Aggregator(first_aggregator)
+        self.snd_aggregator = Aggregator(second_aggregator)
 
         if self.fst_aggregator.heavy or self.snd_aggregator.heavy:
             self.select_features = self.select_features_heavy
         else:
             self.select_features = self.select_features_light
+
+        self.rankings_to_aggregate = None
             
 
 
@@ -63,7 +67,8 @@ class Hybrid:
                     )
                 
                 print("\nAggregating Level 1 rankings...")
-                fs_aggregation = self.fst_aggregator.aggregate(fst_layer_rankings)
+                self.__set_rankings_to_aggregate(fst_layer_rankings)
+                fs_aggregation = self.fst_aggregator.aggregate(self)
                 self.dm.save_encoded_ranking(fs_aggregation, 
                                             output_path+AGGREGATED_RANKING_FILE_NAME)
                 snd_layer_rankings.append(fs_aggregation)
@@ -72,7 +77,8 @@ class Hybrid:
             file_path = self.dm.get_output_path(fold_iteration=i) + \
                             AGGREGATED_RANKING_FILE_NAME
             print("\n\nAggregating Level 2 rankings...")
-            final_ranking = self.snd_aggregator.aggregate(snd_layer_rankings)
+            self.__set_rankings_to_aggregate(snd_layer_rankings)
+            final_ranking = self.snd_aggregator.aggregate(self)
             self.dm.save_encoded_ranking(final_ranking, file_path)
         return
 
@@ -103,7 +109,7 @@ class Hybrid:
                 bs_rankings[j] = fst_layer_rankings
                 
             print("\nAggregating Level 1 rankings...")
-            fs_aggregations = self.fst_aggregator.aggregate(bs_rankings)
+            fs_aggregations = self.fst_aggregator.aggregate(self)
             snd_layer_rankings = []
             for fs_aggregation in fs_aggregations:
                 self.dm.save_encoded_ranking(fs_aggregation, 
@@ -114,6 +120,13 @@ class Hybrid:
             file_path = self.dm.get_output_path(fold_iteration=i) + \
                             AGGREGATED_RANKING_FILE_NAME
             print("\n\nAggregating Level 2 rankings...")
-            final_ranking = self.snd_aggregator.aggregate(snd_layer_rankings)
+            self.__set_rankings_to_aggregate(snd_layer_rankings)
+            final_ranking = self.snd_aggregator.aggregate(self)
             self.dm.save_encoded_ranking(final_ranking, file_path)
+        return
+
+
+
+    def __set_rankings_to_aggregate(self, rankings):
+        self.rankings_to_aggregate = rankings
         return

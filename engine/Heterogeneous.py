@@ -10,7 +10,8 @@ class Heterogeneous:
 
         self.dm = data_manager
         self.fs_methods = self.__generate_fselectors_object(fs_methods)
-        self.aggregator = Aggregator(aggregator, self.dm)
+        self.aggregator = Aggregator(aggregator)
+        self.rankings_to_aggregate = None
 
 
         
@@ -50,8 +51,14 @@ class Heterogeneous:
                 )
                 
             print("\nAggregating rankings...")
-            aggregation = self.aggregator.aggregate(rankings)
+            self.__set_rankings_to_aggregate(rankings)
+            aggregation = self.aggregator.aggregate(self)
             self.dm.save_encoded_ranking(aggregation, 
                                         output_path+AGGREGATED_RANKING_FILE_NAME)
             
+        return
+
+
+    def __set_rankings_to_aggregate(self, rankings):
+        self.rankings_to_aggregate = rankings
         return
