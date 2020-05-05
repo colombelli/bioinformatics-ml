@@ -18,6 +18,8 @@ class Evaluator:
         self.thresholds = None
         self.frac_thresholds = None
         self.__init_thresholds(thresholds, th_in_fraction)
+
+        self.current_threshold = None
         
         self.classifier = None
 
@@ -145,9 +147,6 @@ class Evaluator:
 
     def evaluate_final_rankings(self):
 
-        final_rankings = self.__get_final_rankings()
-        self.rankings = self.__get_gene_lists(final_rankings)
-
         print("Computing stabilities...")
         stabilities = self.__compute_stabilities()
 
@@ -164,27 +163,33 @@ class Evaluator:
         return self.stabilities, self.prediction_performances
     
 
-    def __get_final_rankings(self):
+    def __compute_stabilities(self):
+        
+        th_stabilities = []
+        for th in self.thresholds:
+
+            final_rankings = self.__get_final_rankings(th)
+            self.rankings = self.__get_gene_lists(final_rankings)
+
+            th_stabilities.append(self.get_stability(th))
+        return th_stabilities
+
+    
+    def __get_final_rankings(self, threshold):
 
         final_rankings = []
         for fold_iteration in range(self.dm.num_folds):
             ranking_path = self.dm.results_path + "fold_" + str(fold_iteration+1) + "/"
-            file = ranking_path + AGGREGATED_RANKING_FILE_NAME
-            ranking = self.dm.load_RDS(file)
-            ranking = self.dm.r_to_pandas(ranking)
+            file_path = ranking_path + AGGREGATED_RANKING_FILE_NAME + str(threshold) + ".csv"
+            #ranking = self.dm.load_RDS(file)
+            #ranking = self.dm.r_to_pandas(ranking)
+            ranking = self.dm.load_csv(file_path)
             final_rankings.append(ranking)
 
         return final_rankings
 
 
-    def __compute_stabilities(self):
-        
-        th_stabilities = []
-        for th in self.thresholds:
-            th_stabilities.append(self.get_stability(th))
-        return th_stabilities
 
-    
     def __compute_prediction_performances(self, folds_sampling):
         
         prediction_performances = {
@@ -201,6 +206,10 @@ class Evaluator:
             th_conf_matrices = {}
 
             for th in self.thresholds:
+                
+                final_rankings = self.__get_final_rankings(th)
+                self.rankings = self.__get_gene_lists(final_rankings)
+
                 genes = self.rankings[i][0:th]
                 self.__set_data_axes(training, testing, genes)
                 acc, roc, pr = self.get_prediction_performance()

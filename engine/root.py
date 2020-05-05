@@ -47,12 +47,12 @@ fs_methods = [
     ("reliefF", "python", "rf"),
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
+    ("symmetrical-uncertainty", "r", "su")#,
+    #("oneR", "r", "or")
 ]
 
-aggregator1 = "mean"
-#aggregator1 = "stb_weightened_layer1"
+#aggregator1 = "mean"
+aggregator1 = "stb_weightened_layer1"
 aggregator2 = "mean"
 
 #ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
@@ -62,7 +62,7 @@ ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
 seed = 42
 
 str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "OneR"]
-str_aggregators = ["Mean Aggregation", "Mean Aggregation"]
+str_aggregators = [aggregator1, aggregator2]
 
 
 
@@ -78,16 +78,16 @@ def perform_selection_hyb(dataset_path, results_path):
     ensemble = Hybrid(dm, fs_methods, aggregator1, aggregator2, ths)
 
     st = time()
-    ensemble.select_features()
+    #ensemble.select_features()
     compute_print_time(st)
 
     print("\n\nDecoding dataframe...")
-    #dm.decode_main_dm_df()
+    dm.decode_main_dm_df()
     print("\nStarting evaluation process...")
-    #ev.evaluate_final_rankings()
+    ev.evaluate_final_rankings()
 
     print("\n\nCreating csv files...")
-    #im.create_csv_tables()
+    im.create_csv_tables()
 
     print("\nEvaluating inner levels...")
     #level1_evaluation, level2_evaluation = ev.evaluate_intermediate_hyb_rankings()
@@ -196,6 +196,8 @@ def run():
     
     dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
     results_path = '/home/colombelli/Desktop/thyroid/'
+    #dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+    #results_path = "/home/colombelli/Desktop/BRCA/"
     perform_selection_hyb(dataset_path, results_path)
 
 
