@@ -20,6 +20,9 @@ class Evaluator:
         self.__init_thresholds(thresholds, th_in_fraction)
 
         self.current_threshold = None
+        self.current_eval_level = None  # 3: second layer aggregated rankings
+                                        # 2: first layer aggregated rankings
+                                        # 1: first rankings built from single FS methods
         
         self.classifier = None
 
@@ -146,6 +149,8 @@ class Evaluator:
 
 
     def evaluate_final_rankings(self):
+        
+        self.current_eval_level = 3
 
         print("Computing stabilities...")
         stabilities = self.__compute_stabilities()
@@ -163,15 +168,22 @@ class Evaluator:
         return self.stabilities, self.prediction_performances
     
 
-    def __compute_stabilities(self):
-        
+    def __compute_stabilities(self, final_rankings_intermediate=None):
+             
         th_stabilities = []
         for th in self.thresholds:
 
-            final_rankings = self.__get_final_rankings(th)
-            self.rankings = self.__get_gene_lists(final_rankings)
+            if self.current_eval_level == 3:
+                final_rankings = self.__get_final_rankings(th)
+            elif self.current_eval_level == 2:
+                final_rankings = self.__get_lvl2_rankings(th, final_rankings_intermediate)
+            elif self.current_eval_level == 1:
+                final_rankings = final_rankings_intermediate
 
+
+            self.rankings = self.__get_gene_lists(final_rankings)
             th_stabilities.append(self.get_stability(th))
+
         return th_stabilities
 
     
@@ -188,6 +200,16 @@ class Evaluator:
 
         return final_rankings
 
+    
+    def __get_lvl2_rankings(self, threshold, lvl2_ranking_paths):
+        
+        final_rankings = []
+        for ranking_path in lvl2_ranking_paths:
+            ranking_path += str(threshold) + ".csv"
+            ranking = self.dm.load_csv(ranking_path)
+            final_rankings.append(ranking)
+
+        return final_rankings
 
 
     def __compute_prediction_performances(self, folds_sampling):
@@ -255,8 +277,11 @@ class Evaluator:
         level1_rankings, level2_rankings = self.__get_intermediate_rankings()
         
         print("\nEvaluating level 1 rankings...")
+        self.current_eval_level = 1
         level1_evaluation = self.__evaluate_level1_rankings(level1_rankings)
+
         print("\n\nEvaluating level 2 rankings...")
+        self.current_eval_level = 2
         level2_evaluation = self.__evaluate_intermediate_rankings(level2_rankings)        
         return level1_evaluation, level2_evaluation
         
@@ -287,14 +312,13 @@ class Evaluator:
         }
         stabilities = []
         for i, fold_rankings in enumerate(final_rankings):
-            self.rankings = self.__get_gene_lists(fold_rankings)
 
             print("Computing stabilities...")
-            stabilities.append(self.__compute_stabilities())
+            stabilities.append(self.__compute_stabilities(fold_rankings))
 
             
             print("Computing prediction performances...")
-            acc, roc, pr = self.__compute_intermediate_pred_perf(folds_sampling[i]) 
+            acc, roc, pr = self.__compute_intermediate_pred_perf(folds_sampling[i], fold_rankings) 
             prediction_performances[ACCURACY_METRIC] += acc
             prediction_performances[ROC_AUC_METRIC] += roc
             prediction_performances[PRECISION_RECALL_AUC_METRIC] += pr
@@ -304,8 +328,15 @@ class Evaluator:
     
     def __get_intermediate_rankings(self):
 
-        level2_rankings = []  # each item is a list representing each fold iteration
-                              # these lists contain the rankings generated with each bootstrap
+        level2_rankings_paths = []  # each item is a list representing each fold iteration
+                              # these lists contain the ranking paths for each bootstrap
+                              # [
+                              # fold1 = [agg_r1, agg_r2, agg_r3, ...],
+                              # fold2 = [agg_r1, agg_r2, agg_r3, ...],
+                              # fold3 = [agg_r1, agg_r2, agg_r3, ...],
+                              #  ...
+                              # ] 
+
 
         level1_rankings = {}  # each key is a fs method
                               # each value is a level2_rankings kind-of-structure
@@ -330,10 +361,10 @@ class Evaluator:
         self.__init_level1_rankings_dict(level1_rankings)
         print("Loading level 1 rankings...")
         self.__load_level1_rankings(level1_rankings)
-        print("Loading level 2 rankings...")
-        self.__load_level2_rankings(level2_rankings)
+        print("Build level 2 ranking paths...")
+        self.__load_level2_ranking_paths(level2_rankings_paths)
 
-        return level1_rankings, level2_rankings
+        return level1_rankings, level2_rankings_paths
     
 
     def __init_level1_rankings_dict(self, level1_rankings):
@@ -368,7 +399,7 @@ class Evaluator:
 
 
     def __get_single_fs_ranking_file_names(self, path):
-        file_names_style = path + "*.rds"
+        file_names_style = path + "*.csv"
         return [f for f in glob.glob(f"{file_names_style}") 
                     if AGGREGATED_RANKING_FILE_NAME not in f]
     
@@ -388,7 +419,7 @@ class Evaluator:
         return
 
     
-    def __load_level2_rankings(self, level2_rankings):
+    def __load_level2_ranking_paths(self, level2_ranking_paths):
 
         for fold_iteration in range(1, self.dm.num_folds+1):
             
@@ -396,40 +427,48 @@ class Evaluator:
             for bootstrap in range(1, self.dm.num_bootstraps+1):
                 
                 ranking_path = self.__build_ranking_path_string(fold_iteration, bootstrap)
-                agg_rankings.append(self.__load_agg_rankings(ranking_path))
+                ranking_path += AGGREGATED_RANKING_FILE_NAME
+                agg_rankings.append(ranking_path)
 
-            level2_rankings.append(agg_rankings)
+            level2_ranking_paths.append(agg_rankings)
         return
 
 
     def __load_agg_rankings(self, ranking_path):
-        file = ranking_path + AGGREGATED_RANKING_FILE_NAME
+        file = ranking_path + AGGREGATED_RANKING_FILE_NAME 
         ranking = self.dm.load_RDS(file)
         ranking = self.dm.r_to_pandas(ranking)
         return ranking
 
     
     def __load_single_fs_ranking(self, ranking_path, fs_method):
-        file = ranking_path + fs_method + ".rds"
-        ranking = self.dm.load_RDS(file)
-        ranking = self.dm.r_to_pandas(ranking)
+        file = ranking_path + fs_method + ".csv"
+        ranking = self.dm.load_csv(file)
         return ranking
 
 
     
-    def __compute_intermediate_pred_perf(self, fold_sampling):
+    def __compute_intermediate_pred_perf(self, fold_sampling, fold_rankings):
+        
+        if self.current_eval_level == 1:
+            self.rankings = self.__get_gene_lists(fold_rankings)
         
         training, testing = fold_sampling
 
         bs_accs = []
         bs_roc_aucs = []
         bs_pr_aucs = []
-        for ranking in self.rankings:
 
-            th_accs = []
-            th_roc_aucs = []
-            th_pr_aucs = []
-            for th in self.thresholds:
+        th_accs = []
+        th_roc_aucs = []
+        th_pr_aucs = []
+        for th in self.thresholds:
+
+            if self.current_eval_level == 2:
+                rankings = self.__get_lvl2_rankings(th, fold_rankings)
+                self.rankings = self.__get_gene_lists(rankings)
+            
+            for ranking in self.rankings:
                 genes = ranking[0:th]
                 self.__set_data_axes(training, testing, genes)
                 acc, roc, pr = self.get_prediction_performance()
@@ -437,8 +476,8 @@ class Evaluator:
                 th_roc_aucs.append(roc)
                 th_pr_aucs.append(pr)
 
-            bs_accs.append(th_accs)
-            bs_roc_aucs.append(th_roc_aucs)
-            bs_pr_aucs.append(th_pr_aucs)
+        bs_accs.append(th_accs)
+        bs_roc_aucs.append(th_roc_aucs)
+        bs_pr_aucs.append(th_pr_aucs)
+        
         return bs_accs, bs_roc_aucs, bs_pr_aucs
-    
