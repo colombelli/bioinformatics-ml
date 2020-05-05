@@ -1,7 +1,8 @@
 import pandas as pd
 
+
 def aggregate(self, selector):
-        
+
         rankings = selector.rankings_to_aggregate
 
         aggregated_ranking = {}  # it's a dictionary where the keys 
@@ -27,3 +28,4 @@ def aggregate(self, selector):
         final_ranking.columns = ['rank']
        
         return final_ranking.sort_values(by='rank')
+

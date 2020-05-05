@@ -1,26 +1,36 @@
 import pandas as pd
+from copy import deepcopy
+
 import engine.kuncheva_index as ki
 from engine import Hybrid
 
-heavy = True
+
+heavy = True    # requires access to dm.bs_rankings
 
 def aggregate(self, selector:Hybrid):
     
     bs_rankings = selector.dm.bs_rankings
-    ths = selector.thresholds
+    threshold = selector.current_threshold
 
-    mean_th = sum(ths) // len(ths)
-    fs_stabilities = get_fs_stabilities(mean_th, bs_rankings)
+
+    fs_stabilities = get_fs_stabilities(threshold, bs_rankings)
     
-    aggregated_ranking = initialize_aggregated_ranking_dict(bs_rankings)
-    
+    aggregated_ranking_base = initialize_aggregated_ranking_dict(bs_rankings)
+
+    final_rankings = []    
     for bs in bs_rankings:
+        aggregated_ranking = deepcopy(aggregated_ranking_base)
+
         for fs, ranking in enumerate(bs_rankings[bs]):
             reversed_ranking = ranking.iloc[::-1]
             for gene in reversed_ranking.index: 
                 aggregated_ranking[gene] += (reversed_ranking.index.get_loc(gene)+1) * fs_stabilities[fs]
-    
-    return build_df_and_correct_order(aggregated_ranking)
+
+        final_rankings.append(
+            build_df_and_correct_order(aggregated_ranking)
+        )
+
+    return final_rankings
 
 
 

@@ -51,7 +51,8 @@ fs_methods = [
     ("oneR", "r", "or")
 ]
 
-aggregator1 = "stb_weightened_layer1"
+aggregator1 = "mean"
+#aggregator1 = "stb_weightened_layer1"
 aggregator2 = "mean"
 
 #ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
@@ -81,18 +82,18 @@ def perform_selection_hyb(dataset_path, results_path):
     compute_print_time(st)
 
     print("\n\nDecoding dataframe...")
-    dm.decode_main_dm_df()
+    #dm.decode_main_dm_df()
     print("\nStarting evaluation process...")
-    ev.evaluate_final_rankings()
+    #ev.evaluate_final_rankings()
 
     print("\n\nCreating csv files...")
-    im.create_csv_tables()
+    #im.create_csv_tables()
 
     print("\nEvaluating inner levels...")
-    level1_evaluation, level2_evaluation = ev.evaluate_intermediate_hyb_rankings()
+    #level1_evaluation, level2_evaluation = ev.evaluate_intermediate_hyb_rankings()
 
     print("\n\nCreating csv files...")
-    im.create_intermediate_csv_tables(level1_evaluation, level2_evaluation)
+    #im.create_intermediate_csv_tables(level1_evaluation, level2_evaluation)
 
     print("\nDone!\n\n")
     print("#################################################################\n")

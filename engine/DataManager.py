@@ -74,6 +74,11 @@ class DataManager:
 
 
     @classmethod
+    def load_csv(self, file_path):
+        return pd.read_csv(file_path, index_col=0)
+
+
+    @classmethod
     def pandas_to_r(self, df):
         
         with localconverter(robjects.default_converter + pandas2ri.converter):
@@ -147,8 +152,9 @@ class DataManager:
         decoded_ranking = self.decode_df(encoded_ranking, True)
 
         print("Saving ranking...")
-        r_decoded_ranking = self.pandas_to_r(decoded_ranking)
-        robjects.r["saveRDS"](r_decoded_ranking, file_name_and_dir)
+        #r_decoded_ranking = self.pandas_to_r(decoded_ranking)
+        #robjects.r["saveRDS"](r_decoded_ranking, file_name_and_dir)
+        decoded_ranking.to_csv(file_name_and_dir+".csv")
         return
 
     

@@ -124,7 +124,7 @@ class Evaluator:
 
         roc_auc = metrics.roc_auc_score(np.array(self.testing_y, dtype=int), pred)
 
-        precision, recall, _ = metrics.precision_recall_curve(self.testing_y, pred)
+        precision, recall, _ = metrics.precision_recall_curve(np.array(self.testing_y, dtype=int), pred)
         pr_auc = metrics.auc(recall, precision)
         
         return accuracy, roc_auc, pr_auc
