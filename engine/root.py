@@ -40,20 +40,17 @@ rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 
 
-num_bootstraps = 5
+num_bootstraps = 50
 num_folds = 5
 
 fs_methods = [
     ("reliefF", "python", "rf"),
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
+    ("symmetrical-uncertainty", "r", "su")#,
+    #("oneR", "r", "or")
 ]
 
-#ths = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1]
-#ths = [0.01, 0.02, 0.03, 0.04, 0.06, 0.08, 0.1, 0.2, 0.4]
-#ths = [0.2, 0.4, 1, 1.5, 2, 5, 10]
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
 seed = 42
 
@@ -192,10 +189,10 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 def run():
     
 
-    dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
-    results_path = '/home/colombelli/Desktop/thyroid/'
-    #dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
-    #results_path = "/home/colombelli/Desktop/BRCA/"
+    #dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
+    #results_path = '/home/colombelli/Desktop/thyroid/'
+    dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+    results_path = "/home/colombelli/Desktop/KIRP_pow_meanloc/"
     perform_selection_hyb(dataset_path, results_path, "stb_weightened_layer1", "mean")
 
 

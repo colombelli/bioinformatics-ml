@@ -17,7 +17,7 @@ def aggregate(self, selector):
 
         for ranking in rankings:
             for gene in ranking.index: 
-                aggregated_ranking[gene] += ranking.loc[gene, 'rank']
+                aggregated_ranking[gene] += ranking.index.get_loc(gene)+1 #this way 0=>1
 
         num_rankings = len(rankings)
         for gene, ranking in aggregated_ranking.items():

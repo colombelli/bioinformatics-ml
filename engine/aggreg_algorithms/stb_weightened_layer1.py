@@ -24,7 +24,7 @@ def aggregate(self, selector:Hybrid):
         for fs, ranking in enumerate(bs_rankings[bs]):
             reversed_ranking = ranking.iloc[::-1]
             for gene in reversed_ranking.index: 
-                aggregated_ranking[gene] += (reversed_ranking.index.get_loc(gene)+1) * fs_stabilities[fs]
+                aggregated_ranking[gene] += (reversed_ranking.index.get_loc(gene)+1) * (fs_stabilities[fs]**5)
 
         final_rankings.append(
             build_df_and_correct_order(aggregated_ranking)
