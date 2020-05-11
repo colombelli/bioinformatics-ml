@@ -1,28 +1,18 @@
-from engine.Selector import PySelector, RSelector
+from engine.Selector import FSelector, PySelector, RSelector
 from engine.Aggregator import Aggregator
 from engine.DataManager import DataManager
 from engine.Constants import *
 
 class Homogeneous:
     
-    # fs_method: a tuple (script name, language which the script was written, .rds output name)
-    def __init__(self, data_manager:DataManager, fs_method, aggregator):
+    # fs_method: a single elemet list (to maintain coherence) whose element is a tuple: 
+    # (script name, language which the script was written, .csv output name)
+    def __init__(self, data_manager:DataManager, fs_method, aggregator, thresholds:list):
 
         self.dm = data_manager
-        self.fs_method = self.__generate_fselector_object(fs_method)
+        self.fs_method = FSelector.generate_fselectors_object(fs_method)[0]
         self.aggregator = Aggregator(aggregator)
         self.rankings_to_aggregate = None
-
-
-        
-    def __generate_fselector_object(self, method):
-        
-        (script, language, rds_name) = method
-        if language == "python":
-            return PySelector(rds_name, script)
-            
-        elif language == "r":
-            return RSelector(rds_name, script)
 
 
 

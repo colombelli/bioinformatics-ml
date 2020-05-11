@@ -240,11 +240,11 @@ perform_selection_het(dataset_path, results_path)
 
 ########### HOMOGENEOUS EXPERIMENTS ##############
 
-method_relief = ("reliefF", "python", "rf")
-method_geode = ("geoDE", "python", "gd")
-method_gr = ("gain-ratio", "r", "gr")
-method_su = ("symmetrical-uncertainty", "r", "su")
-method_oner = ("oneR", "r", "or")
+method_relief = [("reliefF", "python", "rf")]
+method_geode = [("geoDE", "python", "gd")]
+method_gr = [("gain-ratio", "r", "gr")]
+method_su = [("symmetrical-uncertainty", "r", "su")]
+method_oner = [("oneR", "r", "or")]
 
 ############ KIRP HOMOGENEOUS ############
 dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"

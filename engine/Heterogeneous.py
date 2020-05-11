@@ -1,4 +1,4 @@
-from engine.Selector import PySelector, RSelector
+from engine.Selector import FSelector, PySelector, RSelector
 from engine.Aggregator import Aggregator
 from engine.DataManager import DataManager
 from engine.Constants import *
@@ -6,29 +6,15 @@ from engine.Constants import *
 class Heterogeneous:
     
     # fs_methods: a tuple (script name, language which the script was written, .rds output name)
-    def __init__(self, data_manager:DataManager, fs_methods, aggregator):
+    def __init__(self, data_manager:DataManager, fs_methods, aggregator, thresholds:list):
 
         self.dm = data_manager
-        self.fs_methods = self.__generate_fselectors_object(fs_methods)
+        self.fs_methods = FSelector.generate_fselectors_object(fs_methods)
         self.aggregator = Aggregator(aggregator)
         self.rankings_to_aggregate = None
 
-
-        
-    def __generate_fselectors_object(self, methods):
-        
-        fs_methods = []
-        for script, language, rds_name in methods:
-            if language == "python":
-                fs_methods.append(
-                    PySelector(rds_name, script)
-                )
-            elif language == "r":
-                fs_methods.append(
-                    RSelector(rds_name, script)
-                )
-
-        return fs_methods
+        self.thresholds = thresholds
+        self.current_threshold = None
 
 
 

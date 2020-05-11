@@ -4,12 +4,28 @@ import importlib
 
 class FSelector:
 
-    # rds_name: the name of the ranking output produced by the algorithm;
-    #           by default, this file is saved in .rds format
-    def __init__(self, rds_name, script_name):
+    # ranking_name: the name of the csv ranking output produced by the algorithm;
+    def __init__(self, ranking_name, script_name):
 
-        self.rds_name = rds_name
+        self.ranking_name = ranking_name
         self.script_name = script_name
+
+    
+    @classmethod
+    def generate_fselectors_object(self, methods):
+        
+        fs_methods = []
+        for script, language, ranking_name in methods:
+            if language == "python":
+                fs_methods.append(
+                    PySelector(ranking_name, script)
+                )
+            elif language == "r":
+                fs_methods.append(
+                    RSelector(ranking_name, script)
+                )
+        return fs_methods
+
 
 
 class RSelector(FSelector):
@@ -23,7 +39,7 @@ class RSelector(FSelector):
         ranking = robjects.r["select"](dataframe)
         ranking = dm.r_to_pandas(ranking)
         
-        dm.save_encoded_ranking(ranking, output_path+self.rds_name)
+        dm.save_encoded_ranking(ranking, output_path+self.ranking_name)
 
         robjects.r['rm']('list = ls()')
         return ranking
@@ -31,11 +47,11 @@ class RSelector(FSelector):
 
 class PySelector(FSelector):
 
-    def __init__(self, rds_name, script_name):
-        FSelector.__init__(self, rds_name, script_name)
+    def __init__(self, ranking_name, script_name):
+        FSelector.__init__(self, ranking_name, script_name)
         self.py_selection = importlib.import_module("engine.fs_algorithms."+script_name).select
 
     def select(self, dataframe, output_path):
         ranking = self.py_selection(dataframe)
-        dm.save_encoded_ranking(ranking, output_path+self.rds_name)
+        dm.save_encoded_ranking(ranking, output_path+self.ranking_name)
         return ranking

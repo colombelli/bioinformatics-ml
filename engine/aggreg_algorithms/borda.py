@@ -19,10 +19,13 @@ def aggregate(self, selector):
             for gene in ranking.index: 
                 aggregated_ranking[gene] += ranking.index.get_loc(gene)+1 #this way 0=>1
 
+        """
+        for mean aggregation:
+            
         num_rankings = len(rankings)
         for gene, ranking in aggregated_ranking.items():
             aggregated_ranking[gene] /= num_rankings 
-
+        """
 
         final_ranking = pd.DataFrame.from_dict(aggregated_ranking, orient='index')
         final_ranking.columns = ['rank']
