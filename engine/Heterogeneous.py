@@ -1,7 +1,7 @@
 from engine.Selector import FSelector, PySelector, RSelector
 from engine.Aggregator import Aggregator
 from engine.DataManager import DataManager
-from engine.Constants import *
+from engine.Constants import AGGREGATED_RANKING_FILE_NAME
 
 class Heterogeneous:
     
@@ -36,12 +36,17 @@ class Heterogeneous:
                     fs_method.select(training_data, output_path)
                 )
                 
-            print("\nAggregating rankings...")
-            self.__set_rankings_to_aggregate(rankings)
-            aggregation = self.aggregator.aggregate(self)
-            self.dm.save_encoded_ranking(aggregation, 
-                                        output_path+AGGREGATED_RANKING_FILE_NAME)
             
+            self.__set_rankings_to_aggregate(rankings)
+            output_path = self.dm.get_output_path(fold_iteration=i)
+            file_path = output_path + AGGREGATED_RANKING_FILE_NAME
+            for th in self.thresholds:
+                print("\nAggregating rankings...")
+                print("\n\nThreshold:", th)
+                self.current_threshold = th
+                aggregation = self.aggregator.aggregate(self)
+                
+                self.dm.save_encoded_ranking(aggregation, file_path+str(th)) 
         return
 
 

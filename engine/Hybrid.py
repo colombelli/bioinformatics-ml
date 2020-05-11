@@ -1,7 +1,7 @@
 from engine.Selector import PySelector, RSelector
 from engine.Aggregator import Aggregator
 from engine.DataManager import DataManager
-from engine.Constants import *
+from engine.Constants import AGGREGATED_RANKING_FILE_NAME
 
 class Hybrid:
     

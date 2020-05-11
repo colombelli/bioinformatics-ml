@@ -40,8 +40,8 @@ rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 
 
-num_bootstraps = 50
-num_folds = 5
+num_bootstraps = 5
+num_folds = 4
 
 fs_methods = [
     ("reliefF", "python", "rf"),
@@ -95,7 +95,9 @@ def perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator2):
 
 
 
-def perform_selection_het(dataset_path, results_path):
+def perform_selection_het(dataset_path, results_path, aggregator):
+
+    str_aggregators = [aggregator]
 
     num_bootstraps = 0
 
@@ -106,7 +108,7 @@ def perform_selection_het(dataset_path, results_path):
     
     ev = Evaluator(dm, ths, False)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
-    ensemble = Heterogeneous(dm, fs_methods, aggregator)
+    ensemble = Heterogeneous(dm, fs_methods, aggregator, ths)
 
     st = time()
     ensemble.select_features()
@@ -126,7 +128,9 @@ def perform_selection_het(dataset_path, results_path):
 
 
 
-def perform_selection_hom(dataset_path, results_path, fs_method):
+def perform_selection_hom(dataset_path, results_path, fs_method, aggregator):
+
+    str_aggregators = [aggregator]
 
     dm = DataManager(results_path, dataset_path, num_bootstraps, num_folds, seed)
     dm.encode_main_dm_df()
@@ -135,7 +139,7 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
 
     ev = Evaluator(dm, ths, False)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
-    ensemble = Homogeneous(dm, fs_method, aggregator)
+    ensemble = Homogeneous(dm, fs_method, aggregator, ths)
 
     st = time()
     ensemble.select_features() 
@@ -155,7 +159,9 @@ def perform_selection_hom(dataset_path, results_path, fs_method):
 
 
 
-def perform_selection_single(dataset_path, results_path, fs_method):
+def perform_selection_single(dataset_path, results_path, fs_method, thresholds):
+
+    str_aggregators = ["No aggregation"] 
 
     num_bootstraps = 0
 
@@ -166,7 +172,7 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 
     ev = Evaluator(dm, ths, False)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
-    feature_selector = SingleFS(dm, fs_method)
+    feature_selector = SingleFS(dm, fs_method, thresholds)
 
     st = time()
     feature_selector.select_features()
@@ -187,13 +193,12 @@ def perform_selection_single(dataset_path, results_path, fs_method):
 
 
 def run():
-    
 
-    #dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
-    #results_path = '/home/colombelli/Desktop/thyroid/'
-    dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-    results_path = "/home/colombelli/Desktop/KIRP_pow_meanloc/"
-    perform_selection_hyb(dataset_path, results_path, "stb_weightened_layer1", "mean")
+    dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
+    results_path = '/home/colombelli/Desktop/thyroid_single/'
+    #dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+    #results_path = "/home/colombelli/Desktop/KIRP_pow_meanloc/"
+    perform_selection_single(dataset_path, results_path, [fs_methods[0]], ths)
 
 
 

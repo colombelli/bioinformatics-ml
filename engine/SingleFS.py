@@ -1,15 +1,16 @@
 from engine.Selector import FSelector, PySelector, RSelector
 from engine.DataManager import DataManager
-from engine.Constants import *
+from engine.Constants import AGGREGATED_RANKING_FILE_NAME
 
 class SingleFS:
     
     # fs_method: a single elemet list (to maintain coherence) whose element is a tuple: 
     # (script name, language which the script was written, .csv output name)
-    def __init__(self, data_manager:DataManager, fs_method):
+    def __init__(self, data_manager:DataManager, fs_method, thresholds:list):
 
         self.dm = data_manager
         self.fs_method = FSelector.generate_fselectors_object(fs_method)[0]
+        self.thresholds = thresholds
 
 
 
@@ -26,10 +27,13 @@ class SingleFS:
 
             ranking = self.fs_method.select(training_data, output_path)
 
-            # in order to reuse Evaluator class, we need an AGGREGATED_RANKING_FILE_NAME.rds
+            # in order to reuse Evaluator class, we need an AGGREGATED_RANKING_FILE_NAME+th
             # accessible inside each fold iteration folder, so we simply resave the only
             # ranking we have with the appropriate name
-            self.dm.save_encoded_ranking(ranking, 
-                                        output_path+AGGREGATED_RANKING_FILE_NAME)
+            output_path = self.dm.get_output_path(fold_iteration=i)
+            file_path = output_path + AGGREGATED_RANKING_FILE_NAME
+            for th in self.thresholds:
+                print("\n\nThreshold:", th)
+                self.dm.save_encoded_ranking(ranking, file_path+str(th)) 
             
         return
