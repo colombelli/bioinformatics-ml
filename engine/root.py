@@ -40,15 +40,15 @@ rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 
 
-num_bootstraps = 5
-num_folds = 4
+num_bootstraps = 50
+num_folds = 5
 
 fs_methods = [
     ("reliefF", "python", "rf"),
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su")#,
-    #("oneR", "r", "or")
+    ("symmetrical-uncertainty", "r", "su"),
+    ("oneR", "r", "or")
 ]
 
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
@@ -159,7 +159,7 @@ def perform_selection_hom(dataset_path, results_path, fs_method, aggregator):
 
 
 
-def perform_selection_single(dataset_path, results_path, fs_method, thresholds):
+def perform_selection_single(dataset_path, results_path, fs_method):
 
     str_aggregators = ["No aggregation"] 
 
@@ -172,7 +172,7 @@ def perform_selection_single(dataset_path, results_path, fs_method, thresholds):
 
     ev = Evaluator(dm, ths, False)
     im = InformationManager(dm, ev, str_methods, str_aggregators)
-    feature_selector = SingleFS(dm, fs_method, thresholds)
+    feature_selector = SingleFS(dm, fs_method, ths)
 
     st = time()
     feature_selector.select_features()
@@ -194,189 +194,184 @@ def perform_selection_single(dataset_path, results_path, fs_method, thresholds):
 
 def run():
 
-    dataset_path = '/home/colombelli/Documents/datasets/thyroid_log2.rds'
-    results_path = '/home/colombelli/Desktop/thyroid_single/'
-    #dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-    #results_path = "/home/colombelli/Desktop/KIRP_pow_meanloc/"
-    perform_selection_single(dataset_path, results_path, [fs_methods[0]], ths)
+    aggregator1 = "borda"
+    aggregator2 = "stb_weightened_layer1"
+
+    ########### HYBRID EXPERIMENTS ##############
+
+    dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hyb_borda_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+
+    dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hyb_borda_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+
+    dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hyb_borda_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+
+    dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hyb_borda_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
 
 
 
-########### HYBRID EXPERIMENTS ##############
-"""
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hyb_mean_mean/"
-perform_selection_hyb(dataset_path, results_path)
+    ########### HETEROGENOUS EXPERIMENTS ##############
 
-dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hyb_mean_mean/"
-perform_selection_hyb(dataset_path, results_path)
+    dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Het_borda/"
+    perform_selection_het(dataset_path, results_path, aggregator1)
 
-dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hyb_mean_mean/"
-perform_selection_hyb(dataset_path, results_path)
+    dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Het_borda/"
+    perform_selection_het(dataset_path, results_path, aggregator1)
 
-dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hyb_mean_mean/"
-perform_selection_hyb(dataset_path, results_path)
-"""
-"""
+    dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Het_borda/"
+    perform_selection_het(dataset_path, results_path, aggregator1)
 
-########### HETEROGENOUS EXPERIMENTS ##############
-
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Het_mean/"
-perform_selection_het(dataset_path, results_path)
-
-dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Het_mean/"
-perform_selection_het(dataset_path, results_path)
-
-dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Het_mean/"
-perform_selection_het(dataset_path, results_path)
-
-dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Het_mean/"
-perform_selection_het(dataset_path, results_path)
+    dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Het_borda/"
+    perform_selection_het(dataset_path, results_path, aggregator1)
 
 
 
 
-########### HOMOGENEOUS EXPERIMENTS ##############
+    ########### HOMOGENEOUS EXPERIMENTS ##############
 
-method_relief = [("reliefF", "python", "rf")]
-method_geode = [("geoDE", "python", "gd")]
-method_gr = [("gain-ratio", "r", "gr")]
-method_su = [("symmetrical-uncertainty", "r", "su")]
-method_oner = [("oneR", "r", "or")]
+    method_relieff = [("reliefF", "python", "rf")]
+    method_geode = [("geoDE", "python", "gd")]
+    method_gr = [("gain-ratio", "r", "gr")]
+    method_su = [("symmetrical-uncertainty", "r", "su")]
+    method_oner = [("oneR", "r", "or")]
 
-############ KIRP HOMOGENEOUS ############
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+    ############ KIRP HOMOGENEOUS ############
+    dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
 
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hom_mean_gr/"
-perform_selection_hom(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hom_mean_su/"
-perform_selection_hom(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hom_mean_geode/"
-perform_selection_hom(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hom_mean_relieff/"
-perform_selection_hom(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/Hom_mean_oner/"
-perform_selection_hom(dataset_path, results_path, method_oner)
-
-
-
-############ UCEC HOMOGENEOUS ############
-dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
-
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hom_mean_gr/"
-perform_selection_hom(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hom_mean_su/"
-perform_selection_hom(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hom_mean_geode/"
-perform_selection_hom(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hom_mean_relieff/"
-perform_selection_hom(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/Hom_mean_oner/"
-perform_selection_hom(dataset_path, results_path, method_oner)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hom_borda_gr/"
+    perform_selection_hom(dataset_path, results_path, method_gr, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hom_borda_su/"
+    perform_selection_hom(dataset_path, results_path, method_su, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hom_borda_geode/"
+    perform_selection_hom(dataset_path, results_path, method_geode, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hom_borda_relieff/"
+    perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hom_borda_oner/"
+    perform_selection_hom(dataset_path, results_path, method_oner, aggregator1)
 
 
 
-############ THCA HOMOGENEOUS ############
-dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
+    ############ UCEC HOMOGENEOUS ############
+    dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
 
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hom_mean_gr/"
-perform_selection_hom(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hom_mean_su/"
-perform_selection_hom(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hom_mean_geode/"
-perform_selection_hom(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hom_mean_relieff/"
-perform_selection_hom(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/Hom_mean_oner/"
-perform_selection_hom(dataset_path, results_path, method_oner)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hom_borda_gr/"
+    perform_selection_hom(dataset_path, results_path, method_gr, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hom_borda_su/"
+    perform_selection_hom(dataset_path, results_path, method_su, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hom_borda_geode/"
+    perform_selection_hom(dataset_path, results_path, method_geode, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hom_borda_relieff/"
+    perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hom_borda_oner/"
+    perform_selection_hom(dataset_path, results_path, method_oner, aggregator1)
 
 
 
-############ BRCA HOMOGENEOUS ############
-dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+    ############ THCA HOMOGENEOUS ############
+    dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
 
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hom_mean_gr/"
-perform_selection_hom(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hom_mean_su/"
-perform_selection_hom(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hom_mean_geode/"
-perform_selection_hom(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hom_mean_relieff/"
-perform_selection_hom(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/Hom_mean_oner/"
-perform_selection_hom(dataset_path, results_path, method_oner)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hom_borda_gr/"
+    perform_selection_hom(dataset_path, results_path, method_gr, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hom_borda_su/"
+    perform_selection_hom(dataset_path, results_path, method_su, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hom_borda_geode/"
+    perform_selection_hom(dataset_path, results_path, method_geode, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hom_borda_relieff/"
+    perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hom_borda_oner/"
+    perform_selection_hom(dataset_path, results_path, method_oner, aggregator1)
+
+
+
+    ############ BRCA HOMOGENEOUS ############
+    dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hom_borda_gr/"
+    perform_selection_hom(dataset_path, results_path, method_gr, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hom_borda_su/"
+    perform_selection_hom(dataset_path, results_path, method_su, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hom_borda_geode/"
+    perform_selection_hom(dataset_path, results_path, method_geode, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hom_borda_relieff/"
+    perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hom_borda_oner/"
+    perform_selection_hom(dataset_path, results_path, method_oner, aggregator1)
 
 
 
 
 
-########### SINGLE FS EXPERIMENTS ##############
+    ########### SINGLE FS EXPERIMENTS ##############
 
 
-######### KIRP
-dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
+    ######### KIRP
+    dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
 
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/sin_gr/"
-perform_selection_single(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/sin_su/"
-perform_selection_single(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/sin_geode/"
-perform_selection_single(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/sin_relieff/"
-perform_selection_single(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/KIRP/sin_oner/"
-perform_selection_single(dataset_path, results_path, method_oner)
-
-
-######### UCEC
-dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
-
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/sin_gr/"
-perform_selection_single(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/sin_su/"
-perform_selection_single(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/sin_geode/"
-perform_selection_single(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/sin_relieff/"
-perform_selection_single(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/UCEC/sin_oner/"
-perform_selection_single(dataset_path, results_path, method_oner)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/sin_gr/"
+    perform_selection_single(dataset_path, results_path, method_gr)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/sin_su/"
+    perform_selection_single(dataset_path, results_path, method_su)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/sin_geode/"
+    perform_selection_single(dataset_path, results_path, method_geode)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/sin_relieff/"
+    perform_selection_single(dataset_path, results_path, method_relieff)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/sin_oner/"
+    perform_selection_single(dataset_path, results_path, method_oner)
 
 
+    ######### UCEC
+    dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
 
-######### THCA
-dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
-
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/sin_gr/"
-perform_selection_single(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/sin_su/"
-perform_selection_single(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/sin_geode/"
-perform_selection_single(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/sin_relieff/"
-perform_selection_single(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/THCA/sin_oner/"
-perform_selection_single(dataset_path, results_path, method_oner)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/sin_gr/"
+    perform_selection_single(dataset_path, results_path, method_gr)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/sin_su/"
+    perform_selection_single(dataset_path, results_path, method_su)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/sin_geode/"
+    perform_selection_single(dataset_path, results_path, method_geode)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/sin_relieff/"
+    perform_selection_single(dataset_path, results_path, method_relieff)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/sin_oner/"
+    perform_selection_single(dataset_path, results_path, method_oner)
 
 
-######### BRCA
-dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
 
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_gr/"
-perform_selection_single(dataset_path, results_path, method_gr)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_su/"
-perform_selection_single(dataset_path, results_path, method_su)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_geode/"
-perform_selection_single(dataset_path, results_path, method_geode)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_relieff/"
-perform_selection_single(dataset_path, results_path, method_relief)
-results_path = "/home/colombelli/Documents/Experiments09_abr/BRCA/sin_oner/"
-perform_selection_single(dataset_path, results_path, method_oner)
-"""
+    ######### THCA
+    dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
+
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/sin_gr/"
+    perform_selection_single(dataset_path, results_path, method_gr)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/sin_su/"
+    perform_selection_single(dataset_path, results_path, method_su)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/sin_geode/"
+    perform_selection_single(dataset_path, results_path, method_geode)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/sin_relieff/"
+    perform_selection_single(dataset_path, results_path, method_relieff)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/sin_oner/"
+    perform_selection_single(dataset_path, results_path, method_oner)
+
+
+    ######### BRCA
+    dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
+
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/sin_gr/"
+    perform_selection_single(dataset_path, results_path, method_gr)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/sin_su/"
+    perform_selection_single(dataset_path, results_path, method_su)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/sin_geode/"
+    perform_selection_single(dataset_path, results_path, method_geode)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/sin_relieff/"
+    perform_selection_single(dataset_path, results_path, method_relieff)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/sin_oner/"
+    perform_selection_single(dataset_path, results_path, method_oner)
+    

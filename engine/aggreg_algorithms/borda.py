@@ -8,7 +8,7 @@ def aggregate(self, selector):
         aggregated_ranking = {}  # it's a dictionary where the keys 
                                 # represent the genes and its values 
                                 # are, at first, the sum of the ranking
-                                # positions and, by the end, the mean
+                                # positions and, by the end, the accumulative
                                 # value of the rankings 
 
 
