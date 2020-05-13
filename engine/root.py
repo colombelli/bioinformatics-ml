@@ -24,18 +24,6 @@ def compute_print_time(st):
 
 
 
-
-#dataset_path = "/home/colombelli/Documents/datasets/thyroid_log2.rds"
-
-#ensemble = Hybrid(dm, fs_methods, aggregator, aggregator)
-#ensemble = Heterogeneous(dm, fs_methods, aggregator)
-#homo_method=("geoDE", "python", "gd")
-#ensemble = Homogeneous(dm, homo_method, aggregator)
-#method = ("geoDE", "python", "gd")
-#single_fs = SingleFS(dm, method)
-
-
-rpackages.importr('CORElearn')
 rpackages.importr('FSelectorRcpp')
 rpackages.importr('FSelector')
 

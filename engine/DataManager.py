@@ -27,8 +27,10 @@ class DataManager:
         self.num_folds = num_folds
 
        
-        self.r_df = self.load_RDS(self.file_path)
-        self.pd_df = self.r_to_pandas(self.r_df)
+        self.r_df = None
+        self.pd_df = None
+        self.__load_dataset()
+        
 
 
         self.folds = None
@@ -39,6 +41,21 @@ class DataManager:
 
         self.results_path = results_path
 
+
+    def __load_dataset(self):
+
+        if self.file_path[-3:] == "rds":
+            self.r_df = self.load_RDS(self.file_path)
+            self.pd_df = self.r_to_pandas(self.r_df)
+        
+        elif self.file_path[-3:] == "csv":
+            self.pd_df = self.load_csv(self.file_path)
+            self.r_df = self.pandas_to_r(self.pd_df)
+
+        else:
+            raise("Dataset format not accepted. Should be a .rds or .csv file")
+        
+        return
 
 
 
