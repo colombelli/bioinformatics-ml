@@ -25,18 +25,18 @@ def compute_print_time(st):
 
 
 rpackages.importr('FSelectorRcpp')
-rpackages.importr('rJava')
+rpackages.importr('FSelector')
 
 
-num_bootstraps = 5
+num_bootstraps = 50
 num_folds = 5
 
 fs_methods = [
     ("reliefF", "python", "rf"),
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su")#,
-    #("oneR", "r", "or")
+    ("symmetrical-uncertainty", "r", "su"),
+    ("oneR", "r", "or")
 ]
 
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
