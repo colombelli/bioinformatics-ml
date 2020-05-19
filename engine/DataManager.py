@@ -44,6 +44,7 @@ class DataManager:
 
     def __load_dataset(self):
 
+        print("Loading dataset...")
         if self.file_path[-3:] == "rds":
             self.r_df = self.load_RDS(self.file_path)
             self.pd_df = self.r_to_pandas(self.r_df)
@@ -53,7 +54,7 @@ class DataManager:
             self.r_df = self.pandas_to_r(self.pd_df)
 
         else:
-            raise("Dataset format not accepted. Should be a .rds or .csv file")
+            raise("Dataset format not accepted. Should be a .rds or .csv file.")
         
         return
 

@@ -25,18 +25,18 @@ def compute_print_time(st):
 
 
 rpackages.importr('FSelectorRcpp')
-rpackages.importr('FSelector')
+rpackages.importr('rJava')
 
 
-num_bootstraps = 50
+num_bootstraps = 5
 num_folds = 5
 
 fs_methods = [
     ("reliefF", "python", "rf"),
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
-    ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
+    ("symmetrical-uncertainty", "r", "su")#,
+    #("oneR", "r", "or")
 ]
 
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
@@ -188,22 +188,22 @@ def run():
     ########### HYBRID EXPERIMENTS ##############
 
     dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
-    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hyb_borda_borda/"
-    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/KIRP/Hyb_stb_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator2, aggregator1)
 
     dataset_path = "/home/colombelli/Documents/datasets/research/ucec.rds"
-    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hyb_borda_borda/"
-    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/UCEC/Hyb_stb_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator2, aggregator1)
 
     dataset_path = "/home/colombelli/Documents/datasets/research/thca.rds"
-    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hyb_borda_borda/"
-    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/THCA/Hyb_stb_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator2, aggregator1)
 
     dataset_path = "/home/colombelli/Documents/datasets/research/brca.rds"
-    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hyb_borda_borda/"
-    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+    results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hyb_stb_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator2, aggregator1)
 
-
+    """
 
     ########### HETEROGENOUS EXPERIMENTS ##############
 
@@ -362,4 +362,4 @@ def run():
     perform_selection_single(dataset_path, results_path, method_relieff)
     results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/sin_oner/"
     perform_selection_single(dataset_path, results_path, method_oner)
-    
+    """
