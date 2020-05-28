@@ -13,4 +13,3 @@ select <- function(df) {
 
   return(rankDf)
 }
-

@@ -41,7 +41,7 @@ class RSelector(FSelector):
         
         dm.save_encoded_ranking(ranking, output_path+self.ranking_name)
 
-        robjects.r['rm']('list = ls()')
+        robjects.r['rm']('select')
         return ranking
 
 

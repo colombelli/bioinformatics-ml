@@ -24,8 +24,8 @@ def compute_print_time(st):
 
 
 
-rpackages.importr('FSelectorRcpp')
-rpackages.importr('FSelector')
+rpackages.quiet_require('FSelectorRcpp')
+rpackages.quiet_require('FSelector')
 
 
 num_bootstraps = 50
