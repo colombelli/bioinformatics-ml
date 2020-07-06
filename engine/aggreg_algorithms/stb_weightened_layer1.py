@@ -39,7 +39,7 @@ def get_normalize_stability(stability):
     s_min = -1
     normalized = (stability - s_min) / (s_max - s_min) 
 
-    return normalized
+    return normalized*2
 
 
 
