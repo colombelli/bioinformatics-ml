@@ -7,9 +7,9 @@ from keras.callbacks import ModelCheckpoint
 from keras.callbacks import LearningRateScheduler
 import numpy as np
 from wx_hyperparam import WxHyperParameter
-import xgboost as xgb
-from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier
+#import xgboost as xgb
+#from sklearn.svm import SVC
+#from sklearn.ensemble import RandomForestClassifier
 import functools
 import time
 
@@ -125,8 +125,9 @@ def naive_SLP_model(x_train, y_train, x_val, y_val, hyper_param=wx_hyperparam, n
     model.load_weights(best_model_path)
 
     return model
-
+'''
 def classifier_LOOCV(x_train, y_train, x_val, y_val, x_test, y_test, method_clf='xgb', verbose=False, num_cls=2):
+    
     if method_clf=='xgb':
         if num_cls == 2:
             clf = xgb.XGBClassifier(seed=1, objective='binary:logistic')
@@ -154,6 +155,7 @@ def classifier_LOOCV(x_train, y_train, x_val, y_val, x_test, y_test, method_clf=
             clf.fit(x_train,y_train)
             pred_prob = clf.predict_proba(x_test)            
             return pred_prob[0]
+    '''
     
 
 @timeit
