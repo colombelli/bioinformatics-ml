@@ -25,7 +25,7 @@ def compute_print_time(st):
 
 
 rpackages.quiet_require('FSelectorRcpp')
-rpackages.quiet_require('FSelector')
+#rpackages.quiet_require('FSelector')
 
 
 num_bootstraps = 50
@@ -36,7 +36,7 @@ fs_methods = [
     ("geoDE", "python", "gd"),
     ("gain-ratio", "r", "gr"),
     ("symmetrical-uncertainty", "r", "su"),
-    ("oneR", "r", "or")
+    ("wx", "python", "wx")
 ]
 
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
@@ -185,6 +185,21 @@ def run():
     aggregator1 = "borda"
     aggregator2 = "stb_weightened_layer1"
 
+
+    dataset_path = "/home/colombelli/Documents/datasets/assembler/brca_microarray.csv"
+    results_path = "/home/colombelli/Documents/Experiments08_jul/BRCA/Het_borda/"
+    perform_selection_het(dataset_path, results_path, aggregator1)
+    
+    results_path = "/home/colombelli/Documents/Experiments08_jul/BRCA/Hyb_borda_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+    
+    method_relieff = [("reliefF", "python", "rf")]
+    results_path = "/home/colombelli/Documents/Experiments08_jul/BRCA/Hom_relieff/"
+    perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
+
+    
+
+    """
     ########### HYBRID EXPERIMENTS ##############
 
     dataset_path = "/home/colombelli/Documents/datasets/research/kirp.rds"
@@ -203,7 +218,7 @@ def run():
     results_path = "/home/colombelli/Documents/Experiments11_mai/BRCA/Hyb_stb_borda/"
     perform_selection_hyb(dataset_path, results_path, aggregator2, aggregator1)
 
-    """
+    
 
     ########### HETEROGENOUS EXPERIMENTS ##############
 
