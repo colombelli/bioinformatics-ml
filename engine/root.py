@@ -186,16 +186,23 @@ def run():
     aggregator2 = "stb_weightened_layer1"
 
 
-    dataset_path = "/home/colombelli/Documents/datasets/assembler/brca_microarray.csv"
-    #results_path = "/home/colombelli/Documents/Experiments08_jul/BRCA/Het_borda/"
-    #perform_selection_het(dataset_path, results_path, aggregator1)
+    dataset_path = "/home/colombelli/Documents/datasets/assembler/brca_rna_symb.csv"
+    res_base = "/home/colombelli/Documents/Experiments08_jul/BRCA/rna-seq/"
+
+    results_path = res_base + "Het_borda/"
+    perform_selection_het(dataset_path, results_path, aggregator1)
     
-    #results_path = "/home/colombelli/Documents/Experiments08_jul/BRCA/Hyb_borda_borda/"
-    #perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
+    results_path = res_base + "Hyb_borda_borda/"
+    perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
     
     method_wx = [("wx", "python", "wx")]
-    results_path = "/home/colombelli/Documents/Experiments08_jul/BRCA/Hom_Wx/"
+    method_relieff = [("relieff", "python", "rf")]
+
+    results_path = res_base + "Hom_Wx/"
     perform_selection_hom(dataset_path, results_path, method_wx, aggregator1)
+
+    results_path = res_base + "Hom_ReliefF/"
+    perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
 
     
 
