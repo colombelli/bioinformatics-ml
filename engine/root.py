@@ -42,7 +42,7 @@ fs_methods = [
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
 seed = 42
 
-str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "OneR"]
+str_methods = ["ReliefF", "GeoDE", "Gain Ratio", "Symmetrical Uncertainty", "Wx"]
 
 
 
@@ -189,17 +189,18 @@ def run():
     dataset_path = "/home/colombelli/Documents/datasets/assembler/brca_rna_symb.csv"
     res_base = "/home/colombelli/Documents/Experiments08_jul/BRCA/rna-seq/"
 
+    """
     results_path = res_base + "Het_borda/"
     perform_selection_het(dataset_path, results_path, aggregator1)
     
     results_path = res_base + "Hyb_borda_borda/"
     perform_selection_hyb(dataset_path, results_path, aggregator1, aggregator1)
-    
+    """
     method_wx = [("wx", "python", "wx")]
-    method_relieff = [("relieff", "python", "rf")]
+    method_relieff = [("reliefF", "python", "rf")]
 
-    results_path = res_base + "Hom_Wx/"
-    perform_selection_hom(dataset_path, results_path, method_wx, aggregator1)
+    #results_path = res_base + "Hom_Wx/"
+    #perform_selection_hom(dataset_path, results_path, method_wx, aggregator1)
 
     results_path = res_base + "Hom_ReliefF/"
     perform_selection_hom(dataset_path, results_path, method_relieff, aggregator1)
