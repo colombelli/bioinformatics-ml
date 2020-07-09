@@ -2,6 +2,7 @@ import pandas as pd
 import pickle
 import glob
 from sklearn.svm import SVC
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn import metrics
 import numpy as np
 import engine.kuncheva_index as ki
@@ -91,7 +92,8 @@ class Evaluator:
 
 
     def __reset_classifier(self):
-        self.classifier = SVC(gamma='auto', probability=True)
+        #self.classifier = SVC(gamma='auto', probability=True)
+        self.classifier = GradientBoostingClassifier()
         return
     
     def __reset_confusion_matrices(self):
