@@ -186,11 +186,12 @@ def run():
     aggregator2 = "stb_weightened_layer1"
 
 
-    dataset_path = "/home/colombelli/Documents/datasets/rodrigo_proc/GSE42568.csv"
-    res_base = "/home/colombelli/Documents/Experiments09_jul/"
+    #dataset_path = "/home/colombelli/Documents/datasets/assembler/brca_micarr_npn.csv"
+    dataset_path = "/home/colombelli/Documents/datasets/assembler/brca_rna_npn.csv"
+    res_base = "/home/colombelli/Documents/Experiments16_jul/"
 
     
-    results_path = res_base + "GSE42568_Het_borda/"
+    results_path = res_base + "rnaseqNPN_Het_borda/"
     perform_selection_het(dataset_path, results_path, aggregator1)
     """
     results_path = res_base + "Hyb_borda_borda/"
