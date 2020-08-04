@@ -6,18 +6,18 @@ rpackages.quiet_require('FSelectorRcpp')
 
 intersect = "/home/colombelli/Documents/up_files/brca_rnaseq_genes_intersec.csv"
 no_intersect = "/home/colombelli/Documents/up_files/brca_rnaseq_npn.csv"
-datasets = [intersect, no_intersect]
+#datasets = [intersect, no_intersect]
+datasets = [intersect]
 
-
-relieff = ("reliefF", "python", "rf"),
-geode = ("geoDE", "python", "gd"),
-gr = ("gain-ratio", "r", "gr"),
-su = ("symmetrical-uncertainty", "r", "su"),
+relieff = ("reliefF", "python", "rf")
+geode = ("geoDE", "python", "gd")
+gr = ("gain-ratio", "r", "gr")
+su = ("symmetrical-uncertainty", "r", "su")
 wx = ("wx", "python", "wx")
 
 all_fs = [relieff, geode, gr, su, wx]
 ths = [1, 5, 10, 15, 25, 50, 75, 100, 150, 200]
-seed = 42
+seed = 43
 k = 5
 num_bs = 50
 
@@ -103,8 +103,9 @@ for sel in all_fs:
 
 
 
-experiments = [het, hyb1, hyb2]
-experiments += hom_exps + sin_exps
+#experiments = [hyb1, hyb2] #[het, hyb1, hyb2]
+#experiments += hom_exps + sin_exps
+experiments = [sin_exps[0]]
 
 results_path = "/home/colombelli/Documents/Experiments31_jul"
 
