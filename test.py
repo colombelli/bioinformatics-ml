@@ -6,8 +6,8 @@ rpackages.quiet_require('FSelectorRcpp')
 
 intersect = "/home/colombelli/Documents/up_files/brca_rnaseq_genes_intersec.csv"
 no_intersect = "/home/colombelli/Documents/up_files/brca_rnaseq_npn.csv"
-#datasets = [intersect, no_intersect]
-datasets = [intersect]
+datasets = [intersect, no_intersect]
+#datasets = [intersect]
 #datasets = [no_intersect]
 
 relieff = ("reliefF", "python", "rf")
@@ -104,11 +104,11 @@ for sel in all_fs:
 
 
 
-#experiments = [hyb1, hyb2] #[het, hyb1, hyb2]
-#experiments += hom_exps + sin_exps
-experiments = [sin_exps[0]]
+experiments = [het, hyb1, hyb2]
+experiments += hom_exps + sin_exps
 
-results_path = "/home/colombelli/Documents/Experiments31_jul"
+
+results_path = "/home/colombelli/Documents/Experiments05_ago"
 
 print("STARTING PROCESS!!!")
 exp = Experiments(experiments, results_path)
