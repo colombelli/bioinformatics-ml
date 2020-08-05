@@ -4,8 +4,8 @@ from ReliefF import ReliefF
 
 def select(df):
     
-    data = np.array(df.iloc[0:, 0:len(df.columns)-1])
-    labels = np.array(df.iloc[0:, len(df.columns)-1:]).flatten()
+    data = np.array(df.iloc[:, :-1])
+    labels = np.array(df.iloc[:, -1:]).flatten()
 
     fs = ReliefF(n_neighbors=len(labels)-1)
     print("Ranking features with ReliefF algorithm...")

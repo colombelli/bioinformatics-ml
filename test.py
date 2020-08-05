@@ -8,6 +8,7 @@ intersect = "/home/colombelli/Documents/up_files/brca_rnaseq_genes_intersec.csv"
 no_intersect = "/home/colombelli/Documents/up_files/brca_rnaseq_npn.csv"
 #datasets = [intersect, no_intersect]
 datasets = [intersect]
+#datasets = [no_intersect]
 
 relieff = ("reliefF", "python", "rf")
 geode = ("geoDE", "python", "gd")
