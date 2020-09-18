@@ -1,8 +1,8 @@
 from efsassembler.Experiments import Experiments
 from copy import deepcopy
 
+datasets = ["/home/colombelli/Documents/datasets/toy_prad.csv"]
 
-datasets = ["/home/colombelli/Documents/up_files/GSE86961.csv"]
 
 relieff = ("reliefF", "python", "rf")
 geode = ("geoDE", "python", "gd")
@@ -11,11 +11,11 @@ su = ("symmetrical-uncertainty", "r", "su")
 wx = ("wx", "python", "wx")
 
 #all_fs = [relieff, geode, gr, su, wx]
-all_fs = [geode, relieff, wx]
-ths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30, 50]
+all_fs = [geode, gr, su]
+ths = [1, 5, 10]
 seed = 42
-k = 5
-num_bs = 50
+k = 2
+num_bs = 3
 
 
 # -----------------------------------
@@ -33,6 +33,31 @@ het={
     }
 
 
+# -----------------------------------
+#       HYBRID
+# -----------------------------------
+
+hyb1={
+        "type": "hyb",
+        "thresholds": ths,
+        "bootstraps": num_bs,
+        "seed": seed,
+        "folds": k,
+        "aggregators": ["borda", "borda"],
+        "selectors": all_fs,
+        "datasets": datasets
+}
+
+hyb2={
+        "type": "hyb",
+        "thresholds": ths,
+        "bootstraps": num_bs,
+        "seed": seed,
+        "folds": k,
+        "aggregators": ["stb_weightened_layer1", "borda"],
+        "selectors": all_fs,
+        "datasets": datasets
+}
 
 
 # -----------------------------------
@@ -73,11 +98,10 @@ for sel in all_fs:
 
 
 
-experiments = [het]
-#experiments += hom_exps + sin_exps
+experiments = [hyb1, hyb2, het] + hom_exps + sin_exps
 
 
-results_path = "/home/colombelli/Documents/Experiments02_set"
+results_path = "/home/colombelli/Documents/test"
 
 print("STARTING PROCESS!!!")
 exp = Experiments(experiments, results_path)
