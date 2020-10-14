@@ -87,7 +87,7 @@ for sel in all_fs:
 experiments = [het, hyb1]
 
 
-results_path = "/home/colombelli/Documents/experiments/rankingCombat"
+results_path = "/home/colombelli/Documents/experiments/LUNG_TEST_NPN_TRUNC/rankingCombat"
 
 print("STARTING PROCESS!!!")
 exp = Experiments(experiments, results_path)
