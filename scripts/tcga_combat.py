@@ -1,7 +1,7 @@
 from efsassembler.Experiments import Experiments
 from copy import deepcopy
 
-datasets = ["/home/colombelli/Documents/datasets/LUNG_TEST_NPN_TRUNC/tcga_combat_qn.csv"]
+datasets = ["/home/colombelli/Documents/datasets/lung cancer/intersect/gse19188.csv"]
 
 
 relieff = ("reliefF", "python", "rf")
@@ -84,10 +84,10 @@ for sel in all_fs:
 
 
 
-experiments = [het, hyb1]
+experiments = [het]#, hyb1]
 
 
-results_path = "/home/colombelli/Documents/experiments/rankingCombat"
+results_path = "/home/colombelli/Documents/experiments/rankingCombat2"
 
 print("STARTING PROCESS!!!")
 exp = Experiments(experiments, results_path)

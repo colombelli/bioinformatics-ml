@@ -1,6 +1,3 @@
-setwd("~/Dropbox/Pesquisa/Projeto_Felipe_Normalizacao/")
-load("lung.RData")
-
 # https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0156594
 # if (!requireNamespace("BiocManager", quietly = TRUE))
 #     install.packages("BiocManager")
@@ -11,6 +8,9 @@ library(data.table)
 library(sva) #for combat function
 
 source("normalizationMethods.R")
+
+setwd("/home/colombelli/Documents/datasets/lung cancer/intersect/")
+load("lung.RData")
 
 preProcessDataset <- function(dataset){
     dataset.df <- subset(dataset, select=-c(class,samples))
@@ -34,25 +34,25 @@ cumida2.preproc.qn <- cumida2.preproc[[1]]
 cumida3.preproc <- preProcessDataset(cumida3)
 cumida3.preproc.qn <- cumida3.preproc[[1]]
 
-tcga_rnaseq.preproc <- preProcessDataset(tcga_rnaseq)
-tcga_rnaseq.preproc.qn <- tcga_rnaseq.preproc[[1]]
+gse19188.preproc <- preProcessDataset(gse19188)
+gse19188.preproc.qn <- gse19188.preproc[[1]]
 
 
 ## APPLY COMBAT TO REMOVE BATCH EFFECTS
 #define batch. 0 means microarray, 1 means RNA-Seq
 numSamplesMicroarray <- dim(cumida1)[1]+dim(cumida2)[1]+dim(cumida3)[1]
-numSamplesRNASeq <- dim(tcga_rnaseq)[1]
+numSamplesRNASeq <- dim(gse19188)[1]
 batches = c(rep(1,numSamplesRNASeq),rep(0,numSamplesMicroarray))
 mod2<-model.matrix(~0+batches)
 ##merge datasets
 
-dat.merged = rbind(subset(tcga_rnaseq, select=-c(class,samples)),
+dat.merged = rbind(subset(gse19188, select=-c(class,samples)),
                    subset(cumida1, select=-c(class,samples)),
                    subset(cumida2, select=-c(class,samples)),
                    subset(cumida3, select=-c(class,samples)))
 
 ##Add C1, C2, C3 to allow data separation after normalization
-row.names(dat.merged) <- c(tcga_rnaseq$samples,
+row.names(dat.merged) <- c(gse19188$samples,
                            paste("C1.",cumida1$samples,sep=""),
                            paste("C2.",cumida2$samples,sep=""),
                            paste("C3.",cumida3$samples,sep=""))
@@ -69,8 +69,8 @@ cleandat.merged.qn2 <- as.data.frame(t(cleandat.merged.qn))
 ##separate and export datasets following the original format
 
 ##TCGA
-tcga_rnaseq.final <- data.frame(cbind(tcga_rnaseq$samples,cleandat.merged.qn2[tcga_rnaseq$samples,],tcga_rnaseq$class))
-colnames(tcga_rnaseq.final) <- c("samples",colnames(dat.merged),"class")
+gse19188.final <- data.frame(cbind(gse19188$samples,cleandat.merged.qn2[gse19188$samples,],gse19188$class))
+colnames(gse19188.final) <- c("samples",colnames(dat.merged),"class")
 
 
 ##CUMIDA1
@@ -88,7 +88,7 @@ cumida3.final <- data.frame(cbind(cumida3$samples,cleandat.merged.qn2[grep("C3",
 colnames(cumida3.final) <- c("samples",colnames(dat.merged),"class")
 
 
-save(list=c("tcga_rnaseq.final","cumida1.final","cumida2.final","cumida3.final"), file="lung_normalized.RData")
+save(list=c("gse19188.final","cumida1.final","cumida2.final","cumida3.final"), file="lung_normalized.RData")
 
 
 
@@ -96,11 +96,11 @@ save(list=c("tcga_rnaseq.final","cumida1.final","cumida2.final","cumida3.final")
 
 
 #### FROM THIS POINT ON:  ONLY TESTS!! IGNORE...
-# cumida1.qn <- QNProcessing(data.table(cumida1.preproc.qn),data.table(tcga_rnaseq.preproc.qn),zero.to.one = TRUE)
+# cumida1.qn <- QNProcessing(data.table(cumida1.preproc.qn),data.table(gse19188.preproc.qn),zero.to.one = TRUE)
 # ## inverse use of datasets does not return good results
-# # cumida1.qn.v2 <- QNProcessing(data.table(tcga_rnaseq.preproc.qn),data.table(cumida1.preproc.qn),zero.to.one = TRUE)
+# # cumida1.qn.v2 <- QNProcessing(data.table(gse19188.preproc.qn),data.table(cumida1.preproc.qn),zero.to.one = TRUE)
 # 
-# data1 <- QNSingleDT(data.table(tcga_rnaseq.preproc.qn)) 
+# data1 <- QNSingleDT(data.table(gse19188.preproc.qn)) 
 # data2 <- QNSingleDT(data.table(cumida1.preproc.qn)) 
 # data3 <- QNSingleDT(data.table(cumida2.preproc.qn)) 
 # data4 <- QNSingleDT(data.table(cumida3.preproc.qn)) 
@@ -112,7 +112,7 @@ save(list=c("tcga_rnaseq.final","cumida1.final","cumida2.final","cumida3.final")
 # mod<-model.matrix(~0+batch)
 # #merge datasets
 # dat = rbind(subset(cumida1, select=-c(class,samples)),
-#             subset(tcga_rnaseq, select=-c(class,samples)))
+#             subset(gse19188, select=-c(class,samples)))
 # 
 # 
 # #remove batch effects
