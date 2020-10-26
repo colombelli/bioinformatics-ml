@@ -1,7 +1,7 @@
 from efsassembler.Experiments import Experiments
 from copy import deepcopy
 
-datasets = ["/home/colombelli/Documents/datasets/lung cancer/intersect/gse19188.csv"]
+datasets = ["/home/colombelli/Documents/datasets/lung cancer/intersect/gse19188_quantile.csv"]
 
 
 relieff = ("reliefF", "python", "rf")
