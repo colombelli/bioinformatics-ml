@@ -12,7 +12,7 @@ su = ("symmetrical-uncertainty", "r", "su")
 wx = ("wx", "python", "wx")
 
 all_fs = [relieff, geode, gr, su, wx]
-ths = [1,3,5,10,15,20,30,50]
+ths = [i for i in range(1,51)] + [75, 100, 150, 200, 500]
 seed = 42
 k = 5
 num_bs = 50
