@@ -15,7 +15,7 @@ ths = [1,3,5,10,15,20,30,50]
 seed = 42
 k = 3
 num_bs = 3
-
+classifier = "gbc"
 
 # -----------------------------------
 #       HETEROGENEOUS
@@ -26,9 +26,10 @@ het={
         "thresholds": ths,
         "seed": seed,
         "folds": k,
-        "aggregators": ["bordasense"],#["borda"],
+        "aggregators": ["borda"],
         "rankers": all_fs,
-        "datasets": datasets
+        "datasets": datasets,
+        "classifier": classifier
     }
 
 
@@ -44,7 +45,8 @@ hyb1={
         "folds": k,
         "aggregators": ["borda", "borda"],
         "rankers": all_fs,
-        "datasets": datasets
+        "datasets": datasets,
+        "classifier": classifier
 }
 
 hyb2={
@@ -55,19 +57,10 @@ hyb2={
         "folds": k,
         "aggregators": ["stb_weightened_layer1", "borda"],
         "rankers": all_fs,
-        "datasets": datasets
+        "datasets": datasets,
+        "classifier": classifier
 }
 
-hyb3={
-        "type": "hyb",
-        "thresholds": ths,
-        "bootstraps": num_bs,
-        "seed": seed,
-        "folds": k,
-        "aggregators": ["bordasense", "borda"],
-        "rankers": all_fs,
-        "datasets": datasets
-}
 
 
 # -----------------------------------
@@ -83,8 +76,9 @@ hom_base={
         "bootstraps": num_bs,
         "seed": seed,
         "folds": k,
-        "aggregators": ["bordasense"],#["borda"],
-        "datasets": datasets
+        "aggregators": ["borda"],
+        "datasets": datasets,
+        "classifier": classifier
     }
 
 sin_base={
@@ -92,7 +86,8 @@ sin_base={
         "thresholds": ths,
         "seed": seed,
         "folds": k,
-        "datasets": datasets
+        "datasets": datasets,
+        "classifier": classifier
     }
 
 for sel in all_fs:
@@ -107,7 +102,7 @@ for sel in all_fs:
 
 
 
-experiments = [het, hom_exps[2]]
+experiments = [het, hom_exps[2], sin_exps[3], hyb1]
 
 
 results_path = "/home/colombelli/Documents/experiments/toy"
