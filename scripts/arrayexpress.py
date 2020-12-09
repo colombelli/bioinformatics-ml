@@ -11,13 +11,26 @@ gr = ("gain-ratio", "r", "gr")
 su = ("symmetrical-uncertainty", "r", "su")
 wx = ("wx", "python", "wx")
 
-all_fs = [relieff, geode, gr, su, wx]
+fss = [gr, su, wx]
 ths = [i for i in range(1,51)] + [75, 100, 150, 200, 500]
 seed = 42
 k = 5
 num_bs = 50
+classifier= "gbc"
 
+hyb3={
+        "type": "hyb",
+        "thresholds": ths,
+        "bootstraps": num_bs,
+        "seed": seed,
+        "folds": k,
+        "aggregators": ["stb_weightened_layer1", "borda"],
+        "rankers": fss,
+        "datasets": datasets,
+        "classifier": "gbc"
+}
 
+"""
 # -----------------------------------
 #       HETEROGENEOUS
 # -----------------------------------
@@ -93,17 +106,13 @@ for sel in all_fs:
         sin_exp = deepcopy(sin_base)
         sin_exp["rankers"] = [sel]
         sin_exps.append(sin_exp)
+"""
 
 
 
-
-experiments = [het, hyb1, hyb2] + hom_exps + sin_exps
-
-
-results_path = base + "results/"
+experiments = [hyb3]
+results_path = base + "results_hyb3/"
 
 print("STARTING PROCESS!!!")
 exp = Experiments(experiments, results_path)
 exp.run()
-
-
