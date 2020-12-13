@@ -1,0 +1,222 @@
+STARTING PROCESS!!!
+INFO:efs-assembler:Loading dataset: /home/colombelli/Documents/arrayexpress/liver.csv
+INFO:efs-assembler:Encoding dataset
+INFO:efs-assembler:Creating results directory in: /home/colombelli/Documents/arrayexpress/results_het2/het_liver_E1/
+INFO:efs-assembler:Number of features to select: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 75, 100, 150, 200, 500]
+INFO:efs-assembler:Starting fold iteration 1
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 2
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 3
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 4
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 5
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Feature selection step time taken: 00:04:14.89
+INFO:efs-assembler:Decoding dataframe
+INFO:efs-assembler:Starting evaluation process
+INFO:efs-assembler:Computing stabilities
+INFO:efs-assembler:Computing prediction performances
+INFO:efs-assembler:Creating csv files
+INFO:efs-assembler:Encoding dataset
+INFO:efs-assembler:Final selection process | 0/1
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 1/1
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Experiment finished!
+INFO:efs-assembler:Loading dataset: /home/colombelli/Documents/arrayexpress/lung.csv
+INFO:efs-assembler:Encoding dataset
+INFO:efs-assembler:Creating results directory in: /home/colombelli/Documents/arrayexpress/results_het2/het_lung_E1/
+INFO:efs-assembler:Number of features to select: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 75, 100, 150, 200, 500]
+INFO:efs-assembler:Starting fold iteration 1
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 2
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 3
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 4
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 5
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Feature selection step time taken: 00:03:09.10
+INFO:efs-assembler:Decoding dataframe
+INFO:efs-assembler:Starting evaluation process
+INFO:efs-assembler:Computing stabilities
+INFO:efs-assembler:Computing prediction performances
+INFO:efs-assembler:Creating csv files
+INFO:efs-assembler:Encoding dataset
+INFO:efs-assembler:Final selection process | 0/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 1/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 2/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 3/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 4/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 5/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 6/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 7/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 8/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 9/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Experiment finished!
+INFO:efs-assembler:Loading dataset: /home/colombelli/Documents/arrayexpress/breast.csv
+INFO:efs-assembler:Encoding dataset
+INFO:efs-assembler:Creating results directory in: /home/colombelli/Documents/arrayexpress/results_het2/het_breast_E1/
+INFO:efs-assembler:Number of features to select: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 75, 100, 150, 200, 500]
+INFO:efs-assembler:Starting fold iteration 1
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 2
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 3
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 4
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Starting fold iteration 5
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Feature selection step time taken: 00:03:45.91
+INFO:efs-assembler:Decoding dataframe
+INFO:efs-assembler:Starting evaluation process
+INFO:efs-assembler:Computing stabilities
+INFO:efs-assembler:Computing prediction performances
+INFO:efs-assembler:Creating csv files
+INFO:efs-assembler:Encoding dataset
+INFO:efs-assembler:Final selection process | 0/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 1/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 2/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 3/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 4/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 5/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 6/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 7/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 8/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Final selection process | 9/9
+INFO:efs-assembler:Ranking features with gain-ratio
+INFO:efs-assembler:Ranking features with symmetrical-uncertainty
+INFO:efs-assembler:Ranking features with wx
+INFO:efs-assembler:Aggregating rankings
+INFO:efs-assembler:Experiment finished!
