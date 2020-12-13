@@ -18,13 +18,12 @@ k = 5
 num_bs = 50
 classifier= "gbc"
 
-hyb3={
-        "type": "hyb",
+het2={
+        "type": "het",
         "thresholds": ths,
-        "bootstraps": num_bs,
         "seed": seed,
         "folds": k,
-        "aggregators": ["stb_weightened_layer1", "borda"],
+        "aggregators": ["borda"],
         "rankers": fss,
         "datasets": datasets,
         "classifier": "gbc"
@@ -110,8 +109,8 @@ for sel in all_fs:
 
 
 
-experiments = [hyb3]
-results_path = base + "results_hyb3/"
+experiments = [het2]
+results_path = base + "results_het2/"
 
 print("STARTING PROCESS!!!")
 exp = Experiments(experiments, results_path)
