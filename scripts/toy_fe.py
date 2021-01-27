@@ -1,4 +1,4 @@
-from efsassembler.Experiments import Experiments
+from efsassembler import FeatureExtraction
 from copy import deepcopy
 
 datasets = ["/home/colombelli/Documents/datasets/toy_prad_reduced.csv"]
@@ -13,9 +13,7 @@ wx = ("wx", "python", "wx")
 all_fs = [relieff, geode, gr, su, wx]
 ths = [1,3,5,10,15,20,30,50]
 seed = 42
-k = 3
 num_bs = 3
-classifier = "gbc"
 
 # -----------------------------------
 #       HETEROGENEOUS
@@ -25,12 +23,35 @@ het={
         "type": "het",
         "thresholds": ths,
         "seed": seed,
-        "folds": k,
         "aggregators": ["borda"],
         "rankers": all_fs,
         "datasets": datasets,
-        "classifier": classifier
     }
+
+
+# -----------------------------------
+#       HYBRID
+# -----------------------------------
+
+hyb1={
+        "type": "hyb",
+        "thresholds": ths,
+        "bootstraps": num_bs,
+        "seed": seed,
+        "aggregators": ["borda", "borda"],
+        "rankers": all_fs,
+        "datasets": datasets
+}
+
+hyb2={
+        "type": "hyb",
+        "thresholds": ths,
+        "bootstraps": num_bs,
+        "seed": seed,
+        "aggregators": ["stb_weightened_layer1", "borda"],
+        "rankers": all_fs,
+        "datasets": datasets
+}
 
 
 
@@ -46,23 +67,17 @@ hom_base={
         "thresholds": ths,
         "bootstraps": num_bs,
         "seed": seed,
-        "folds": k,
-        "undersampling": False,
-        "balanced_final_selection": False,
+        "balanced_selection": False,
         "aggregators": ["borda"],
-        "datasets": datasets,
-        "classifier": classifier
+        "datasets": datasets
     }
 
 sin_base={
         "type": "sin",
         "thresholds": ths,
         "seed": seed,
-        "folds": k,
-        "undersampling": True,
-        "balanced_final_selection": True,
-        "datasets": datasets,
-        "classifier": classifier
+        "balanced_selection": True,
+        "datasets": datasets
     }
 
 for sel in all_fs:
@@ -76,14 +91,12 @@ for sel in all_fs:
 
 
 
+cfgs = [het, hom_exps[2], sin_exps[3], hyb1, hyb2]
 
-experiments = [het, hom_exps[2], sin_exps[3]]
-
-
-results_path = "/home/colombelli/Documents/experiments/toy"
+results_path = "/home/colombelli/Documents/experiments/toy/extractions"
 
 print("STARTING PROCESS!!!")
-exp = Experiments(experiments, results_path)
-exp.run()
+fe = FeatureExtraction(cfgs, results_path)
+fe.run()
 
 
