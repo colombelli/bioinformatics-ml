@@ -1,4 +1,4 @@
-from efsassembler.Experiments import Experiments
+from efsassembler import Experiments
 from copy import deepcopy
 
 base = "/home/colombelli/Documents/arrayexpress/"
