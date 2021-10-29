@@ -30,7 +30,7 @@ classifier= "gbc"
 # -----------------------------------
 #       HETEROGENEOUS
 # -----------------------------------
-
+"""
 het={
         "type": "het",
         "thresholds": ths,
@@ -68,7 +68,7 @@ hyb1={
         "datasets": datasets,
         "classifier": "gbc"
 }
-
+"""
 hyb2={
         "type": "hyb",
         "thresholds": ths,
@@ -133,7 +133,8 @@ for sel in all_fs:
 
 
 
-experiments = [het, het2, hyb1, hyb2, hyb3] + hom_exps + sin_exps
+#experiments = [het, het2, hyb1, hyb2, hyb3] + hom_exps + sin_exps
+experiments = [hyb2, hyb3] + hom_exps + sin_exps
 results_path = base + "results/"
 
 print("STARTING PROCESS!!!")
